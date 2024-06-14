@@ -6,13 +6,15 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "althinect/filament-spatie-roles-permissions": "^2.2",
         "filament/filament": "^3.2",
+        "filament/notifications": "^3.2",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
-        "owenvoke/blade-fontawesome": "^2.6"
+        "owenvoke/blade-fontawesome": "^2.6",
+        "spatie/laravel-permission": "^6.7"
     },
     "require-dev": {
+        "doctrine/dbal": "^3.8",
         "fakerphp/faker": "^1.23",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",
