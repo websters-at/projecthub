@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PermissionResource\Pages;
 use App\Filament\Resources\PermissionResource\RelationManagers;
+use App\Models\Permission;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
@@ -14,7 +15,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Spatie\Permission\Models\Permission;
 
 class PermissionResource extends Resource
 {
@@ -34,7 +34,7 @@ class PermissionResource extends Resource
                         ->minLength(2)
                         ->maxLength(255)
                         ->required()
-                        ->unique()
+                        ->unique(ignoreRecord: true)
                 ])
             ]);
     }
@@ -49,12 +49,11 @@ class PermissionResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+
+
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+
             ]);
     }
 

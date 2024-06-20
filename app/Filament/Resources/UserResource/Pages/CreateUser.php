@@ -14,4 +14,9 @@ class CreateUser extends CreateRecord
     {
         return 'User created';
     }
+
+    protected function getRedirectUrl(): string
+    {
+        return '/admin/users';
+    }
 }

@@ -7,6 +7,7 @@ use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -41,9 +42,13 @@ class UserResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('password')
                     ->password()
-
                     ->required()
                     ->maxLength(255),
+
+                Select::make('roles')
+                    ->multiple()
+                    ->relationship('roles','name')
+                    ->preload()
 
                 ])->columns(2)
             ]);
@@ -57,9 +62,6 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -74,6 +76,7 @@ class UserResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

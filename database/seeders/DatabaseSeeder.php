@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Permission;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -28,6 +29,17 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $role = Role::create(['name' => 'Admin']);
+
+        $permissions = [
+            ['name' => 'Create Contract'],
+            ['name' => 'View Contract'],
+            ['name' => 'Delete Contract'],
+            ['name' => 'Update Contract'],
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::create($permission);
+        }
 
         $user->assignRole($role);
         $user2->assignRole($role);

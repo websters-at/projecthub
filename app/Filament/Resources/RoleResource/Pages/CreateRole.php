@@ -14,4 +14,10 @@ class CreateRole extends CreateRecord
     {
         return 'Role created';
     }
+
+
+    protected function getRedirectUrl(): string
+    {
+        return '/admin/roles';
+    }
 }

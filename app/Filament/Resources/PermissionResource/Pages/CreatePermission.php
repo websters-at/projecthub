@@ -14,4 +14,9 @@ class CreatePermission extends CreateRecord
     {
         return 'Permission created';
     }
+
+    protected function getRedirectUrl(): string
+    {
+        return '/admin/permissions';
+    }
 }
