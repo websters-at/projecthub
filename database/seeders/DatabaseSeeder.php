@@ -2,12 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Permission;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,9 +15,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-       $user = User::factory()->create([
+        // Create users
+        $user = User::factory()->create([
             'name' => 'Stevan Vlajic',
             'email' => 'stevanvlajic@webhoch.com',
         ]);
@@ -28,19 +26,29 @@ class DatabaseSeeder extends Seeder
             'email' => 'jonathanhochmeir@webhoch.com',
         ]);
 
+        // Create the Admin role
         $role = Role::create(['name' => 'Admin']);
 
+        // Create permissions
         $permissions = [
             ['name' => 'Create Contract'],
             ['name' => 'View Contract'],
             ['name' => 'Delete Contract'],
             ['name' => 'Update Contract'],
+            ['name' => 'Root']
         ];
 
         foreach ($permissions as $permission) {
             Permission::create($permission);
         }
 
+        // Retrieve all permissions
+        $allPermissions = Permission::all();
+
+        // Assign all permissions to the Admin role
+        $role->givePermissionTo($allPermissions);
+
+        // Assign the Admin role to the users
         $user->assignRole($role);
         $user2->assignRole($role);
     }
