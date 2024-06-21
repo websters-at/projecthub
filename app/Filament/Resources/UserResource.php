@@ -32,24 +32,22 @@ class UserResource extends Resource
         return $form
             ->schema([
                 Section::make()->schema([
-
                     Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->required()
-                    ->maxLength(255),
+                    Forms\Components\TextInput::make('email')
+                        ->email()
+                        ->required()
+                        ->maxLength(255),
+                    Forms\Components\TextInput::make('password')
+                        ->password()
+                        ->required()
+                        ->maxLength(255),
 
-                Select::make('roles')
-                    ->multiple()
-                    ->relationship('roles','name')
-                    ->preload()
-
+                    Select::make('roles')
+                        ->multiple()
+                        ->relationship('roles','name')
+                        ->preload()
                 ])->columns(2)
             ]);
     }

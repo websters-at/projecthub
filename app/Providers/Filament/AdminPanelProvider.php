@@ -17,6 +17,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use TimWassenburg\FilamentTimesheets\FilamentTimesheetsPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -51,6 +52,7 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+          #  ->plugin(FilamentTimesheetsPlugin::make()) # TODO: REMOVE LATER ON...
             ->authMiddleware([
                 Authenticate::class,
             ]);
