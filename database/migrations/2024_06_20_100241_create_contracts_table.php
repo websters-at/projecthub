@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('contracts', function (Blueprint $table) {
             $table->id();
+            $table->string('name')->unique();
+            $table->string('description')->nullable();
+            $table->string('zip_code')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('country')->nullable();
+            $table->string('address1')->nullable();
+            $table->string('address2')->nullable();
+            $table->string('address3')->nullable();
             $table->timestamps();
         });
     }

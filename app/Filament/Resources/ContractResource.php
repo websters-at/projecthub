@@ -17,7 +17,7 @@ class ContractResource extends Resource
 {
     protected static ?string $model = Contract::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'fas-list-check';
 
     public static function form(Form $form): Form
     {
@@ -63,4 +63,11 @@ class ContractResource extends Resource
             'edit' => Pages\EditContract::route('/{record}/edit'),
         ];
     }
+
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery();
+    }
+
 }
