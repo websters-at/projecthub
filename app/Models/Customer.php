@@ -12,6 +12,7 @@ class Customer extends Model
     protected $fillable = [
         "company_name",
         "address",
+        "zip_code",
         "city",
         "state",
         "country"

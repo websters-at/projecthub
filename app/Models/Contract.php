@@ -13,6 +13,7 @@ class Contract extends Model
         "name",
         "description",
         "zip_code",
+        "customer_id",
         "city",
         "state",
         "country",

@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ContractResource\Pages;
 use App\Filament\Resources\ContractResource\RelationManagers;
 use App\Models\Contract;
+use App\Models\Customer;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
@@ -30,7 +31,6 @@ class ContractResource extends Resource
     protected static ?string $navigationIcon = 'fas-list-check';
     protected static ?string $navigationGroup = 'Time Tracking';
 
-
     public static function form(Form $form): Form
     {
         return $form
@@ -46,6 +46,25 @@ class ContractResource extends Resource
                         DatePicker::make('due_to')
                             ->nullable()
                     ]),
+                Section::make('Customer')->schema([
+                    Select::make('customer_id')
+                        ->options(Customer::all()
+                            ->pluck('company_name','id'))
+                        ->searchable()
+                    ->label('Customer')
+                    ->required()
+                ])->columns(1),
+
+                Section::make('Employees')
+                    ->schema([
+                        Select::make('users')
+                            ->multiple()
+                            ->preload()
+                            ->relationship('users', 'email')
+                            ->searchable(),
+                    ])
+                    ->columns(1),
+
                     Section::make('Address')->schema([
                         TextInput::make('country')
                             ->nullable()
@@ -63,15 +82,6 @@ class ContractResource extends Resource
                             ->nullable()
                             ->maxLength(255)
                     ])->columns(2),
-                Section::make('Employees')->schema([
-                    Select::make('users')
-                        ->multiple()
-                        ->relationship('users', 'email')
-                       /* ->options(
-                            User::all()
-                            ->pluck('email', 'user_id'))*/
-                        ->searchable()
-                ])->columns(1),
 
                 Section::make('Contract Picture')->schema([
                     FileUpload::make('contract_image')
