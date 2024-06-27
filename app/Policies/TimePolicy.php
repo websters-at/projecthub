@@ -13,7 +13,7 @@ class TimePolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->hasPermissionTo('View Time');
     }
 
     /**
@@ -21,7 +21,7 @@ class TimePolicy
      */
     public function view(User $user, Time $time): bool
     {
-        return true;
+        return $user->hasPermissionTo('View Time');
     }
 
     /**
@@ -29,7 +29,7 @@ class TimePolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $user->hasPermissionTo('Create Time');
     }
 
     /**
@@ -37,7 +37,7 @@ class TimePolicy
      */
     public function update(User $user, Time $time): bool
     {
-        return true;
+        return $user->hasPermissionTo('Update Time');
     }
 
     /**
@@ -45,7 +45,7 @@ class TimePolicy
      */
     public function delete(User $user, Time $time): bool
     {
-        return true;
+        return $user->hasPermissionTo('Delete Time');
     }
 
     /**
@@ -53,7 +53,7 @@ class TimePolicy
      */
     public function restore(User $user, Time $time): bool
     {
-        return true;
+        return $user->hasPermissionTo('Restore Time');
     }
 
     /**
@@ -61,6 +61,6 @@ class TimePolicy
      */
     public function forceDelete(User $user, Time $time): bool
     {
-        return true;
+        return $user->hasPermissionTo('Delete Time');
     }
 }

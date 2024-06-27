@@ -34,12 +34,21 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Create Contract'],
             ['name' => 'View Contract'],
             ['name' => 'Delete Contract'],
+            ['name' => 'Restore Contract'],
             ['name' => 'Update Contract'],
 
             ['name' => 'Create Customer'],
             ['name' => 'View Customer'],
+            ['name' => 'Restore Customer'],
             ['name' => 'Delete Customer'],
             ['name' => 'Update Customer'],
+
+            ['name' => 'Create Time'],
+            ['name' => 'View Time'],
+            ['name' => 'Restore Time'],
+            ['name' => 'Delete Time'],
+            ['name' => 'Update Time'],
+
             ['name' => 'Root']
         ];
 

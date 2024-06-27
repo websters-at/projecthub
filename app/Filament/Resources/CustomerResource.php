@@ -11,6 +11,9 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -57,23 +60,37 @@ class CustomerResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('company_name')
-                    ->limit(30),
+                    ->limit(30)
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('country')
-                    ->limit(30),
+                    ->limit(30)
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('state')
-                    ->limit(30),
+                    ->limit(30)
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('city')
-                    ->limit(30),
+                    ->limit(30)
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('zip_code')
-                    ->limit(30),
-                TextColumn::make('address'),
+                    ->limit(30)
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('address')
+                    ->searchable()
+                    ->sortable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                EditAction::make(),
+                ViewAction::make(),
+                DeleteAction::make(),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

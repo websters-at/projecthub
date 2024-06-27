@@ -18,12 +18,20 @@ return new class extends Migration
                 ->references('id')
                 ->on('contract_classifications')
                 ->onDelete('cascade');
-            $table->string('description')->nullable();
-            $table->date('date')->nullable();
-            $table->timestamp('start_time')->nullable();
-            $table->timestamp('end_time')->nullable();
-            $table->double('total_hours_worked')->nullable();
-            $table->boolean('is_special')->nullable();
+            $table->string('description')
+                ->nullable();
+            $table->date('date')
+                ->nullable();
+            $table->time('start_time')
+                ->nullable();
+            $table->time('end_time')
+                ->nullable();
+            $table->double('total_hours_worked')
+                ->nullable();
+            $table->double('total_minutes_worked')
+                ->nullable();
+            $table->boolean('is_special')
+                ->nullable();
             $table->timestamps();
         });
     }

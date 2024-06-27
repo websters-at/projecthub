@@ -19,6 +19,11 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -37,7 +42,7 @@ class ContractResource extends Resource
             ->schema([
                     Section::make([
                         TextInput::make('name')
-                            ->nullable()
+                            ->required()
                             ->maxLength(255),
                         RichEditor::make('description')
                            ->nullable()
@@ -100,28 +105,36 @@ class ContractResource extends Resource
             ->columns([
                 TextColumn::make('due_to')
                     ->date()
+                    ->searchable()
+                    ->sortable()
                     ->limit(30),
                 TextColumn::make('name')
+                    ->searchable()
+                    ->sortable()
                     ->limit(30),
                 TextColumn::make('description')
                     ->limit(30)
+                    ->searchable()
                     ->markdown(),
                 TextColumn::make('city')
                     ->limit(30),
                 TextColumn::make('zip_code')
-                    ->limit(30),
-                TextColumn::make('address'),
+                    ->limit(30)
+                    ->searchable(),
+                TextColumn::make('address')
+                    ->searchable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                EditAction::make(),
+                ViewAction::make(),
+                DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
