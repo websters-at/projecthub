@@ -132,7 +132,7 @@ class ContractResource extends Resource
                     ->searchable(),
             ])
             ->filters([
-                //
+
             ])
             ->actions([
                 EditAction::make(),

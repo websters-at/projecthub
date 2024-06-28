@@ -62,8 +62,6 @@ class TimesRelationManager extends RelationManager
             ]);
     }
 
-
-
     public function isReadOnly(): bool
     {
         return false;
@@ -123,6 +121,13 @@ class TimesRelationManager extends RelationManager
                     }
 
                     return $data;
+                })->visible(function(): bool{
+                    $user = Auth::user();
+                    $contractId = $this->ownerRecord->id;
+
+                    return ContractClassification::where('user_id', $user->id)
+                        ->where('contract_id', $contractId)
+                        ->exists();
                 }),
             ])
             ->actions([
