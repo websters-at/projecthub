@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Contract extends Model
 {
@@ -41,9 +42,9 @@ class Contract extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    public function times(): HasMany
+    public function times(): HasManyThrough
     {
-        return $this->hasMany(Time::class);
+        return $this->hasManyThrough(Time::class, ContractClassification::class, 'contract_id', 'contract_classification_id', 'id', 'id');
     }
 
     public function classifications()

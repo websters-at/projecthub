@@ -31,23 +31,25 @@ class DatabaseSeeder extends Seeder
 
         // Create permissions
         $permissions = [
-            ['name' => 'Create Contract'],
-            ['name' => 'View Contract'],
-            ['name' => 'Delete Contract'],
-            ['name' => 'Restore Contract'],
-            ['name' => 'Update Contract'],
+            ['name' => 'Create Contracts'],
+            ['name' => 'View Contracts'],
+            ['name' => 'Delete Contracts'],
+            ['name' => 'Restore Contracts'],
+            ['name' => 'Update Contracts'],
+            ['name' => 'View All Contracts'],
 
-            ['name' => 'Create Customer'],
-            ['name' => 'View Customer'],
-            ['name' => 'Restore Customer'],
-            ['name' => 'Delete Customer'],
-            ['name' => 'Update Customer'],
+            ['name' => 'Create Customers'],
+            ['name' => 'View Customers'],
+            ['name' => 'Restore Customers'],
+            ['name' => 'Delete Customers'],
+            ['name' => 'Update Customers'],
 
-            ['name' => 'Create Time'],
-            ['name' => 'View Time'],
-            ['name' => 'Restore Time'],
-            ['name' => 'Delete Time'],
-            ['name' => 'Update Time'],
+            ['name' => 'Create Times'],
+            ['name' => 'View Times'],
+            ['name' => 'Restore Times'],
+            ['name' => 'Delete Times'],
+            ['name' => 'Update Times'],
+            ['name' => 'View All Times'],
 
             ['name' => 'Root']
         ];

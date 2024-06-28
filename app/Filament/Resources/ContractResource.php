@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\ContractResource\Pages;
 use App\Filament\Resources\ContractResource\RelationManagers;
 use App\Models\Contract;
+use App\Models\ContractClassification;
 use App\Models\Customer;
 use App\Models\User;
 use Filament\Forms;
@@ -28,6 +29,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class ContractResource extends Resource
 {
@@ -40,7 +42,7 @@ class ContractResource extends Resource
     {
         return $form
             ->schema([
-                    Section::make([
+                    Section::make('General')->schema([
                         TextInput::make('name')
                             ->required()
                             ->maxLength(255),
@@ -50,7 +52,8 @@ class ContractResource extends Resource
                            ->maxLength(255),
                         DatePicker::make('due_to')
                             ->nullable()
-                    ]),
+                    ])->collapsible()
+                        ->collapsed(false),
                 Section::make('Customer')->schema([
                     Select::make('customer_id')
                         ->options(Customer::all()
@@ -58,7 +61,8 @@ class ContractResource extends Resource
                         ->searchable()
                     ->label('Customer')
                     ->required()
-                ])->columns(1),
+                ])->columns(1)->collapsible()
+                    ->collapsed(false),
 
                 Section::make('Employees')
                     ->schema([
@@ -68,7 +72,8 @@ class ContractResource extends Resource
                             ->relationship('users', 'email')
                             ->searchable(),
                     ])
-                    ->columns(1),
+                    ->columns(1)->collapsible()
+                    ->collapsed(false),
 
                     Section::make('Address')->schema([
                         TextInput::make('country')
@@ -86,7 +91,8 @@ class ContractResource extends Resource
                         TextInput::make('address')
                             ->nullable()
                             ->maxLength(255)
-                    ])->columns(2),
+                    ])->columns(2)->collapsible()
+                        ->collapsed(false),
 
                 Section::make('Contract Picture')->schema([
                     FileUpload::make('contract_image')
@@ -95,7 +101,8 @@ class ContractResource extends Resource
                     ->nullable()
                     ->directory('contract_images')
                     ->storeFileNamesIn('original_filename')
-                ])
+                ])->collapsible()
+                ->collapsed(false)
             ]);
     }
 
@@ -142,7 +149,7 @@ class ContractResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\TimesRelationManager::class,
         ];
     }
 
@@ -156,18 +163,17 @@ class ContractResource extends Resource
         ];
     }
 
-
-  /*  public static function getEloquentQuery(): Builder
+    public static function getEloquentQuery(): Builder
     {
         $user = auth()->user();
 
-        if ($user && $user->hasRole('admin')) {
+        if ($user && $user->hasPermissionTo('View All Contracts')) {
             return parent::getEloquentQuery();
         } else {
             return parent::getEloquentQuery()
-                ->join('contract_classifications', 'contracts.id', '=', 'contract_classifications.contract_id')
-                ->where('contract_classifications.user_id', $user->id)
-                ->select('contracts.*');
+                ->whereHas('classifications', function (Builder $query) use ($user) {
+                    $query->where('user_id', $user->id);
+                });
         }
-    }*/
+    }
 }

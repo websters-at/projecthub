@@ -1,12 +1,8 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\ContractResource\RelationManagers;
 
-use App\Filament\Resources\TimeResource\Pages;
-use App\Filament\Resources\TimeResource\RelationManagers;
-use App\Models\Contract;
 use App\Models\ContractClassification;
-use App\Models\Time;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\RichEditor;
@@ -16,23 +12,21 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\IconColumn\IconColumnSize;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 
-class TimeResource extends Resource
+class TimesRelationManager extends RelationManager
 {
-    protected static ?string $model = Time::class;
-    protected static ?string $navigationGroup = 'Time Tracking';
-    protected static ?string $navigationIcon = 'far-clock';
+    protected static string $relationship = 'times';
 
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
@@ -59,23 +53,6 @@ class TimeResource extends Resource
                     ->collapsed(false)
                     ->heading('Time'),
                 Section::make([
-                    Select::make('contract_classification_id')
-                        ->label('Contract')
-                        ->options(function () {
-                            $user = Auth::user();
-                            return ContractClassification::where('user_id', $user->id)
-                                ->with('contract')
-                                ->get()
-                                ->pluck('contract.name', 'id');
-                        })
-                        ->preload()
-                        ->searchable()
-                        ->required()
-                ])->columns(1)
-                    ->collapsible()
-                    ->collapsed(false)
-                    ->heading('Contract'),
-                Section::make([
                     Toggle::make('is_special')
                         ->required()
                 ])->columns(1)
@@ -85,12 +62,20 @@ class TimeResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
+
+
+    public function isReadOnly(): bool
+    {
+        return false;
+    }
+
+    public function table(Table $table): Table
     {
         return $table
+            ->recordTitleAttribute('date')
             ->columns([
                 TextColumn::make('date')
-                ->date(),
+                    ->date(),
                 TextColumn::make('description')->markdown()->limit(30)  ,
                 TextColumn::make('start_time')
                     ->time(),
@@ -109,49 +94,45 @@ class TimeResource extends Resource
                         true => 'success',
                     })
                     ->size(IconColumnSize::Medium)
-            ])
+            ])->modifyQueryUsing(function (Builder $query) {
+                $user = Auth::user();
+                $contractId = $this->ownerRecord->id;
+                if($user->hasPermissionTo('View All Times')){
+                    return $query;
+                }else{
+                    $query->whereHas('contractClassification', function (Builder $query) use ($user, $contractId) {
+                        $query->where('user_id', $user->id)
+                            ->where('contract_id', $contractId);
+                    });
+                }
+            })
             ->filters([
                 //
             ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make()->mutateFormDataUsing(function (array $data): array {
+                    $user = Auth::user();
+                    $contractId = $this->ownerRecord->id;
+
+                    $contractClassification = ContractClassification::where('user_id', $user->id)
+                        ->where('contract_id', $contractId)
+                        ->first();
+
+                    if ($contractClassification) {
+                        $data['contract_classification_id'] = $contractClassification->id;
+                    }
+
+                    return $data;
+                }),
+            ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
-
-    public static function getEloquentQuery(): Builder
-    {
-        $user = auth()->user();
-
-        if ($user && $user->hasPermissionTo('View All Times')) {
-            return parent::getEloquentQuery();
-        } else {
-            return parent::getEloquentQuery()
-                ->whereHas('contractClassification', function (Builder $query) use ($user) {
-                    $query->where('user_id', $user->id);
-                });
-        }
-    }
-    public static function getPages(): array
-    {
-        return [
-            'index' => Pages\ListTimes::route('/'),
-            'create' => Pages\CreateTime::route('/create'),
-            'view' => Pages\ViewTime::route('/{record}'),
-            'edit' => Pages\EditTime::route('/{record}/edit'),
-        ];
     }
 }
