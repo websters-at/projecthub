@@ -26,6 +26,7 @@ use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -132,7 +133,13 @@ class ContractResource extends Resource
                     ->searchable(),
             ])
             ->filters([
-
+                SelectFilter::make('customer')
+                    ->relationship('customer', 'company_name'),
+                SelectFilter::make('users')
+                    ->relationship('users', 'email')
+                    ->visible(function(): bool{
+                        return Auth::user()->hasPermissionTo('View Special Contract Filters');
+                })
             ])
             ->actions([
                 EditAction::make(),
