@@ -134,12 +134,16 @@ class ContractResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('customer')
-                    ->relationship('customer', 'company_name'),
+                    ->relationship('customer', 'company_name')
+                    ->searchable()
+                    ->preload(),
                 SelectFilter::make('users')
                     ->relationship('users', 'email')
+                    ->multiple()
+                    ->searchable()
                     ->visible(function(): bool{
-                        return Auth::user()->hasPermissionTo('View Special Contract Filters');
-                })
+                        return Auth::user()->hasPermissionTo('View Special Contracts Filters');
+                })->preload()
             ])
             ->actions([
                 EditAction::make(),

@@ -37,14 +37,14 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Restore Contracts'],
             ['name' => 'Update Contracts'],
             ['name' => 'View All Contracts'],
-            ['name' => 'View Special Contract Filters'],
+            ['name' => 'View Special Contracts Filters'],
 
             ['name' => 'Create Customers'],
             ['name' => 'View Customers'],
             ['name' => 'Restore Customers'],
             ['name' => 'Delete Customers'],
             ['name' => 'Update Customers'],
-            ['name' => 'View Special Customer Filters'],
+            ['name' => 'View Special Customers Filters'],
 
             ['name' => 'Create Times'],
             ['name' => 'View Times'],
@@ -52,8 +52,7 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Delete Times'],
             ['name' => 'Update Times'],
             ['name' => 'View All Times'],
-            ['name' => 'View Special Customer Times'],
-
+            ['name' => 'View Special Times Filters'],
 
             ['name' => 'Root']
         ];

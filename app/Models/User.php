@@ -58,6 +58,11 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasRole(Role::all());
     }
 
+    public function contractClassifications(): HasMany
+    {
+        return $this->hasMany(ContractClassification::class);
+    }
+
     public function contracts()
     {
         return $this

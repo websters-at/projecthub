@@ -7,6 +7,7 @@ use App\Filament\Resources\TimeResource\RelationManagers;
 use App\Models\Contract;
 use App\Models\ContractClassification;
 use App\Models\Time;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\RichEditor;
@@ -22,6 +23,7 @@ use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\IconColumn\IconColumnSize;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
@@ -111,7 +113,35 @@ class TimeResource extends Resource
                     ->size(IconColumnSize::Medium)
             ])
             ->filters([
-                //
+                SelectFilter::make('contractClassification.user')
+                    ->relationship('contractClassification.user', 'email')
+                    ->label('Filter by User')
+                    ->visible(function () {
+                        return Auth::user()->hasPermissionTo('View Special Times Filters');
+                    })
+                    ->multiple()
+                    ->searchable()
+                    ->preload(),
+
+                SelectFilter::make('contractClassification.contract')
+                    ->relationship('contractClassification.contract', 'name')
+                    ->label('Filter by Contract')
+                    ->visible(function () {
+                        return Auth::user()->hasPermissionTo('View Special Times Filters');
+                    })
+                    ->multiple()
+                    ->searchable()
+                    ->preload(),
+
+                /* SelectFilter::make('contractClassification')
+                     ->options(
+                         User::all()
+                             ->pluck('email', 'id')
+                     )
+
+                     ->visible(function () {
+                         return Auth::user()->hasPermissionTo('View Special Times Filters');
+                     })->preload()*/
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
