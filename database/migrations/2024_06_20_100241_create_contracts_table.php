@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('zip_code')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
-            $table->date('due_to')->nullable();
+            $table->date('due_to');
             $table->string('country')->nullable();
             $table->string('attachments')->nullable();
             $table->string('address')->nullable();

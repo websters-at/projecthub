@@ -11,9 +11,6 @@ use App\Filament\Resources\BillResource\RelationManagers;
 use App\Models\Bill;
 use App\Models\ContractClassification;
 use App\Models\Customer;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -24,6 +21,9 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -34,7 +34,7 @@ class BillResource extends Resource
 {
     protected static ?string $model = Bill::class;
 
-    protected static ?string $navigationGroup = 'Time Tracking';
+    #protected static ?string $navigationGroup = 'Time Tracking';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 

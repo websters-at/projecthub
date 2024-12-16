@@ -36,7 +36,7 @@
     {
         protected static ?string $model = Contract::class;
         protected static ?string $navigationIcon = 'fas-list-check';
-        protected static ?string $navigationGroup = 'Time Tracking';
+        #protected static ?string $navigationGroup = 'Time Tracking';
 
         public static function form(Form $form): Form
         {
@@ -125,12 +125,7 @@
                         ->searchable()
                         ->markdown(),
                     TextColumn::make('city')
-                        ->limit(30),
-                    TextColumn::make('zip_code')
                         ->limit(30)
-                        ->searchable(),
-                    TextColumn::make('address')
-                        ->searchable(),
                 ])
                 ->filters([
                     SelectFilter::make('customer')

@@ -34,7 +34,7 @@ use Filament\Tables\Filters\Indicator;
 class TimeResource extends Resource
 {
     protected static ?string $model = Time::class;
-    protected static ?string $navigationGroup = 'Time Tracking';
+   # protected static ?string $navigationGroup = 'Time Tracking';
     protected static ?string $navigationIcon = 'far-clock';
 
     public static function form(Form $form): Form

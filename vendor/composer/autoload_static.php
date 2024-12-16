@@ -239,6 +239,7 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
         'O' => 
         array (
             'OwenVoke\\BladeFontAwesome\\' => 26,
+            'Orhanerday\\OpenAi\\' => 18,
             'OpenSpout\\' => 10,
         ),
         'N' => 
@@ -280,6 +281,7 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
         array (
             'Illuminate\\Support\\' => 19,
             'Illuminate\\' => 11,
+            'Icetalker\\FilamentChatgptBot\\' => 29,
         ),
         'G' => 
         array (
@@ -620,6 +622,10 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
         array (
             0 => __DIR__ . '/..' . '/owenvoke/blade-fontawesome/src',
         ),
+        'Orhanerday\\OpenAi\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/orhanerday/open-ai/src',
+        ),
         'OpenSpout\\' => 
         array (
             0 => __DIR__ . '/..' . '/openspout/openspout/src',
@@ -714,6 +720,10 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
         'Illuminate\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravel/framework/src/Illuminate',
+        ),
+        'Icetalker\\FilamentChatgptBot\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/icetalker/filament-chatgpt-bot/src',
         ),
         'GuzzleHttp\\UriTemplate\\' => 
         array (
@@ -897,11 +907,27 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
         'AnourValar\\EloquentSerialize\\Grammars\\QueryBuilderGrammar' => __DIR__ . '/..' . '/anourvalar/eloquent-serialize/src/Grammars/QueryBuilderGrammar.php',
         'AnourValar\\EloquentSerialize\\Package' => __DIR__ . '/..' . '/anourvalar/eloquent-serialize/src/Package.php',
         'AnourValar\\EloquentSerialize\\Service' => __DIR__ . '/..' . '/anourvalar/eloquent-serialize/src/Service.php',
+        'App\\Filament\\Resources\\BillResource' => __DIR__ . '/../..' . '/app/Filament/Resources/BillResource.php',
+        'App\\Filament\\Resources\\BillResource\\Pages\\CreateBill' => __DIR__ . '/../..' . '/app/Filament/Resources/BillResource/Pages/CreateBill.php',
+        'App\\Filament\\Resources\\BillResource\\Pages\\EditBill' => __DIR__ . '/../..' . '/app/Filament/Resources/BillResource/Pages/EditBill.php',
+        'App\\Filament\\Resources\\BillResource\\Pages\\ListBills' => __DIR__ . '/../..' . '/app/Filament/Resources/BillResource/Pages/ListBills.php',
+        'App\\Filament\\Resources\\BillResource\\Pages\\ViewBill' => __DIR__ . '/../..' . '/app/Filament/Resources/BillResource/Pages/ViewBill.php',
         'App\\Filament\\Resources\\ContractResource' => __DIR__ . '/../..' . '/app/Filament/Resources/ContractResource.php',
         'App\\Filament\\Resources\\ContractResource\\Pages\\CreateContract' => __DIR__ . '/../..' . '/app/Filament/Resources/ContractResource/Pages/CreateContract.php',
         'App\\Filament\\Resources\\ContractResource\\Pages\\EditContract' => __DIR__ . '/../..' . '/app/Filament/Resources/ContractResource/Pages/EditContract.php',
         'App\\Filament\\Resources\\ContractResource\\Pages\\ListContracts' => __DIR__ . '/../..' . '/app/Filament/Resources/ContractResource/Pages/ListContracts.php',
         'App\\Filament\\Resources\\ContractResource\\Pages\\ViewContract' => __DIR__ . '/../..' . '/app/Filament/Resources/ContractResource/Pages/ViewContract.php',
+        'App\\Filament\\Resources\\ContractResource\\RelationManagers\\TimesRelationManager' => __DIR__ . '/../..' . '/app/Filament/Resources/ContractResource/RelationManagers/TimesRelationManager.php',
+        'App\\Filament\\Resources\\CustomerResource' => __DIR__ . '/../..' . '/app/Filament/Resources/CustomerResource.php',
+        'App\\Filament\\Resources\\CustomerResource\\Pages\\CreateCustomer' => __DIR__ . '/../..' . '/app/Filament/Resources/CustomerResource/Pages/CreateCustomer.php',
+        'App\\Filament\\Resources\\CustomerResource\\Pages\\EditCustomer' => __DIR__ . '/../..' . '/app/Filament/Resources/CustomerResource/Pages/EditCustomer.php',
+        'App\\Filament\\Resources\\CustomerResource\\Pages\\ListCustomers' => __DIR__ . '/../..' . '/app/Filament/Resources/CustomerResource/Pages/ListCustomers.php',
+        'App\\Filament\\Resources\\CustomerResource\\Pages\\ViewCustomer' => __DIR__ . '/../..' . '/app/Filament/Resources/CustomerResource/Pages/ViewCustomer.php',
+        'App\\Filament\\Resources\\NoteResource' => __DIR__ . '/../..' . '/app/Filament/Resources/NoteResource.php',
+        'App\\Filament\\Resources\\NoteResource\\Pages\\CreateNote' => __DIR__ . '/../..' . '/app/Filament/Resources/NoteResource/Pages/CreateNote.php',
+        'App\\Filament\\Resources\\NoteResource\\Pages\\EditNote' => __DIR__ . '/../..' . '/app/Filament/Resources/NoteResource/Pages/EditNote.php',
+        'App\\Filament\\Resources\\NoteResource\\Pages\\ListNotes' => __DIR__ . '/../..' . '/app/Filament/Resources/NoteResource/Pages/ListNotes.php',
+        'App\\Filament\\Resources\\NoteResource\\Pages\\ViewNote' => __DIR__ . '/../..' . '/app/Filament/Resources/NoteResource/Pages/ViewNote.php',
         'App\\Filament\\Resources\\PermissionResource' => __DIR__ . '/../..' . '/app/Filament/Resources/PermissionResource.php',
         'App\\Filament\\Resources\\PermissionResource\\Pages\\CreatePermission' => __DIR__ . '/../..' . '/app/Filament/Resources/PermissionResource/Pages/CreatePermission.php',
         'App\\Filament\\Resources\\PermissionResource\\Pages\\EditPermission' => __DIR__ . '/../..' . '/app/Filament/Resources/PermissionResource/Pages/EditPermission.php',
@@ -915,17 +941,26 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
         'App\\Filament\\Resources\\TimeResource\\Pages\\EditTime' => __DIR__ . '/../..' . '/app/Filament/Resources/TimeResource/Pages/EditTime.php',
         'App\\Filament\\Resources\\TimeResource\\Pages\\ListTimes' => __DIR__ . '/../..' . '/app/Filament/Resources/TimeResource/Pages/ListTimes.php',
         'App\\Filament\\Resources\\TimeResource\\Pages\\ViewTime' => __DIR__ . '/../..' . '/app/Filament/Resources/TimeResource/Pages/ViewTime.php',
+        'App\\Filament\\Resources\\TimeResource\\Widgets\\TimesOverview' => __DIR__ . '/../..' . '/app/Filament/Resources/TimeResource/Widgets/TimesOverview.php',
         'App\\Filament\\Resources\\UserResource' => __DIR__ . '/../..' . '/app/Filament/Resources/UserResource.php',
         'App\\Filament\\Resources\\UserResource\\Pages\\CreateUser' => __DIR__ . '/../..' . '/app/Filament/Resources/UserResource/Pages/CreateUser.php',
         'App\\Filament\\Resources\\UserResource\\Pages\\EditUser' => __DIR__ . '/../..' . '/app/Filament/Resources/UserResource/Pages/EditUser.php',
         'App\\Filament\\Resources\\UserResource\\Pages\\ListUsers' => __DIR__ . '/../..' . '/app/Filament/Resources/UserResource/Pages/ListUsers.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
+        'App\\Models\\Bill' => __DIR__ . '/../..' . '/app/Models/Bill.php',
+        'App\\Models\\Call' => __DIR__ . '/../..' . '/app/Models/Call.php',
         'App\\Models\\Contract' => __DIR__ . '/../..' . '/app/Models/Contract.php',
+        'App\\Models\\ContractClassification' => __DIR__ . '/../..' . '/app/Models/ContractClassification.php',
+        'App\\Models\\ContractLoginCredentials' => __DIR__ . '/../..' . '/app/Models/ContractLoginCredentials.php',
+        'App\\Models\\Customer' => __DIR__ . '/../..' . '/app/Models/Customer.php',
+        'App\\Models\\GeneralSoftwareCredentials' => __DIR__ . '/../..' . '/app/Models/GeneralSoftwareCredentials.php',
+        'App\\Models\\Note' => __DIR__ . '/../..' . '/app/Models/Note.php',
         'App\\Models\\Permission' => __DIR__ . '/../..' . '/app/Models/Permission.php',
         'App\\Models\\Role' => __DIR__ . '/../..' . '/app/Models/Role.php',
         'App\\Models\\Time' => __DIR__ . '/../..' . '/app/Models/Time.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Policies\\ContractPolicy' => __DIR__ . '/../..' . '/app/Policies/ContractPolicy.php',
+        'App\\Policies\\CustomerPolicy' => __DIR__ . '/../..' . '/app/Policies/CustomerPolicy.php',
         'App\\Policies\\PermissionPolicy' => __DIR__ . '/../..' . '/app/Policies/PermissionPolicy.php',
         'App\\Policies\\RolePolicy' => __DIR__ . '/../..' . '/app/Policies/RolePolicy.php',
         'App\\Policies\\TimePolicy' => __DIR__ . '/../..' . '/app/Policies/TimePolicy.php',
@@ -3455,6 +3490,9 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
         'Hamcrest\\Type\\IsString' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Type/IsString.php',
         'Hamcrest\\Util' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Util.php',
         'Hamcrest\\Xml\\HasXPath' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Xml/HasXPath.php',
+        'Icetalker\\FilamentChatgptBot\\Components\\ChatgptBot' => __DIR__ . '/..' . '/icetalker/filament-chatgpt-bot/src/Components/ChatgptBot.php',
+        'Icetalker\\FilamentChatgptBot\\FilamentChatgptBotServiceProvider' => __DIR__ . '/..' . '/icetalker/filament-chatgpt-bot/src/FilamentChatgptBotServiceProvider.php',
+        'Icetalker\\FilamentChatgptBot\\OpenAI' => __DIR__ . '/..' . '/icetalker/filament-chatgpt-bot/src/OpenAI.php',
         'Illuminate\\Auth\\Access\\AuthorizationException' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/Access/AuthorizationException.php',
         'Illuminate\\Auth\\Access\\Events\\GateEvaluated' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/Access/Events/GateEvaluated.php',
         'Illuminate\\Auth\\Access\\Gate' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/Access/Gate.php',
@@ -6160,6 +6198,8 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
         'OpenSpout\\Writer\\XLSX\\Options\\PageSetup' => __DIR__ . '/..' . '/openspout/openspout/src/Writer/XLSX/Options/PageSetup.php',
         'OpenSpout\\Writer\\XLSX\\Options\\PaperSize' => __DIR__ . '/..' . '/openspout/openspout/src/Writer/XLSX/Options/PaperSize.php',
         'OpenSpout\\Writer\\XLSX\\Writer' => __DIR__ . '/..' . '/openspout/openspout/src/Writer/XLSX/Writer.php',
+        'Orhanerday\\OpenAi\\OpenAi' => __DIR__ . '/..' . '/orhanerday/open-ai/src/OpenAi.php',
+        'Orhanerday\\OpenAi\\Url' => __DIR__ . '/..' . '/orhanerday/open-ai/src/Url.php',
         'Override' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/Override.php',
         'OwenVoke\\BladeFontAwesome\\Actions\\CompileSvgsAction' => __DIR__ . '/..' . '/owenvoke/blade-fontawesome/src/Actions/CompileSvgsAction.php',
         'OwenVoke\\BladeFontAwesome\\BladeFontAwesomeServiceProvider' => __DIR__ . '/..' . '/owenvoke/blade-fontawesome/src/BladeFontAwesomeServiceProvider.php',

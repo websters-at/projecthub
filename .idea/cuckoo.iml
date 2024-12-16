@@ -169,6 +169,8 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpoffice/phpspreadsheet" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/pxlrbt/filament-excel" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/timwassenburg/filament-timesheets" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/icetalker/filament-chatgpt-bot" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/orhanerday/open-ai" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

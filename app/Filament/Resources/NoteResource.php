@@ -16,7 +16,7 @@ class NoteResource extends Resource
 {
     protected static ?string $model = Note::class;
 
-    protected static ?string $navigationGroup = 'Configuration';
+    #protected static ?string $navigationGroup = 'Configuration';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
