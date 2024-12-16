@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -18,12 +17,13 @@ class DatabaseSeeder extends Seeder
         // Create users
         $user = User::factory()->create([
             'name' => 'Stevan Vlajic',
-            'email' => 'stevanvlajic@webhoch.com',
+            'email' => 'stevan@webhoch.com',
+            'password' => bcrypt('password')
         ]);
 
         $user2 = User::factory()->create([
             'name' => 'Jonathan Hochmeir',
-            'email' => 'jonathanhochmeir@webhoch.com',
+            'email' => 'jonathan@webhoch.com',
         ]);
 
         // Create the Admin role

@@ -11,20 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('contract_classifications', function (Blueprint $table) {
+        Schema::create('notes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('contract_id');
-            $table->unsignedBigInteger('user_id');
-            $table->double('hourly_rate')
-                ->default(0);
             $table->foreign('contract_id')
                 ->references('id')
                 ->on('contracts')
                 ->onDelete('cascade');
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
+            $table->string('note')
+                ->nullable();
+            $table->string('original_filename')
+                ->nullable();
             $table->timestamps();
         });
     }
@@ -34,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('contract_classifications');
+        Schema::dropIfExists('notes');
     }
 };

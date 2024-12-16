@@ -25,8 +25,7 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->date('due_to')->nullable();
             $table->string('country')->nullable();
-            $table->string('contract_image')->nullable();
-            $table->string('original_filename')->nullable();
+            $table->string('attachments')->nullable();
             $table->string('address')->nullable();
             $table->string('address2')->nullable();
             $table->string('address3')->nullable();

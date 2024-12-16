@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
@@ -23,21 +24,22 @@ class Contract extends Model
         "address",
         "address2",
         "address3",
-        "contract_image",
-        "orginial_filename"
+        "attachments",
     ];
-
     public $casts = [
-        'contract_image' => 'array'
+        'attachments' => 'array',
     ];
-
     public function users()
     {
         return $this->belongsToMany(User::class, 'contract_classifications')
             ->withTimestamps();
     }
+    public function notes(): HasMany
+    {
+        return $this->hasMany(Note::class);
+    }
 
-    public function customer()
+    public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
     }
@@ -47,8 +49,9 @@ class Contract extends Model
         return $this->hasManyThrough(Time::class, ContractClassification::class, 'contract_id', 'contract_classification_id', 'id', 'id');
     }
 
-    public function classifications()
+    public function classifications(): HasMany
     {
         return $this->hasMany(ContractClassification::class);
     }
+
 }
