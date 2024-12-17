@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CallNotesResource\Pages;
 use App\Filament\Resources\CallNotesResource\RelationManagers;
+use App\Models\CallNote;
 use App\Models\CallNotes;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -15,7 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class CallNotesResource extends Resource
 {
-    protected static ?string $model = CallNotes::class;
+    protected static ?string $model = CallNote::class;
 
     protected static ?int $navigationSort= 2;
     protected static ?string $navigationGroup = 'Calls';
