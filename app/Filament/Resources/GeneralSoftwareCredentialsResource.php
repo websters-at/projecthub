@@ -17,6 +17,10 @@ class GeneralSoftwareCredentialsResource extends Resource
 {
     protected static ?string $model = GeneralSoftwareCredentials::class;
 
+    protected static ?string $navigationGroup = 'Data';
+    protected static ?int $navigationSort = 15;
+
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form

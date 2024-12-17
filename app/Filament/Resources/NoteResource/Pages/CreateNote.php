@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\NoteResource\Pages;
 
-use App\Filament\Resources\NoteResource;
+use App\Filament\Resources\ContractNoteResource;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateNote extends CreateRecord
 {
-    protected static string $resource = NoteResource::class;
+    protected static string $resource = ContractNoteResource::class;
 }

@@ -29,7 +29,7 @@ class RoleResource extends Resource
     protected static ?string $navigationIcon = 'fas-fingerprint';
 
     protected static ?string $navigationGroup = 'Settings';
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 10;
 
 
 

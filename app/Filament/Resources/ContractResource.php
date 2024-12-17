@@ -36,7 +36,9 @@
     {
         protected static ?string $model = Contract::class;
         protected static ?string $navigationIcon = 'fas-list-check';
-        #protected static ?string $navigationGroup = 'Time Tracking';
+        protected static ?string $navigationGroup = 'Contracts';
+        protected static ?int $navigationSort = 1;
+
 
         public static function form(Form $form): Form
         {

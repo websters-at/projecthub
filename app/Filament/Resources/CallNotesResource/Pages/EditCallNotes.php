@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\NoteResource\Pages;
+namespace App\Filament\Resources\CallNotesResource\Pages;
 
-use App\Filament\Resources\ContractNoteResource;
+use App\Filament\Resources\CallNotesResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditNote extends EditRecord
+class EditCallNotes extends EditRecord
 {
-    protected static string $resource = ContractNoteResource::class;
+    protected static string $resource = CallNotesResource::class;
 
     protected function getHeaderActions(): array
     {

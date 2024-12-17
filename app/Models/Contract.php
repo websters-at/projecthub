@@ -36,7 +36,7 @@ class Contract extends Model
     }
     public function notes(): HasMany
     {
-        return $this->hasMany(Note::class);
+        return $this->hasMany(ContractNote::class);
     }
 
     public function customer(): BelongsTo

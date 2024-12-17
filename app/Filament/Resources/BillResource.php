@@ -34,7 +34,9 @@ class BillResource extends Resource
 {
     protected static ?string $model = Bill::class;
 
-    #protected static ?string $navigationGroup = 'Time Tracking';
+    protected static ?string $navigationGroup = 'Contracts';
+    protected static ?int $navigationSort= 5;
+
 
     protected static ?string $navigationIcon = 'fas-money-bill';
 

@@ -2,9 +2,8 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ContractLoginCredentialsResource\Pages;
-use App\Filament\Resources\ContractLoginCredentialsResource\RelationManagers;
-use App\Models\ContractLoginCredentials;
+use App\Filament\Resources\NoteResource\Pages;
+use App\Models\ContractNote;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,14 +12,15 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class ContractLoginCredentialsResource extends Resource
+class ContractNoteResource extends Resource
 {
-    protected static ?string $model = ContractLoginCredentials::class;
+    protected static ?string $model = ContractNote::class;
 
     protected static ?string $navigationGroup = 'Contracts';
-    protected static ?int $navigationSort = 7;
+    protected static ?int $navigationSort = 6;
 
-    protected static ?string $navigationIcon = 'fas-database';
+
+    protected static ?string $navigationIcon = 'fas-book';
 
     public static function form(Form $form): Form
     {
@@ -60,10 +60,10 @@ class ContractLoginCredentialsResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListContractLoginCredentials::route('/'),
-            'create' => Pages\CreateContractLoginCredentials::route('/create'),
-            'view' => Pages\ViewContractLoginCredentials::route('/{record}'),
-            'edit' => Pages\EditContractLoginCredentials::route('/{record}/edit'),
+            'index' => Pages\ListNotes::route('/'),
+            'create' => Pages\CreateNote::route('/create'),
+            'view' => Pages\ViewNote::route('/{record}'),
+            'edit' => Pages\EditNote::route('/{record}/edit'),
         ];
     }
 }

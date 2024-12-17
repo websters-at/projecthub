@@ -2,8 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\NoteResource\Pages;
-use App\Models\Note;
+use App\Filament\Resources\CallNotesResource\Pages;
+use App\Filament\Resources\CallNotesResource\RelationManagers;
+use App\Models\CallNotes;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,13 +13,14 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class NoteResource extends Resource
+class CallNotesResource extends Resource
 {
-    protected static ?string $model = Note::class;
+    protected static ?string $model = CallNotes::class;
 
-    #protected static ?string $navigationGroup = 'Configuration';
+    protected static ?int $navigationSort= 2;
+    protected static ?string $navigationGroup = 'Calls';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'fas-book';
 
     public static function form(Form $form): Form
     {
@@ -58,10 +60,10 @@ class NoteResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListNotes::route('/'),
-            'create' => Pages\CreateNote::route('/create'),
-            'view' => Pages\ViewNote::route('/{record}'),
-            'edit' => Pages\EditNote::route('/{record}/edit'),
+            'index' => Pages\ListCallNotes::route('/'),
+            'create' => Pages\CreateCallNotes::route('/create'),
+            'view' => Pages\ViewCallNotes::route('/{record}'),
+            'edit' => Pages\EditCallNotes::route('/{record}/edit'),
         ];
     }
 }
