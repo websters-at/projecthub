@@ -36,16 +36,20 @@ class BillResource extends Resource
 
     #protected static ?string $navigationGroup = 'Time Tracking';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'fas-money-bill';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make('General')->schema([
+                Section::make('General')->schema(components: [
                     TextInput::make('name')
                         ->required()
                         ->maxLength(255),
+                    TextInput::make('hourly_rate')
+                        ->required()
+                        ->numeric()
+                        ->prefix("€"),
                     RichEditor::make('description')
                         ->nullable()
                         ->string()
@@ -73,13 +77,14 @@ class BillResource extends Resource
                     ->collapsed(false)
                     ->heading('Contract'),
                 Section::make('Contract Picture')->schema([
-                    FileUpload::make('contract_image')
+                    FileUpload::make('attachments')
                         ->columns(1)
                         ->multiple()
                         ->nullable()
-                        ->directory('contract_images')
+                        ->directory('bills_attachments')
+                        ->downloadable()
+                        ->preserveFilenames()
                         ->previewable()
-                        ->storeFileNamesIn('original_filename')
                 ])->collapsible()
                     ->collapsed(false)
             ]);
@@ -96,6 +101,7 @@ class BillResource extends Resource
                 TextColumn::make('contractClassification.contract.name')
                     ->label('Contract')
                     ->sortable()
+                    ->limit(10)
                     ->searchable(),
                 TextColumn::make('name')
                     ->label('Bill Name')
@@ -103,21 +109,26 @@ class BillResource extends Resource
                     ->searchable(),
                 TextColumn::make('description')
                     ->label('Description')
-                    ->limit(30)
+                    ->limit(10)
                     ->markdown()
                     ->sortable(),
-                TextColumn
-                    ::make('created_on')
-                    ->label('Created On')
-                    ->sortable(),
-                TextColumn::make('due_to')
-                    ->label('Due Date')
-                    ->sortable(),
+                TextColumn::make('hourly_rate')
+                    ->label('€')
+                    ->formatStateUsing(function ($state, $record) {
+                        $roundedTotalHours = $record
+                            ->contractClassification
+                            ->times
+                            ->map(function ($time) {
+                                $hours = $time->total_hours_worked;
+                                $minutes = $time->total_minutes_worked;
+                                $fractionalHours = $minutes / 60;
+                                return $fractionalHours >= 0.5 ? ceil($hours + $fractionalHours) : $hours + $fractionalHours;
+                            })
+                            ->sum();
 
-                TextColumn::make('contractClassification.hourly_rate')
-                    ->label('Hourly Rate')
-                    ->sortable()
-                    ->formatStateUsing(fn ($state) => number_format($state, 2) . ' $'),
+                        $calculatedPrice = $state * $roundedTotalHours;
+                        return $calculatedPrice . ' €';
+                    }),
             ])
             ->filters([
                 //

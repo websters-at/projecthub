@@ -52,10 +52,6 @@ class TimeResource extends Resource
                     ->collapsible()
                     ->collapsed(false),
                 Section::make([
-                    TimePicker::make('start_time')
-                        ->required(),
-                    TimePicker::make('end_time')
-                        ->required(),
                     TextInput::make('total_hours_worked')
                         ->required(),
                     TextInput::make('total_minutes_worked')

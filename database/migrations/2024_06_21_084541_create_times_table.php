@@ -22,10 +22,6 @@ return new class extends Migration
                 ->nullable();
             $table->date('date')
                 ->nullable();
-            $table->time('start_time')
-                ->nullable();
-            $table->time('end_time')
-                ->nullable();
             $table->double('total_hours_worked')
                 ->nullable();
             $table->double('total_minutes_worked')

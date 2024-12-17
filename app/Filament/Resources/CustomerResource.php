@@ -34,7 +34,7 @@ class CustomerResource extends Resource
                     TextInput::make('company_name')
                         ->maxLength(255)
                         ->required()
-                ]),
+                ])->heading("General"),
                 Section::make('Address')->schema([
                     TextInput::make('country')
                         ->nullable()
@@ -51,7 +51,8 @@ class CustomerResource extends Resource
                     TextInput::make('address')
                         ->nullable()
                         ->maxLength(255)
-                ])->columns(2),
+                ])->columns(2)
+                    ->collapsible(true),
             ]);
     }
 

@@ -14,8 +14,6 @@ class Time extends Model
     protected $fillable = [
         'description',
         'date',
-        'start_time',
-        'end_time',
         'total_hours_worked',
         'total_minutes_worked',
         'is_special',

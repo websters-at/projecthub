@@ -51,7 +51,7 @@
                                 ->string()
                                ->maxLength(255),
                             DatePicker::make('due_to')
-                                ->nullable()
+                            ->required()
                         ])->collapsible()
                             ->collapsed(false),
                     Section::make('Customer')->schema([
@@ -100,7 +100,7 @@
                         ->nullable()
                         ->directory('contracts_attachments')
                         ->downloadable()
-                            ->preserveFilenames()
+                        ->preserveFilenames()
                         ->previewable()
                     ])->collapsible()
                     ->collapsed(false)

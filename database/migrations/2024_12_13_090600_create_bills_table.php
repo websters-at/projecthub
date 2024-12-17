@@ -19,13 +19,15 @@ return new class extends Migration
                 ->on('contract_classifications')
                 ->onDelete('cascade');
             $table->string('name');
+            $table->double('hourly_rate')
+                ->nullable();
             $table->date('created_on')
                 ->nullable();
             $table->date('due_to')
                 ->nullable();
             $table->string('description')
                 ->nullable();
-            $table->string('original_filename')
+            $table->string('attachments')
                 ->nullable();
             $table->timestamps();
         });

@@ -14,15 +14,14 @@ class Bill extends Model
         "contract_classification_id",
         "contract_classification_id_for_contract",
         "name",
-        "orginial_filename",
-        "contract_image",
+        "hourly_rate",
+        "attachments",
         "created_on",
         "due_to",
         "description"
     ];
     public $casts = [
-        'orginial_filename' => 'array',
-        'contract_image' => 'array'
+        'attachments' => 'array'
     ];
     public function contractClassification(): BelongsTo {
         return $this->belongsTo(ContractClassification::class);
@@ -30,7 +29,6 @@ class Bill extends Model
     public function users(): BelongsTo {
         return $this->belongsTo(ContractClassification::class, 'contract_classifications');
     }
-
     public function contract(): BelongsTo {
         return $this->belongsTo(ContractClassification::class, 'contract_classifications');
     }
