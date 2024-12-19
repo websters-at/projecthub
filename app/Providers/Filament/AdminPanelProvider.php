@@ -54,6 +54,9 @@ class AdminPanelProvider extends PanelProvider
           #  ->plugin(FilamentTimesheetsPlugin::make()) # TODO: REMOVE LATER ON...
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->brandLogo(fn () => view('vendor.filament.components.brand'))
+            ->brandLogoHeight('2rem')
+            ->favicon(asset('images/logo.ico'));
     }
 }

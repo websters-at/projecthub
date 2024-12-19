@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TodosResource\Pages;
 use App\Filament\Resources\TodosResource\RelationManagers;
+use App\Models\Todo;
 use App\Models\Todos;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -15,9 +16,9 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TodosResource extends Resource
 {
-    protected static ?string $model = Todos::class;
+    protected static ?string $model = Todo::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'fas-folder';
 
     public static function form(Form $form): Form
     {
