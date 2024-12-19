@@ -14,6 +14,9 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Actions\CreateAction;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\IconColumn\IconColumnSize;
 use Filament\Tables\Columns\TextColumn;
@@ -108,7 +111,7 @@ class TimesRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make()->mutateFormDataUsing(function (array $data): array {
+                CreateAction::make()->mutateFormDataUsing(function (array $data): array {
                     $user = Auth::user();
                     $contractId = $this->ownerRecord->id;
 
@@ -119,7 +122,6 @@ class TimesRelationManager extends RelationManager
                     if ($contractClassification) {
                         $data['contract_classification_id'] = $contractClassification->id;
                     }
-
                     return $data;
                 })->visible(function(): bool{
                     $user = Auth::user();
@@ -131,8 +133,8 @@ class TimesRelationManager extends RelationManager
                 }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

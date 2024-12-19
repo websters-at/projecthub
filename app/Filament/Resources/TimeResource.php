@@ -37,7 +37,7 @@ class TimeResource extends Resource
 
     protected static ?string $navigationIcon = 'far-clock';
     protected static ?string $navigationGroup = 'Contracts';
-    protected static ?int $navigationSort= 4;
+    protected static ?int $navigationSort = 4;
 
 
     public static function form(Form $form): Form

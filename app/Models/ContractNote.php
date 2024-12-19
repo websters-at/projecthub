@@ -11,24 +11,25 @@ class ContractNote extends Model
     use HasFactory;
 
     protected $fillable = [
-        "original_filename",
+        "name",
+        "date",
         "note",
-        "note_attachment",
+        "attachments",
         'contract_classification_id'
     ];
 
     public $casts = [
-        'note_attachment' => 'array'
+        'attachments' => 'array'
     ];
-
+    public function contractClassification(): BelongsTo {
+        return $this->belongsTo(ContractClassification::class);
+    }
     public function user(): BelongsTo
     {
         return $this->belongsTo(ContractClassification::class, 'contract_classifications');
     }
-
     public function contract(): BelongsTo
     {
         return $this->belongsTo(ContractClassification::class, 'contract_classifications');
     }
-
 }

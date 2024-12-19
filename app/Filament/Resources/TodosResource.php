@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\GeneralSoftwareCredentialsResource\Pages;
-use App\Filament\Resources\GeneralSoftwareCredentialsResource\RelationManagers;
-use App\Models\GeneralSoftwareCredentials;
+use App\Filament\Resources\TodosResource\Pages;
+use App\Filament\Resources\TodosResource\RelationManagers;
+use App\Models\Todos;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,15 +13,11 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class GeneralSoftwareCredentialsResource extends Resource
+class TodosResource extends Resource
 {
-    protected static ?string $model = GeneralSoftwareCredentials::class;
+    protected static ?string $model = Todos::class;
 
-    protected static ?string $navigationGroup = 'Data';
-    protected static ?int $navigationSort = 15;
-
-
-    protected static ?string $navigationIcon = 'fas-database';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
@@ -61,10 +57,10 @@ class GeneralSoftwareCredentialsResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListGeneralSoftwareCredentials::route('/'),
-            'create' => Pages\CreateGeneralSoftwareCredentials::route('/create'),
-            'view' => Pages\ViewGeneralSoftwareCredentials::route('/{record}'),
-            'edit' => Pages\EditGeneralSoftwareCredentials::route('/{record}/edit'),
+            'index' => Pages\ListTodos::route('/'),
+            'create' => Pages\CreateTodos::route('/create'),
+            'view' => Pages\ViewTodos::route('/{record}'),
+            'edit' => Pages\EditTodos::route('/{record}/edit'),
         ];
     }
 }

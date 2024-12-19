@@ -14,6 +14,7 @@ class Bill extends Model
         "contract_classification_id",
         "contract_classification_id_for_contract",
         "name",
+        "is_paid",
         "hourly_rate",
         "attachments",
         "created_on",

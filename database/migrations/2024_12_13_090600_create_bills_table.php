@@ -19,6 +19,8 @@ return new class extends Migration
                 ->on('contract_classifications')
                 ->onDelete('cascade');
             $table->string('name');
+            $table->boolean('is_payed')
+                ->default(false);
             $table->double('hourly_rate')
                 ->nullable();
             $table->date('created_on')

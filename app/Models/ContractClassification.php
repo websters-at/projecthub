@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Prompts\Note;
 
 class ContractClassification extends Model
 {
@@ -19,6 +20,11 @@ class ContractClassification extends Model
     public function contract(): BelongsTo
     {
         return $this->belongsTo(Contract::class);
+    }
+
+    public function notes(): HasMany
+    {
+        return $this->hasMany(Note::class);
     }
 
     public function user(): BelongsTo

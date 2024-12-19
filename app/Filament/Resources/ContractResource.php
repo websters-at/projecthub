@@ -143,8 +143,8 @@
                     })->preload()
                 ])
                 ->actions([
-                    EditAction::make(),
                     ViewAction::make(),
+                    EditAction::make(),
                     DeleteAction::make(),
                 ])
                 ->bulkActions([
@@ -158,6 +158,9 @@
         {
             return [
                 RelationManagers\TimesRelationManager::class,
+                RelationManagers\NotesRelationManager::class,
+                RelationManagers\BillsRelationManager::class,
+
             ];
         }
 

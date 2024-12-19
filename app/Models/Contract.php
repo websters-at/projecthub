@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Laravel\Prompts\Note;
 
 class Contract extends Model
 {
@@ -31,12 +32,34 @@ class Contract extends Model
     ];
     public function users()
     {
-        return $this->belongsToMany(User::class, 'contract_classifications')
+        return $this->belongsToMany(
+            User::class,
+            'contract_classifications')
             ->withTimestamps();
     }
-    public function notes(): HasMany
+
+    public function notes(): HasManyThrough
     {
-        return $this->hasMany(ContractNote::class);
+        return $this->hasManyThrough(
+            ContractNote::class,
+            ContractClassification::class,
+            'contract_id',
+            'contract_classification_id',
+            'id',
+            'id'
+        );
+    }
+
+    public function bills(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Bill::class,
+            ContractClassification::class,
+            'contract_id',
+            'contract_classification_id',
+            'id',
+            'id'
+        );
     }
 
     public function customer(): BelongsTo
@@ -46,7 +69,13 @@ class Contract extends Model
 
     public function times(): HasManyThrough
     {
-        return $this->hasManyThrough(Time::class, ContractClassification::class, 'contract_id', 'contract_classification_id', 'id', 'id');
+        return $this->hasManyThrough(
+            Time::class,
+            ContractClassification::class,
+            'contract_id',
+            'contract_classification_id',
+            'id',
+            'id');
     }
 
     public function classifications(): HasMany

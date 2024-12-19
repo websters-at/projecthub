@@ -1,16 +1,8 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Resources\ContractResource\RelationManagers;
 
-use App\Filament\Resources\BillResource\Pages;
-use App\Filament\Resources\BillResource\Pages\CreateBill;
-use App\Filament\Resources\BillResource\Pages\EditBill;
-use App\Filament\Resources\BillResource\Pages\ListBills;
-use App\Filament\Resources\BillResource\Pages\ViewBill;
-use App\Filament\Resources\BillResource\RelationManagers;
-use App\Models\Bill;
 use App\Models\ContractClassification;
-use App\Models\Customer;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -20,11 +12,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -32,17 +21,11 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 
-class BillResource extends Resource
+class BillsRelationManager extends RelationManager
 {
-    protected static ?string $model = Bill::class;
+    protected static string $relationship = 'bills';
 
-    protected static ?string $navigationGroup = 'Contracts';
-    protected static ?int $navigationSort= 5;
-
-
-    protected static ?string $navigationIcon = 'fas-money-bill';
-
-    public static function form(Form $form): Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([
@@ -62,6 +45,7 @@ class BillResource extends Resource
                     DatePicker::make('created_on')
                         ->nullable(),
                     Toggle::make('is_payed')
+                        ->default(false)
                         ->nullable()
                 ])->collapsible()
                     ->collapsed(false),
@@ -96,9 +80,10 @@ class BillResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
+    public function table(Table $table): Table
     {
         return $table
+            ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('contractClassification.user.name')
                     ->label('User')
@@ -136,37 +121,22 @@ class BillResource extends Resource
                         return $calculatedPrice . ' €';
                     }),
                 Tables\Columns\ToggleColumn::make('is_payed')
-                    ->label('Payed')
+                ->label('Payed')
             ])
             ->filters([
                 //
             ])
+            ->headerActions([
+                Tables\Actions\CreateAction::make(),
+            ])
             ->actions([
-                ViewAction::make(),
-                EditAction::make(),
-                DeleteAction::make()
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => ListBills::route('/'),
-            'create' => CreateBill::route('/create'),
-            'view' => ViewBill::route('/{record}'),
-            'edit' => EditBill::route('/{record}/edit')
-        ];
     }
 }

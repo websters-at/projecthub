@@ -13,11 +13,14 @@ return new class extends Migration
     {
         Schema::create('contract_notes', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('contract_id');
-            $table->foreign('contract_id')
+            $table->unsignedBigInteger('contract_classification_id');
+            $table->foreign('contract_classification_id')
                 ->references('id')
-                ->on('contracts')
+                ->on('contract_classifications')
                 ->onDelete('cascade');
+            $table->text('name');
+            $table->timestamp('date');
+            $table->text('attachments')->nullable();
             $table->string('note')
                 ->nullable();
             $table->string('original_filename')
