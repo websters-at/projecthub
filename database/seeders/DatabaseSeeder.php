@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
         $user2 = User::factory()->create([
             'name' => 'Jonathan Hochmeir',
             'email' => 'jonathan@webhoch.com',
+            'password' => bcrypt('password')
         ]);
 
         // Create the Admin role
@@ -44,6 +45,7 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Restore Customers'],
             ['name' => 'Delete Customers'],
             ['name' => 'Update Customers'],
+            ['name' => 'View All Customers'],
             ['name' => 'View Special Customers Filters'],
 
             ['name' => 'Create Times'],
@@ -53,6 +55,47 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Update Times'],
             ['name' => 'View All Times'],
             ['name' => 'View Special Times Filters'],
+
+            ['name' => 'Create Notes'],
+            ['name' => 'View Notes'],
+            ['name' => 'Restore Notes'],
+            ['name' => 'Delete Notes'],
+            ['name' => 'Update Notes'],
+            ['name' => 'View All Notes'],
+            ['name' => 'View Special Notes Filters'],
+
+            ['name' => 'Create Bills'],
+            ['name' => 'View Bills'],
+            ['name' => 'Restore Bills'],
+            ['name' => 'Delete Bills'],
+            ['name' => 'Update Bills'],
+            ['name' => 'View All Bills'],
+            ['name' => 'View Special Bills Filters'],
+
+            ['name' => 'Create Calls'],
+            ['name' => 'View Calls'],
+            ['name' => 'Restore Calls'],
+            ['name' => 'Delete Calls'],
+            ['name' => 'Update Calls'],
+            ['name' => 'View All Calls'],
+            ['name' => 'View Special Calls Filters'],
+
+            ['name' => 'Create Todos'],
+            ['name' => 'View Todos'],
+            ['name' => 'Restore Todos'],
+            ['name' => 'Delete Todos'],
+            ['name' => 'Update Todos'],
+            ['name' => 'View All Todos'],
+            ['name' => 'View Special Todos Filters'],
+
+            ['name' => 'Create Call Notes'],
+            ['name' => 'View Call Notes'],
+            ['name' => 'Restore Call Notes'],
+            ['name' => 'Delete Call Notes'],
+            ['name' => 'Update Call Notes'],
+            ['name' => 'View All Call Notes'],
+            ['name' => 'View Special Call Notes Filters'],
+
 
             ['name' => 'Root']
         ];

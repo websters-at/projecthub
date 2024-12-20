@@ -134,4 +134,18 @@ class TimesRelationManager extends RelationManager
                 ]),
             ]);
     }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $user = auth()->user();
+
+        if ($user && $user->hasPermissionTo('View All Times')) {
+            return self::getEloquentQuery();
+        } else {
+            return self::getEloquentQuery()
+                ->whereHas('classifications', function (Builder $query) use ($user) {
+                    $query->where('user_id', $user->id);
+                });
+        }
+    }
 }

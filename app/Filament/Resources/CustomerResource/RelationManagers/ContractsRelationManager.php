@@ -64,7 +64,7 @@ class ContractsRelationManager extends RelationManager
                 ])->columns(2)->collapsible()
                     ->collapsed(false),
 
-                Section::make('Contract Picture')->schema([
+                Section::make('Contract Attachment')->schema([
                     FileUpload::make('attachments')
                         ->columns(1)
                         ->multiple()

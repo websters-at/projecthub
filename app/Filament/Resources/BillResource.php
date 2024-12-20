@@ -153,6 +153,20 @@ class BillResource extends Resource
             ]);
     }
 
+    public static function getEloquentQuery(): Builder
+    {
+        $user = auth()->user();
+
+        if ($user && $user->hasPermissionTo('View All Bills')) {
+            return parent::getEloquentQuery();
+        } else {
+            return parent::getEloquentQuery()
+                ->whereHas('contractClassification', function (Builder $query) use ($user) {
+                    $query->where('user_id', $user->id);
+                });
+        }
+    }
+
     public static function getRelations(): array
     {
         return [

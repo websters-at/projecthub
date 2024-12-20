@@ -33,9 +33,16 @@ class CustomerResource extends Resource
         return $form
             ->schema([
                 Section::make([
+                    TextInput::make('full_name')
+                        ->maxLength(255),
                     TextInput::make('company_name')
                         ->maxLength(255)
-                        ->required()
+                        ->required(),
+                     TextInput::make('email')
+                         ->email(),
+                    TextInput::make('phone')
+                        ->tel()
+                        ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/'),
                 ])->heading("General"),
                 Section::make('Address')->schema([
                     TextInput::make('country')
@@ -66,23 +73,15 @@ class CustomerResource extends Resource
                     ->limit(30)
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('country')
+                TextColumn::make('email')
                     ->limit(30)
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('state')
-                    ->limit(30)
+                TextColumn::make('phone')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('city')
                     ->limit(30)
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('zip_code')
-                    ->limit(30)
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('address')
                     ->searchable()
                     ->sortable(),
             ])
@@ -100,6 +99,19 @@ class CustomerResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $user = auth()->user();
+        if ($user && $user->hasPermissionTo('View All Customers')) {
+            return parent::getEloquentQuery();
+        } else {
+            return parent::getEloquentQuery()
+                ->whereHas('contractClassification', function (Builder $query) use ($user) {
+                    $query->where('user_id', $user->id);
+                });
+        }
     }
 
     public static function getRelations(): array
