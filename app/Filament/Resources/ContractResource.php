@@ -160,7 +160,7 @@
                 RelationManagers\TimesRelationManager::class,
                 RelationManagers\NotesRelationManager::class,
                 RelationManagers\BillsRelationManager::class,
-
+                RelationManagers\LoginCredentialsRelationManager::class,
             ];
         }
 

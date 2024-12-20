@@ -2,13 +2,13 @@
 
 namespace App\Filament\Resources\ContractLoginCredentialsResource\Pages;
 
-use App\Filament\Resources\ContractLoginCredentialsResource;
+use App\Filament\Resources\LoginCredentialsResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
 class EditContractLoginCredentials extends EditRecord
 {
-    protected static string $resource = ContractLoginCredentialsResource::class;
+    protected static string $resource = LoginCredentialsResource::class;
 
     protected function getHeaderActions(): array
     {

@@ -27,7 +27,7 @@ class GeneralSoftwareCredentialsResource extends Resource
     {
         return $form
             ->schema([
-                //
+
             ]);
     }
 

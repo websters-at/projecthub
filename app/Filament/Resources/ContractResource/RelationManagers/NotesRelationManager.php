@@ -68,6 +68,10 @@ class NotesRelationManager extends RelationManager
                 ]),
             ]);
     }
+    public function isReadOnly(): bool
+    {
+        return false;
+    }
 
     public function table(Table $table): Table
     {

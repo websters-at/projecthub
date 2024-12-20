@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Call extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        "name",
+        "on_date",
+        "description"
+    ];
 }

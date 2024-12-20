@@ -20,7 +20,7 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->string('description')
                 ->nullable();
-            $table->date('date')
+            $table->timestamp('date')
                 ->nullable();
             $table->double('total_hours_worked')
                 ->nullable();

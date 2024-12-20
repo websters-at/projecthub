@@ -45,11 +45,11 @@ class ContractsRelationManager extends RelationManager
                     ->collapsed(false),
                 Section::make('Customer')->schema([
                     Select::make('customer_id')
-                        ->options(Customer::all()
-                            ->pluck('company_name','id'))
+                        ->relationship('customer', 'company_name' ?? 'full_name')
+                        ->default(fn (RelationManager $livewire) => $livewire->getOwnerRecord()->getKey())
                         ->searchable()
                         ->label('Customer')
-                        ->required()
+                        ->required(),
                 ])->columns(1)->collapsible()
                     ->collapsed(false),
                 Section::make('Employees')
@@ -94,6 +94,10 @@ class ContractsRelationManager extends RelationManager
                 ])->collapsible()
                     ->collapsed(false)
             ]);
+    }
+    public function isReadOnly(): bool
+    {
+        return false;
     }
 
     public function table(Table $table): Table

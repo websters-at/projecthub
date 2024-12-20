@@ -44,10 +44,6 @@ class TimesRelationManager extends RelationManager
                     ->collapsible()
                     ->collapsed(false),
                 Section::make([
-                    TimePicker::make('start_time')
-                        ->required(),
-                    TimePicker::make('end_time')
-                        ->required(),
                     TextInput::make('total_hours_worked')
                         ->required(),
                     TextInput::make('total_minutes_worked')
@@ -79,10 +75,6 @@ class TimesRelationManager extends RelationManager
                     ->date(),
                 TextColumn::make('description')->markdown()->limit(30)  ,
                 TextColumn::make('start_time')
-                    ->time(),
-                TextColumn::make('end_time')
-                    ->time(),
-                TextColumn::make('end_time')
                     ->time(),
                 TextColumn::make('total_hours_worked'),
                 IconColumn::make('is_special')

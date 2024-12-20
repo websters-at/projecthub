@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('general_software_credentials', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('email')->nullable();
+            $table->string('password')->nullable();
+            $table->string('description')->nullable();
+            $table->string('attachments')->nullable();
             $table->timestamps();
         });
     }

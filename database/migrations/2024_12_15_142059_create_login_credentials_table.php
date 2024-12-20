@@ -11,16 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('calls', function (Blueprint $table) {
+        Schema::create('login_credentials', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->timestamp('on_date');
+            $table->string('email')->nullable();
+            $table->string('password')->nullable();
             $table->string('description')->nullable();
-            $table->unsignedBigInteger('contract_classification_id');
-            $table->foreign('contract_classification_id')
-                ->references('id')
-                ->on('contract_classifications')
-                ->onDelete('cascade');
+            $table->string('attachments')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('calls');
+        Schema::dropIfExists('login_credentials');
     }
 };

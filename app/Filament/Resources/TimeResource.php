@@ -11,6 +11,7 @@ use App\Models\Time;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -45,7 +46,8 @@ class TimeResource extends Resource
         return $form
             ->schema([
                 Section::make([
-                    DatePicker::make('date')
+                    DateTimePicker::make('date')
+                        ->default(now())
                         ->required(),
                     RichEditor::make('description')
                         ->nullable()
