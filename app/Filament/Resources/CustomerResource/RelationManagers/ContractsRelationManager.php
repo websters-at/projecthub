@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\CustomerResource\RelationManagers;
 
+use App\Models\ContractClassification;
 use App\Models\Customer;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
@@ -22,6 +23,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class ContractsRelationManager extends RelationManager
 {
@@ -43,26 +45,6 @@ class ContractsRelationManager extends RelationManager
                         ->required()
                 ])->collapsible()
                     ->collapsed(false),
-                Section::make('Customer')->schema([
-                    Select::make('customer_id')
-                        ->relationship('customer', 'company_name' ?? 'full_name')
-                        ->default(fn (RelationManager $livewire) => $livewire->getOwnerRecord()->getKey())
-                        ->searchable()
-                        ->label('Customer')
-                        ->required(),
-                ])->columns(1)->collapsible()
-                    ->collapsed(false),
-                Section::make('Employees')
-                    ->schema([
-                        Select::make('users')
-                            ->multiple()
-                            ->preload()
-                            ->relationship('users', 'email')
-                            ->searchable(),
-                    ])
-                    ->columns(1)->collapsible()
-                    ->collapsed(false),
-
                 Section::make('Address')->schema([
                     TextInput::make('country')
                         ->nullable()
@@ -124,7 +106,10 @@ class ContractsRelationManager extends RelationManager
 
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()->mutateFormDataUsing(function (array $data): array {
+                     $data['customer_id'] = $this->ownerRecord->id;
+                    return $data;
+                })
             ])
             ->actions([
                 EditAction::make(),

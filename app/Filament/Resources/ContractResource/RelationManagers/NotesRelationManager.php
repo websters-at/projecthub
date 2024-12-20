@@ -45,18 +45,7 @@ class NotesRelationManager extends RelationManager
                         ->default(now())
                         ->required(),
                 ]),
-
                 Section::make('More Information')->schema([
-                    Select::make('contract_classification_id')
-                        ->label('Contract')
-                        ->required()
-                        ->options(function () {
-                            $user = Auth::user();
-                            return ContractClassification::where('user_id', Auth::user()->id)
-                                ->with('contract')
-                                ->get()
-                                ->pluck('contract.name', 'id');
-                        }),
                     FileUpload::make('attachments')
                         ->label('Attachments')
                         ->multiple()
@@ -95,7 +84,19 @@ class NotesRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()->mutateFormDataUsing(function (array $data): array {
+                    $user = Auth::user();
+                    $contractId = $this->ownerRecord->id;
+
+                    $contractClassification = ContractClassification::where('user_id', $user->id)
+                        ->where('contract_id', $contractId)
+                        ->first();
+
+                    if ($contractClassification) {
+                        $data['contract_classification_id'] = $contractClassification->id;
+                    }
+                    return $data;
+                })
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

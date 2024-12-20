@@ -14,6 +14,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -49,19 +50,7 @@ class BillsRelationManager extends RelationManager
                         ->nullable()
                 ])->collapsible()
                     ->collapsed(false),
-                Section::make([
-                    Select::make('contract_classification_id')
-                        ->label('Contract')
-                        ->relationship('contract.contract', 'name')
-                        ->default(fn (RelationManager $livewire) => $livewire->getOwnerRecord()->getKey())
-                        ->searchable()
-                        ->label('Contract')
-                        ->required(),
-                ])->columns(1)
-                    ->collapsible()
-                    ->collapsed(false)
-                    ->heading('Contract'),
-                Section::make('Contract Picture')->schema([
+                Section::make('Bills Attachment')->schema([
                     FileUpload::make('attachments')
                         ->columns(1)
                         ->multiple()
@@ -126,7 +115,19 @@ class BillsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                CreateAction::make()->mutateFormDataUsing(function (array $data): array {
+                    $user = Auth::user();
+                    $contractId = $this->ownerRecord->id;
+
+                    $contractClassification = ContractClassification::where('user_id', $user->id)
+                        ->where('contract_id', $contractId)
+                        ->first();
+
+                    if ($contractClassification) {
+                        $data['contract_classification_id'] = $contractClassification->id;
+                    }
+                    return $data;
+                })
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

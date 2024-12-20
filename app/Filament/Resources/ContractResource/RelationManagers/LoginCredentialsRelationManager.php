@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ContractResource\RelationManagers;
 
+use App\Models\ContractClassification;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
@@ -12,11 +13,13 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class LoginCredentialsRelationManager extends RelationManager
 {
@@ -47,17 +50,6 @@ class LoginCredentialsRelationManager extends RelationManager
                             ->visibility('public')
                             ->preserveFilenames(),
                     ])->collapsible(),
-                    Section::make('Contract')
-                        ->schema([
-                            Select::make('contracts')
-                                ->multiple()
-                                ->preload()
-                                ->relationship('contracts', 'name')
-                                ->searchable(),
-                        ])
-                        ->collapsible()
-                        ->collapsed(false),
-
                 ]),
             ]);
     }
@@ -84,7 +76,19 @@ class LoginCredentialsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
+                CreateAction::make()->mutateFormDataUsing(function (array $data): array {
+                    $user = Auth::user();
+                    $contractId = $this->ownerRecord->id;
+
+                    $contractClassification = ContractClassification::where('user_id', $user->id)
+                        ->where('contract_id', $contractId)
+                        ->first();
+
+                    if ($contractClassification) {
+                        $data['contract_classification_id'] = $contractClassification->id;
+                    }
+                    return $data;
+                })
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
