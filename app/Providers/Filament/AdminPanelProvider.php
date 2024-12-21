@@ -50,10 +50,14 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                \Hasnayeen\Themes\Http\Middleware\SetTheme::class
             ])
           #  ->plugin(FilamentTimesheetsPlugin::make()) # TODO: REMOVE LATER ON...
             ->authMiddleware([
                 Authenticate::class,
+            ])
+            ->plugins([
+                \Hasnayeen\Themes\ThemesPlugin::make()
             ])
             ->brandLogo(fn () => view('vendor.filament.components.brand'))
             ->brandLogoHeight('2rem')

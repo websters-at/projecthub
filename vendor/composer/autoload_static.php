@@ -283,6 +283,10 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
             'Illuminate\\' => 11,
             'Icetalker\\FilamentChatgptBot\\' => 29,
         ),
+        'H' => 
+        array (
+            'Hasnayeen\\Themes\\' => 17,
+        ),
         'G' => 
         array (
             'GuzzleHttp\\UriTemplate\\' => 23,
@@ -725,6 +729,10 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
         array (
             0 => __DIR__ . '/..' . '/icetalker/filament-chatgpt-bot/src',
         ),
+        'Hasnayeen\\Themes\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/hasnayeen/themes/src',
+        ),
         'GuzzleHttp\\UriTemplate\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/uri-template/src',
@@ -991,11 +999,17 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
         'App\\Models\\Time' => __DIR__ . '/../..' . '/app/Models/Time.php',
         'App\\Models\\Todo' => __DIR__ . '/../..' . '/app/Models/Todo.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
+        'App\\Policies\\BillPolicy' => __DIR__ . '/../..' . '/app/Policies/BillPolicy.php',
+        'App\\Policies\\CallNotePolicy' => __DIR__ . '/../..' . '/app/Policies/CallNotePolicy.php',
+        'App\\Policies\\CallPolicy' => __DIR__ . '/../..' . '/app/Policies/CallPolicy.php',
+        'App\\Policies\\ContractNotePolicy' => __DIR__ . '/../..' . '/app/Policies/ContractNotePolicy.php',
         'App\\Policies\\ContractPolicy' => __DIR__ . '/../..' . '/app/Policies/ContractPolicy.php',
         'App\\Policies\\CustomerPolicy' => __DIR__ . '/../..' . '/app/Policies/CustomerPolicy.php',
+        'App\\Policies\\LoginCredentialsPolicy' => __DIR__ . '/../..' . '/app/Policies/LoginCredentialsPolicy.php',
         'App\\Policies\\PermissionPolicy' => __DIR__ . '/../..' . '/app/Policies/PermissionPolicy.php',
         'App\\Policies\\RolePolicy' => __DIR__ . '/../..' . '/app/Policies/RolePolicy.php',
         'App\\Policies\\TimePolicy' => __DIR__ . '/../..' . '/app/Policies/TimePolicy.php',
+        'App\\Policies\\TodoPolicy' => __DIR__ . '/../..' . '/app/Policies/TodoPolicy.php',
         'App\\Policies\\UserPolicy' => __DIR__ . '/../..' . '/app/Policies/UserPolicy.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\Providers\\Filament\\AdminPanelProvider' => __DIR__ . '/../..' . '/app/Providers/Filament/AdminPanelProvider.php',
@@ -3522,6 +3536,22 @@ class ComposerStaticInit7e8c3c14ff33b199b4a0838993eb8423
         'Hamcrest\\Type\\IsString' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Type/IsString.php',
         'Hamcrest\\Util' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Util.php',
         'Hamcrest\\Xml\\HasXPath' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Xml/HasXPath.php',
+        'Hasnayeen\\Themes\\Commands\\ThemesMakeCommand' => __DIR__ . '/..' . '/hasnayeen/themes/src/Commands/ThemesMakeCommand.php',
+        'Hasnayeen\\Themes\\Commands\\UpgradeCommand' => __DIR__ . '/..' . '/hasnayeen/themes/src/Commands/UpgradeCommand.php',
+        'Hasnayeen\\Themes\\Contracts\\CanModifyPanelConfig' => __DIR__ . '/..' . '/hasnayeen/themes/src/Contracts/CanModifyPanelConfig.php',
+        'Hasnayeen\\Themes\\Contracts\\HasChangeableColor' => __DIR__ . '/..' . '/hasnayeen/themes/src/Contracts/HasChangeableColor.php',
+        'Hasnayeen\\Themes\\Contracts\\HasOnlyDarkMode' => __DIR__ . '/..' . '/hasnayeen/themes/src/Contracts/HasOnlyDarkMode.php',
+        'Hasnayeen\\Themes\\Contracts\\HasOnlyLightMode' => __DIR__ . '/..' . '/hasnayeen/themes/src/Contracts/HasOnlyLightMode.php',
+        'Hasnayeen\\Themes\\Contracts\\Theme' => __DIR__ . '/..' . '/hasnayeen/themes/src/Contracts/Theme.php',
+        'Hasnayeen\\Themes\\Filament\\Pages\\Themes' => __DIR__ . '/..' . '/hasnayeen/themes/src/Filament/Pages/Themes.php',
+        'Hasnayeen\\Themes\\Http\\Middleware\\SetTheme' => __DIR__ . '/..' . '/hasnayeen/themes/src/Http/Middleware/SetTheme.php',
+        'Hasnayeen\\Themes\\Themes' => __DIR__ . '/..' . '/hasnayeen/themes/src/Themes.php',
+        'Hasnayeen\\Themes\\ThemesPlugin' => __DIR__ . '/..' . '/hasnayeen/themes/src/ThemesPlugin.php',
+        'Hasnayeen\\Themes\\ThemesServiceProvider' => __DIR__ . '/..' . '/hasnayeen/themes/src/ThemesServiceProvider.php',
+        'Hasnayeen\\Themes\\Themes\\DefaultTheme' => __DIR__ . '/..' . '/hasnayeen/themes/src/Themes/DefaultTheme.php',
+        'Hasnayeen\\Themes\\Themes\\Dracula' => __DIR__ . '/..' . '/hasnayeen/themes/src/Themes/Dracula.php',
+        'Hasnayeen\\Themes\\Themes\\Nord' => __DIR__ . '/..' . '/hasnayeen/themes/src/Themes/Nord.php',
+        'Hasnayeen\\Themes\\Themes\\Sunset' => __DIR__ . '/..' . '/hasnayeen/themes/src/Themes/Sunset.php',
         'Icetalker\\FilamentChatgptBot\\Components\\ChatgptBot' => __DIR__ . '/..' . '/icetalker/filament-chatgpt-bot/src/Components/ChatgptBot.php',
         'Icetalker\\FilamentChatgptBot\\FilamentChatgptBotServiceProvider' => __DIR__ . '/..' . '/icetalker/filament-chatgpt-bot/src/FilamentChatgptBotServiceProvider.php',
         'Icetalker\\FilamentChatgptBot\\OpenAI' => __DIR__ . '/..' . '/icetalker/filament-chatgpt-bot/src/OpenAI.php',

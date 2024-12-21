@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '5b927d2821f18d72a29709c07e2ae7584cbf3189',
+        'reference' => 'fdab89671f32101cfa0ac723c9e6a5a1791d77bb',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -355,6 +355,15 @@
             'aliases' => array(),
             'dev_requirement' => true,
         ),
+        'hasnayeen/themes' => array(
+            'pretty_version' => 'v3.0.23',
+            'version' => '3.0.23.0',
+            'reference' => '6f5cc1719719591d31c30e6f971fe5cede7aa000',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../hasnayeen/themes',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'icetalker/filament-chatgpt-bot' => array(
             'pretty_version' => 'v1.1.0',
             'version' => '1.1.0.0',
@@ -598,7 +607,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '5b927d2821f18d72a29709c07e2ae7584cbf3189',
+            'reference' => 'fdab89671f32101cfa0ac723c9e6a5a1791d77bb',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
