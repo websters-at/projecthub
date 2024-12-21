@@ -96,6 +96,14 @@ class DatabaseSeeder extends Seeder
             ['name' => 'View All Call Notes'],
             ['name' => 'View Special Call Notes Filters'],
 
+            ['name' => 'Create Contract Notes'],
+            ['name' => 'View Contract Notes'],
+            ['name' => 'Delete Contract Notes'],
+            ['name' => 'Restore Contract Notes'],
+            ['name' => 'Update Contract Notes'],
+            ['name' => 'View All Contract Notes'],
+            ['name' => 'View Special Contract Notes Filters'],
+
             ['name' => 'Create Logins'],
             ['name' => 'View Logins'],
             ['name' => 'Restore Logins'],
@@ -103,6 +111,15 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Update Logins'],
             ['name' => 'View All Logins'],
             ['name' => 'View Special Logins Filters'],
+
+
+            ['name' => 'Create General'],
+            ['name' => 'View General'],
+            ['name' => 'Restore General'],
+            ['name' => 'Delete General'],
+            ['name' => 'Update General'],
+            ['name' => 'View All General'],
+            ['name' => 'View Special General Filters'],
 
 
             ['name' => 'Root']
