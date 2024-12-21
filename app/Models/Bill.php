@@ -12,7 +12,6 @@ class Bill extends Model
     use HasFactory;
     protected $fillable = [
         "contract_classification_id",
-        "contract_classification_id_for_contract",
         "name",
         "is_paid",
         "hourly_rate",

@@ -96,6 +96,14 @@ class DatabaseSeeder extends Seeder
             ['name' => 'View All Call Notes'],
             ['name' => 'View Special Call Notes Filters'],
 
+            ['name' => 'Create Logins'],
+            ['name' => 'View Logins'],
+            ['name' => 'Restore Logins'],
+            ['name' => 'Delete Logins'],
+            ['name' => 'Update Logins'],
+            ['name' => 'View All Logins'],
+            ['name' => 'View Special Logins Filters'],
+
 
             ['name' => 'Root']
         ];

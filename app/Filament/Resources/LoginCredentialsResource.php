@@ -47,7 +47,6 @@ class LoginCredentialsResource extends Resource
                             ->email()
                             ->label('Email'),
                         TextInput::make('password')
-                            ->password()
                             ->label('Password'),
                         FileUpload::make('attachments')
                             ->multiple()
@@ -83,7 +82,7 @@ class LoginCredentialsResource extends Resource
                     ->searchable(),
                 TextColumn::make('description')
                     ->label('Description')
-                    ->limit(50)
+                    ->limit(50),
             ])
             ->filters([
                 //
@@ -91,6 +90,8 @@ class LoginCredentialsResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -105,6 +106,21 @@ class LoginCredentialsResource extends Resource
             //
         ];
     }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $user = auth()->user();
+
+        if ($user && $user->hasPermissionTo('View All Logins')) {
+            return parent::getEloquentQuery();
+        } else {
+            return parent::getEloquentQuery()
+                ->whereHas('contracts.classifications', function (Builder $query) use ($user) {
+                    $query->where('user_id', $user->id);
+                });
+        }
+    }
+
 
     public static function getPages(): array
     {

@@ -94,6 +94,11 @@ class ContractNoteResource extends Resource
                     ->sortable()
                     ->limit(10)
                     ->searchable(),
+                TextColumn::make('contractClassification.contract.customer.company_name')
+                    ->label('Customer')
+                    ->sortable()
+                    ->limit(10)
+                    ->searchable(),
 
             ])
             ->filters([

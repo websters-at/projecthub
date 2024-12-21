@@ -26,6 +26,10 @@ class ContractClassification extends Model
     {
         return $this->hasMany(Note::class);
     }
+    public function calls(): HasMany
+    {
+        return $this->hasMany(Call::class);
+    }
 
     public function user(): BelongsTo
     {

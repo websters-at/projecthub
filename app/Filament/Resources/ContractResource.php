@@ -17,6 +17,7 @@
     use Filament\Forms\Components\Split;
     use Filament\Forms\Components\Textarea;
     use Filament\Forms\Components\TextInput;
+    use Filament\Forms\Components\Toggle;
     use Filament\Forms\Form;
     use Filament\Resources\Resource;
     use Filament\Tables;
@@ -26,6 +27,7 @@
     use Filament\Tables\Actions\EditAction;
     use Filament\Tables\Actions\ViewAction;
     use Filament\Tables\Columns\TextColumn;
+    use Filament\Tables\Columns\ToggleColumn;
     use Filament\Tables\Filters\SelectFilter;
     use Filament\Tables\Table;
     use Illuminate\Database\Eloquent\Builder;
@@ -45,6 +47,9 @@
             return $form
                 ->schema([
                         Section::make('General')->schema([
+                            Toggle::make('is_finished')
+                                ->label("Done")
+                                ->nullable(),
                             TextInput::make('name')
                                 ->required()
                                 ->maxLength(255),
@@ -53,7 +58,8 @@
                                 ->string()
                                ->maxLength(255),
                             DatePicker::make('due_to')
-                            ->required()
+                            ->required(),
+
                         ])->collapsible()
                             ->collapsed(false),
                     Section::make('Customer')->schema([
@@ -72,6 +78,7 @@
                                 ->preload()
                                 ->relationship('users', 'email')
                                 ->searchable(),
+
                         ])
                         ->columns(1)->collapsible()
                         ->collapsed(false),
@@ -122,12 +129,12 @@
                         ->searchable()
                         ->sortable()
                         ->limit(30),
-                    TextColumn::make('description')
+                    TextColumn::make('customer.company_name')
                         ->limit(30)
                         ->searchable()
                         ->markdown(),
-                    TextColumn::make('city')
-                        ->limit(30)
+                    ToggleColumn::make('is_finished')
+                        ->label('Done')
                 ])
                 ->filters([
                     SelectFilter::make('customer')

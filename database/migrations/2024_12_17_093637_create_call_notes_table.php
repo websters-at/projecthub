@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('call_notes', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('description');
+            $table->string('name')->nullable();
+            $table->string('description')->nullable();
             $table->unsignedBigInteger('call_id');
             $table->foreign('call_id')
                 ->references('id')

@@ -18,6 +18,7 @@ class Contract extends Model
         "name",
         "description",
         "zip_code",
+        "is_finished",
         "customer_id",
         "city",
         "state",
@@ -83,6 +84,10 @@ class Contract extends Model
             'contract_id',
             'login_credentials_id'
         );
+    }
+    public function contract_classifications(): HasMany
+    {
+        return $this->hasMany(ContractClassification::class);
     }
 
     public function customer(): BelongsTo

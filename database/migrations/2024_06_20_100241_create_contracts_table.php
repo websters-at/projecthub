@@ -21,6 +21,7 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->string('description')->nullable();
             $table->string('zip_code')->nullable();
+            $table->boolean('is_finished')->default(false);
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->date('due_to');
