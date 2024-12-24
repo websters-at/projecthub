@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('login_credentials', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->unsignedBigInteger("contract_login_credentials_id")->nullable(); // Make it nullable
+            // Remove the foreign key constraint
             $table->string('email')->nullable();
             $table->string('password')->nullable();
             $table->string('description')->nullable();

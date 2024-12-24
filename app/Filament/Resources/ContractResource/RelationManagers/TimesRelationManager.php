@@ -125,6 +125,7 @@ class TimesRelationManager extends RelationManager
                 }),
             ])
             ->actions([
+                CreateAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
             ])

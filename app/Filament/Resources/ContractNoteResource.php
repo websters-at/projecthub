@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\NoteResource\Pages;
 use App\Models\Contract;
+use Illuminate\Database\Eloquent\Model;
 use App\Models\ContractClassification;
 use App\Models\ContractNote;
 use App\Models\User;
@@ -31,7 +32,27 @@ class ContractNoteResource extends Resource
     protected static ?string $navigationGroup = 'Contracts';
     protected static ?int $navigationSort = 6;
 
-    protected static ?string $navigationIcon = 'fas-book';
+    protected static ?string $navigationIcon = 'heroicon-o-book-open';
+    public static function getNavigationBadge(): ?string
+    {
+        return static::$model::count();
+    }
+    public static function getGloballySearchableAttributes(): array
+    {
+        return [
+            'name',
+            'date',
+            'contract.name',
+            'contract.customer.company_name',
+        ];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        $contractName = $record->contract->name ?? 'No Contract';
+        $customerName = $record->contract->customer->company_name ?? 'No Customer';
+        return $record->name . ' - ' . $contractName . ' (' . $customerName . ')';
+    }
 
     public static function form(Form $form): Form
     {
@@ -54,17 +75,18 @@ class ContractNoteResource extends Resource
                         ->required(),
                 ]),
 
-                Section::make('More Information')->schema([
-                    Select::make('contract_classification_id')
+                Section::make('Contract')->schema([
+                    Select::make('contract_id')
                         ->label('Contract')
                         ->required()
                         ->options(function () {
                             $user = Auth::user();
-                            return ContractClassification::where('user_id', Auth::user()->id)
-                                ->with('contract')
-                                ->get()
-                                ->pluck('contract.name', 'id');
-                        }),
+                            return Contract::whereHas('classifications', function ($query) use ($user) {
+                                $query->where('user_id', $user->id);
+                            })->pluck('name', 'id');
+                        })
+                        ->preload()
+                        ->searchable(),
                     FileUpload::make('attachments')
                         ->label('Attachments')
                         ->multiple()
@@ -89,12 +111,12 @@ class ContractNoteResource extends Resource
                 TextColumn::make('date')
                     ->label('Date')
                     ->sortable(),
-                TextColumn::make('contractClassification.contract.name')
+                TextColumn::make('contract.name')
                     ->label('Contract')
                     ->sortable()
                     ->limit(10)
                     ->searchable(),
-                TextColumn::make('contractClassification.contract.customer.company_name')
+                TextColumn::make('contract.customer.company_name')
                     ->label('Customer')
                     ->sortable()
                     ->limit(10)
@@ -102,7 +124,27 @@ class ContractNoteResource extends Resource
 
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('contract_id')
+                    ->label('Contract')
+                    ->options(function () {
+                        $user = Auth::user();
+                        return ContractClassification::where('user_id', $user->id)
+                            ->with('contract')
+                            ->get()
+                            ->pluck('contract.name', 'contract_id');
+                    })
+                    ->searchable(),
+                Tables\Filters\Filter::make('date')
+                    ->label('Date Range')
+                    ->form([
+                        DatePicker::make('date_from')->label('From'),
+                        DatePicker::make('date_until')->label('To'),
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        return $query
+                            ->when($data['date_from'], fn ($query, $date) => $query->whereDate('date', '>=', $date))
+                            ->when($data['date_until'], fn ($query, $date) => $query->whereDate('date', '<=', $date));
+                    }),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

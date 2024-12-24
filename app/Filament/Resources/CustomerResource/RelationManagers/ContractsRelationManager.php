@@ -74,7 +74,17 @@ class ContractsRelationManager extends RelationManager
                         ->preserveFilenames()
                         ->previewable()
                 ])->collapsible()
-                    ->collapsed(false)
+                    ->collapsed(false),
+                Section::make('Employees')
+                    ->schema([
+                        Select::make('users')
+                            ->multiple()
+                            ->preload()
+                            ->relationship('users', 'email')
+                            ->searchable(),
+                    ])
+                    ->columns(1)->collapsible()
+                    ->collapsed(false),
             ]);
     }
     public function isReadOnly(): bool
@@ -101,6 +111,7 @@ class ContractsRelationManager extends RelationManager
                     ->markdown(),
                 TextColumn::make('city')
                     ->limit(30)
+
             ])
             ->filters([
 

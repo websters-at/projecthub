@@ -2,13 +2,12 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\TodosResource\Pages;
-use App\Filament\Resources\TodosResource\RelationManagers;
+use App\Filament\Resources\GeneralTodoResource\Pages;
+use App\Filament\Resources\GeneralTodoResource\RelationManagers;
 use App\Models\ContractClassification;
-use App\Models\Todo;
-use App\Models\Todos;
+use App\Models\GeneralTodo;
+use App\Models\User;
 use Filament\Forms;
-use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
@@ -19,6 +18,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\Filter;
@@ -28,14 +28,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 
-class TodosResource extends Resource
+class GeneralTodoResource extends Resource
 {
-    protected static ?string $model = Todo::class;
-
-    protected static ?string $navigationGroup = 'Contracts';
+    protected static ?string $model = GeneralTodo::class;
+    protected static ?string $navigationGroup = 'General';
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
-    protected static ?int $navigationSort = 3;
     public static function getNavigationBadge(): ?string
     {
         return static::$model::count();
@@ -68,20 +66,6 @@ class TodosResource extends Resource
                         ->acceptedFileTypes(['image/*', 'application/pdf', 'text/plain'])
                         ->directory('todos_attachments')
                 ])->heading("General"),
-                Section::make('Contract')->schema([
-                    Select::make('contract_classification_id')
-                        ->label('Contract')
-                        ->options(function () {
-                            $user = Auth::user();
-                            return ContractClassification::where('user_id', $user->id)
-                                ->with('contract')
-                                ->get()
-                                ->pluck('contract.name', 'id');
-                        })
-                        ->preload()
-                        ->searchable()
-                        ->required()
-                ])
             ]);
     }
 
@@ -92,11 +76,8 @@ class TodosResource extends Resource
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('contract_classification.contract.name')
-                    ->label('Contract')
-                    ->sortable(),
-                TextColumn::make('contract_classification.contract.customer.company_name')
-                    ->label('Customer')
+                TextColumn::make('user.name')
+                    ->label('User')
                     ->sortable(),
                 TextColumn::make('due_to')
                     ->time()
@@ -108,31 +89,36 @@ class TodosResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                SelectFilter::make('priority')
+               SelectFilter::make('priority')
                     ->label('Priority')
                     ->options([
                         'low' => 'Low',
                         'mid' => 'Medium',
                         'high' => 'High',
-                    ]),
-
+                    ])
+                    ->searchable(),
                 Filter::make('is_done')
-                    ->label('Completed')
+                    ->label('Completion Status')
                     ->query(fn (Builder $query) => $query->where('is_done', true))
                     ->toggle(),
-
                 Filter::make('due_to')
                     ->label('Due Date Range')
                     ->form([
-                        DatePicker::make('due_from')->label('From'),
-                        DatePicker::make('due_until')->label('To'),
+                        DateTimePicker::make('due_from')->label('From'),
+                        DateTimePicker::make('due_until')->label('To'),
                     ])
                     ->query(function (Builder $query, array $data) {
                         return $query
-                            ->when($data['due_from'], fn ($query, $date) => $query->whereDate('due_to', '>=', $date))
-                            ->when($data['due_until'], fn ($query, $date) => $query->whereDate('due_to', '<=', $date));
+                            ->when($data['due_from'], fn ($query, $date) => $query->where('due_to', '>=', $date))
+                            ->when($data['due_until'], fn ($query, $date) => $query->where('due_to', '<=', $date));
                     }),
 
+                SelectFilter::make('user_id')
+                    ->label('User')
+                    ->options(
+                        User::all()->pluck('name', 'id')
+                    )
+                    ->searchable(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -156,23 +142,21 @@ class TodosResource extends Resource
     {
         $user = auth()->user();
 
-        if ($user && $user->hasPermissionTo('View All Contracts')) {
+        if ($user && $user->hasPermissionTo('View All General Todos')) {
             return parent::getEloquentQuery();
         } else {
             return parent::getEloquentQuery()
-                ->whereHas('contract_classifications', function (Builder $query) use ($user) {
-                    $query->where('user_id', $user->id);
-                });
+                ->where("user_id", "=", Auth::id());
         }
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTodos::route('/'),
-            'create' => Pages\CreateTodos::route('/create'),
-            'view' => Pages\ViewTodos::route('/{record}'),
-            'edit' => Pages\EditTodos::route('/{record}/edit'),
+            'index' => Pages\ListGeneralTodos::route('/'),
+            'create' => Pages\CreateGeneralTodo::route('/create'),
+            'view' => Pages\ViewGeneralTodo::route('/{record}'),
+            'edit' => Pages\EditGeneralTodo::route('/{record}/edit'),
         ];
     }
 }

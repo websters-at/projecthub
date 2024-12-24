@@ -121,6 +121,15 @@ class DatabaseSeeder extends Seeder
             ['name' => 'View All General'],
             ['name' => 'View Special General Filters'],
 
+            ['name' => 'Create General Todos'],
+            ['name' => 'View General Todos'],
+            ['name' => 'Restore General Todos'],
+            ['name' => 'Delete General Todos'],
+            ['name' => 'Update General Todos'],
+            ['name' => 'View All General Todos'],
+            ['name' => 'View Special General Todos Filters'],
+
+
 
             ['name' => 'Root']
         ];

@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CallResource\Pages;
 use App\Filament\Resources\CallResource\RelationManagers;
 use App\Models\Call;
+use Illuminate\Database\Eloquent\Model;
 use App\Models\ContractClassification;
 use Filament\Forms;
 use Filament\Forms\Components\DateTimePicker;
@@ -27,9 +28,35 @@ class CallResource extends Resource
     protected static ?string $model = Call::class;
     protected static ?int $navigationSort = 1;
 
-    protected static ?string $navigationIcon = 'fas-phone';
+    protected static ?string $navigationIcon = 'heroicon-o-phone';
     protected static ?string $navigationGroup = 'Calls';
+    public static function getNavigationBadge(): ?string
+    {
+        return static::$model::count();
+    }
 
+    public static function getGloballySearchableAttributes(): array
+    {
+        return [
+            'name', // Call name
+            'description', // Call description
+            'on_date', // Call date
+
+            // Related contract and customer details
+            'contract_classification.contract.name', // Contract name
+            'contract_classification.contract.customer.company_name', // Customer name
+            'contract_classification.user.name', // User name associated with the call
+        ];
+    }
+
+
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        $contractName = $record->contract_classification->contract->name ?? 'No Contract';
+        $customerName = $record->contract_classification->contract->customer->company_name ?? 'No Customer';
+        return $record->name . ' - ' . $contractName . ' (' . $customerName . ')';
+    }
     public static function form(Form $form): Form
     {
         return $form
@@ -94,7 +121,34 @@ class CallResource extends Resource
                     ->label('Done')
             ])
             ->filters([
-                //
+                // Filter by completion status
+                Tables\Filters\Filter::make('is_done')
+                    ->label('Completion Status')
+                    ->query(fn (Builder $query) => $query->where('is_done', true))
+                    ->toggle(),
+
+                Tables\Filters\Filter::make('on_date')
+                    ->label('Date Range')
+                    ->form([
+                        Forms\Components\DatePicker::make('on_date_from')->label('From'),
+                        Forms\Components\DatePicker::make('on_date_until')->label('To'),
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        return $query
+                            ->when($data['on_date_from'], fn ($query, $date) => $query->whereDate('on_date', '>=', $date))
+                            ->when($data['on_date_until'], fn ($query, $date) => $query->whereDate('on_date', '<=', $date));
+                    }),
+
+                Tables\Filters\SelectFilter::make('contract_classification_id')
+                    ->label('Contract')
+                    ->options(function () {
+                        $user = Auth::user();
+                        return ContractClassification::where('user_id', $user->id)
+                            ->with('contract')
+                            ->get()
+                            ->pluck('contract.name', 'id');
+                    })
+                    ->searchable(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

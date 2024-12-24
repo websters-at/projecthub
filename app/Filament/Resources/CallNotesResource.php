@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use Illuminate\Database\Eloquent\Model;
+
 use App\Filament\Resources\CallNotesResource\Pages;
 use App\Filament\Resources\CallNotesResource\RelationManagers;
 use App\Models\Call;
@@ -28,7 +30,29 @@ class CallNotesResource extends Resource
     protected static ?int $navigationSort = 2;
     protected static ?string $navigationGroup = 'Calls';
 
-    protected static ?string $navigationIcon = 'fas-book';
+    protected static ?string $navigationIcon = 'heroicon-o-book-open';
+    public static function getNavigationBadge(): ?string
+    {
+        return static::$model::count();
+    }
+    public static function getGloballySearchableAttributes(): array
+    {
+        return [
+            'name', // Title of the call note
+            'description', // Description of the call note
+
+            // Related Call attributes
+            'call.name', // Call name
+            'call.contract_classification.contract.name', // Contract name
+            'call.contract_classification.user.name', // User name
+        ];
+    }
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        $callName = $record->call->name ?? 'No Call';
+        return $record->name . ' (' . $callName . ')';
+    }
 
     public static function form(Form $form): Form
     {
@@ -65,10 +89,28 @@ class CallNotesResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Title')
+                    ->sortable()
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('description')
+                    ->label('Description')
+                    ->limit(50)
+                    ->sortable()
+                    ->searchable()
+                    ->markdown(),
+
+                Tables\Columns\TextColumn::make('call.name')
+                    ->label('Call')
+                    ->sortable()
+                    ->searchable(),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('call_id')
+                    ->label('Call')
+                    ->options(fn () => Call::all()->pluck('name', 'id'))
+                    ->searchable(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

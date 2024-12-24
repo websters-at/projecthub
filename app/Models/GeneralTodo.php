@@ -6,24 +6,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ContractNote extends Model
+class GeneralTodo extends Model
 {
     use HasFactory;
-
     protected $fillable = [
         "name",
-        "date",
-        "note",
+        "due_to",
+        "description",
         "attachments",
-        'contract_id'
+        "user_id",
+        "is_done",
+        "priority"
     ];
 
     public $casts = [
-        'attachments' => 'array'
+        'attachments' => 'array',
     ];
-
-    public function contract(): BelongsTo
-    {
-        return $this->belongsTo(Contract::class);
+    public function user(): BelongsTo{
+        return $this->belongsTo(User::class);
     }
 }

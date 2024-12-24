@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('todos', function (Blueprint $table) {
+        Schema::create('general_todos', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('contract_classification_id');
-            $table->foreign('contract_classification_id')
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')
                 ->references('id')
-                ->on('contract_classifications')
+                ->on('users')
                 ->onDelete('cascade');
             $table->string('name');
             $table->string('priority')->default("low"); // low / mid / high
@@ -24,8 +24,6 @@ return new class extends Migration
             $table->timestamp('due_to');
             $table->boolean("is_done")->default(false);
             $table->string('attachments')->nullable();
-
-
             $table->timestamps();
         });
     }
@@ -35,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('todos');
+        Schema::dropIfExists('general_todos');
     }
 };

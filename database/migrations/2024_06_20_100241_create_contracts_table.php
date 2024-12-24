@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('contracts', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('priority')->default("low"); // low / mid / high
             $table->unsignedBigInteger('customer_id');
             $table->foreign('customer_id')
                 ->references('id')
@@ -24,7 +25,7 @@ return new class extends Migration
             $table->boolean('is_finished')->default(false);
             $table->string('city')->nullable();
             $table->string('state')->nullable();
-            $table->date('due_to');
+            $table->dateTime('due_to');
             $table->string('country')->nullable();
             $table->string('attachments')->nullable();
             $table->string('address')->nullable();

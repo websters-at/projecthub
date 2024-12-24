@@ -35,6 +35,10 @@ use Filament\Tables\Filters\Indicator;
 class TimeResource extends Resource
 {
     protected static ?string $model = Time::class;
+    public static function getNavigationBadge(): ?string
+    {
+        return static::$model::count();
+    }
 
     protected static ?string $navigationIcon = 'far-clock';
     protected static ?string $navigationGroup = 'Contracts';

@@ -19,8 +19,12 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class PermissionResource extends Resource
 {
     protected static ?string $model = Permission::class;
+    public static function getNavigationBadge(): ?string
+    {
+        return static::$model::count();
+    }
 
-    protected static ?string $navigationIcon = 'fas-key';
+    protected static ?string $navigationIcon = 'heroicon-o-key';
     protected static ?string $navigationGroup = 'Settings';
     protected static ?int $navigationSort = 11;
 

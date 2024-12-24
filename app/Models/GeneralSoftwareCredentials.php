@@ -8,4 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class GeneralSoftwareCredentials extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        "name",
+        "description",
+        "email",
+        "password",
+        "attachments",
+    ];
+    public $casts = [
+        'attachments' => 'array',
+    ];
+
 }

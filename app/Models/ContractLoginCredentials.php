@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ContractLoginCredentials extends Model
 {
@@ -14,10 +15,8 @@ class ContractLoginCredentials extends Model
         "contract_id"
     ];
 
-    public function contract(): BelongsTo{
+    public function contract(): BelongsTo
+    {
         return $this->belongsTo(Contract::class);
-    }
-    public function login_credentials(): BelongsTo{
-        return $this->belongsTo(LoginCredentials::class);
     }
 }

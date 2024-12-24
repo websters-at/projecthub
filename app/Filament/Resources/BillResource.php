@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Filament\Resources;
-
+use Illuminate\Database\Eloquent\Model;
 use App\Filament\Resources\BillResource\Pages;
 use App\Filament\Resources\BillResource\Pages\CreateBill;
 use App\Filament\Resources\BillResource\Pages\EditBill;
@@ -9,8 +9,10 @@ use App\Filament\Resources\BillResource\Pages\ListBills;
 use App\Filament\Resources\BillResource\Pages\ViewBill;
 use App\Filament\Resources\BillResource\RelationManagers;
 use App\Models\Bill;
+use App\Models\Contract;
 use App\Models\ContractClassification;
 use App\Models\Customer;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -20,6 +22,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\DeleteAction;
@@ -27,20 +30,49 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
+use Filament\Infolists\Infolist;
 
 class BillResource extends Resource
 {
     protected static ?string $model = Bill::class;
 
     protected static ?string $navigationGroup = 'Contracts';
-    protected static ?int $navigationSort= 5;
+    protected static ?int $navigationSort = 5;
 
 
-    protected static ?string $navigationIcon = 'fas-money-bill';
+    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::$model::count();
+    }
+    public static function getGloballySearchableAttributes(): array
+    {
+        return [
+            'name', // Bill name
+            'description',
+            'hourly_rate',
+
+            // Attributes from related ContractClassification
+            'contractClassification.contract.name',
+            'contractClassification.user.name',
+
+            // Attributes from related Customer (via Contract)
+            'contractClassification.contract.customer.company_name',
+            'contractClassification.contract.customer.email',
+        ];
+    }
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        $contractName = $record->contractClassification->contract->name ?? 'No Contract';
+        return $record->name . ' (' . $contractName . ')';
+    }
 
     public static function form(Form $form): Form
     {
@@ -139,18 +171,21 @@ class BillResource extends Resource
                     ->label('Payed')
             ])
             ->filters([
-                //
+                Filter::make('is_payed')
+                    ->label('Payment Status')
+                    ->query(fn(Builder $query) => $query->where('is_payed', true))
+                    ->toggle()
             ])
             ->actions([
-                ViewAction::make(),
-                EditAction::make(),
-                DeleteAction::make()
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+        ViewAction::make(),
+        EditAction::make(),
+        DeleteAction::make()
+    ])
+        ->bulkActions([
+            Tables\Actions\BulkActionGroup::make([
+                Tables\Actions\DeleteBulkAction::make(),
+            ]),
+        ]);
     }
 
     public static function getEloquentQuery(): Builder

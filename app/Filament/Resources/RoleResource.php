@@ -25,8 +25,12 @@ use Filament\Forms\Components\TextInput;
 class RoleResource extends Resource
 {
     protected static ?string $model = Role::class;
+    public static function getNavigationBadge(): ?string
+    {
+        return static::$model::count();
+    }
 
-    protected static ?string $navigationIcon = 'fas-fingerprint';
+    protected static ?string $navigationIcon = 'heroicon-o-hand-raised';
 
     protected static ?string $navigationGroup = 'Settings';
     protected static ?int $navigationSort = 10;

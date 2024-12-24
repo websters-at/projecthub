@@ -80,4 +80,8 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->hasMany(ContractClassification::class, 'contract_classifications');
     }
+    public function general_todos(): HasMany
+    {
+        return $this->hasMany(GeneralTodo::class);
+    }
 }

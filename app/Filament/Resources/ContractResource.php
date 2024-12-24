@@ -10,6 +10,7 @@
     use App\Models\User;
     use Filament\Forms;
     use Filament\Forms\Components\DatePicker;
+    use Filament\Forms\Components\DateTimePicker;
     use Filament\Forms\Components\FileUpload;
     use Filament\Forms\Components\RichEditor;
     use Filament\Forms\Components\Section;
@@ -30,6 +31,8 @@
     use Filament\Tables\Columns\ToggleColumn;
     use Filament\Tables\Filters\SelectFilter;
     use Filament\Tables\Table;
+    use Illuminate\Database\Eloquent\Model;
+
     use Illuminate\Database\Eloquent\Builder;
     use Illuminate\Database\Eloquent\SoftDeletingScope;
     use Illuminate\Support\Facades\Auth;
@@ -39,7 +42,33 @@
         protected static ?string $model = Contract::class;
         protected static ?string $navigationIcon = 'fas-list-check';
         protected static ?string $navigationGroup = 'Contracts';
-        protected static ?int $navigationSort = 1;
+        protected static ?int $navigationSort = 2;
+
+        public static function getNavigationBadge(): ?string
+        {
+            return static::$model::count();
+        }
+
+        public static function getGloballySearchableAttributes(): array
+        {
+            return [
+                'name', // Contract name
+                'description', // Contract description
+                'priority', // Priority level of the contract
+                'due_to', // Due date of the contract
+
+                // Related customer and user details
+                'customer.company_name', // Customer company name
+                'users.name', // User (employee) name associated with the contract
+                'users.email', // User (employee) email associated with the contract
+            ];
+        }
+        public static function getGlobalSearchResultTitle(Model $record): string
+        {
+            $customerName = $record->customer->company_name ?? 'No Customer';
+            return $record->name . ' - ' . $customerName;
+        }
+
 
         public static function form(Form $form): Form
         {
@@ -56,7 +85,16 @@
                                ->nullable()
                                 ->string()
                                ->maxLength(255),
-                            DatePicker::make('due_to')
+                            Select::make('priority')
+                                ->options([
+                                    "low" => "Low",
+                                    "high" => "High",
+                                    "mid" => "Medium",
+                                ])
+                                ->searchable()
+                                ->label('Priority')
+                                ->required(),
+                            DateTimePicker::make('due_to')
                             ->required(),
 
                         ])->collapsible()
@@ -77,7 +115,6 @@
                                 ->preload()
                                 ->relationship('users', 'email')
                                 ->searchable(),
-
                         ])
                         ->columns(1)->collapsible()
                         ->collapsed(false),
@@ -120,7 +157,7 @@
             return $table
                 ->columns([
                     TextColumn::make('due_to')
-                        ->date()
+                        ->dateTime()
                         ->searchable()
                         ->sortable()
                         ->limit(30),
@@ -133,7 +170,9 @@
                         ->searchable()
                         ->markdown(),
                     ToggleColumn::make('is_finished')
-                        ->label('Done')
+                        ->label('Done'),
+                    TextColumn::make('priority')
+                        ->searchable(),
                 ])
                 ->filters([
                     SelectFilter::make('customer')
@@ -146,7 +185,41 @@
                         ->searchable()
                         ->visible(function(): bool{
                             return Auth::user()->hasPermissionTo('View Special Contracts Filters');
-                    })->preload()
+                    })->preload(),
+                    SelectFilter::make('priority')
+                        ->options([
+                            'low' => 'Low',
+                            'mid' => 'Medium',
+                            'high' => 'High',
+                        ])
+                        ->label('Priority')
+                        ->searchable(),
+
+                    Tables\Filters\Filter::make('due_to')
+                        ->label('Due Date Range')
+                        ->form([
+                            DatePicker::make('due_from')->label('From'),
+                            DatePicker::make('due_until')->label('To'),
+                        ])
+                        ->query(function (Builder $query, array $data) {
+                            return $query
+                                ->when($data['due_from'], fn ($query, $date) => $query->whereDate('due_to', '>=', $date))
+                                ->when($data['due_until'], fn ($query, $date) => $query->whereDate('due_to', '<=', $date));
+                        }),
+
+                    Tables\Filters\Filter::make('is_finished')
+                        ->label('Done')
+                        ->query(fn (Builder $query) => $query->where('is_finished', true))
+                        ->toggle(),
+
+                    Tables\Filters\Filter::make('name')
+                        ->label('Contract Company Name')
+                        ->form([
+                            TextInput::make('name_contains')->label('Name Contains'),
+                        ])
+                        ->query(function (Builder $query, array $data) {
+                            return $query->when($data['name_contains'], fn ($query, $value) => $query->where('name', 'like', '%' . $value . '%'));
+                        }),
                 ])
                 ->actions([
                     ViewAction::make(),

@@ -27,12 +27,13 @@ class Contract extends Model
         "address",
         "address2",
         "address3",
+        "priority",
         "attachments",
     ];
     public $casts = [
         'attachments' => 'array',
     ];
-    public function users()
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(
             User::class,
@@ -40,15 +41,10 @@ class Contract extends Model
             ->withTimestamps();
     }
 
-    public function notes(): HasManyThrough
+    public function notes(): HasMany
     {
-        return $this->hasManyThrough(
+        return $this->hasMany(
             ContractNote::class,
-            ContractClassification::class,
-            'contract_id',
-            'contract_classification_id',
-            'id',
-            'id'
         );
     }
 

@@ -37,9 +37,7 @@ class AdminPanelProvider extends PanelProvider
                 Pages\Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
-            ->widgets([
-                Widgets\AccountWidget::class,
-            ])
+
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -58,6 +56,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 \Hasnayeen\Themes\ThemesPlugin::make()
+            ])
+            ->widgets([
+
             ])
             ->brandLogo(fn () => view('vendor.filament.components.brand'))
             ->brandLogoHeight('2rem')

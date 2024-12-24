@@ -18,6 +18,8 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Database\Eloquent\Model;
+
 
 class CustomerResource extends Resource
 {
@@ -25,8 +27,33 @@ class CustomerResource extends Resource
 
     protected static ?string $navigationIcon = 'fas-handshake';
     protected static ?string $navigationGroup = 'Contracts';
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 1;
+    public static function getNavigationBadge(): ?string
+    {
+        return static::$model::count();
+    }
 
+    public static function getGloballySearchableAttributes(): array
+    {
+        return [
+            'full_name', // Customer's full name
+            'company_name', // Customer's company name
+            'email', // Customer's email
+            'phone', // Customer's phone number
+            'tax_id', // Customer's tax ID
+
+            // Address fields
+            'country',
+            'state',
+            'city',
+            'zip_code',
+            'address',
+        ];
+    }
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return $record->company_name . ' - ' . ($record->full_name ?? 'No Name');
+    }
 
     public static function form(Form $form): Form
     {
@@ -43,6 +70,7 @@ class CustomerResource extends Resource
                     TextInput::make('phone')
                         ->tel()
                         ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/'),
+                    TextInput::make('tax_id'),
                 ])->heading("General"),
                 Section::make('Address')->schema([
                     TextInput::make('country')
@@ -78,7 +106,7 @@ class CustomerResource extends Resource
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('phone')
-                    ->searchable()
+                   ->searchable()
                     ->sortable(),
                 TextColumn::make('city')
                     ->limit(30)
@@ -86,7 +114,36 @@ class CustomerResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('country')
+                    ->label('Country')
+                    ->options(
+                        Customer::query()
+                            ->whereNotNull('country')
+                            ->distinct()
+                            ->pluck('country', 'country')
+                            ->toArray()
+                    )
+                    ->searchable(),
+                Tables\Filters\SelectFilter::make('state')
+                    ->label('State')
+                    ->options(
+                        Customer::query()
+                            ->whereNotNull('state')
+                            ->distinct()
+                            ->pluck('state', 'state')
+                            ->toArray()
+                    )
+                    ->searchable(),
+                Tables\Filters\SelectFilter::make('city')
+                    ->label('City')
+                    ->options(
+                        Customer::query()
+                            ->whereNotNull('city')
+                            ->distinct()
+                            ->pluck('city', 'city')
+                            ->toArray()
+                    )
+                    ->searchable(),
             ])
             ->actions([
                 EditAction::make(),
