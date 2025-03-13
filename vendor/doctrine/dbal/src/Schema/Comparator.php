@@ -555,10 +555,6 @@ class Comparator
      */
     public function diffForeignKey(ForeignKeyConstraint $key1, ForeignKeyConstraint $key2)
     {
-        if (strtolower($key1->getName()) !== strtolower($key2->getName())) {
-            return true;
-        }
-
         if (
             array_map('strtolower', $key1->getUnquotedLocalColumns())
             !== array_map('strtolower', $key2->getUnquotedLocalColumns())
@@ -640,7 +636,7 @@ class Comparator
         // null != 0, null != false, null != '' etc. This affects platform's table alteration SQL generation.
         if (
             ($properties1['default'] === null) !== ($properties2['default'] === null)
-            || $properties1['default'] != $properties2['default']
+            || $properties1['default'] != $properties2['default'] // @phpstan-ignore notEqual.notAllowed
         ) {
             $changedProperties[] = 'default';
         }

@@ -1,31 +1,45 @@
+networks:
+  cuckoo_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.1.0/24
+
 services:
-  php:
-    build:
-      context: .
-      target: php
-      args:
-        - APP_ENV=${APP_ENV}
-    environment:
-      - APP_ENV=${APP_ENV}
-      - CONTAINER_ROLE=app
+  app:
+    build: .
+    container_name: cuckoo
+    restart: always
     working_dir: /var/www
     volumes:
-      - ./:/var/www
+      - .:/var/www
     ports:
       - "8000:8000"
     depends_on:
       - db
+    environment:
+      APP_ENV: local
+      CONTAINER_ROLE: app
+      PORT: 8000
+      DB_HOST: db
+    networks:
+      cuckoo_net:
+        ipv4_address: 192.168.1.100
+
   db:
-      image: mysql
-      ports:
-        - "3306:3306"
-      restart: always
-      environment:
-        MYSQL_USER: ${DB_USERNAME}
-        MYSQL_PASSWORD: ${DB_PASSWORD}
-        MYSQL_DATABASE: ${DB_DATABASE}
-        MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      volumes:
-        - "db:/var/lib/mysql"
+    image: mysql:latest
+    container_name: db-1
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_DATABASE: cuckoo
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - "db:/var/lib/mysql"
+    networks:
+      cuckoo_net:
+        ipv4_address: 192.168.1.101
+
 volumes:
   db:

@@ -6,7 +6,6 @@ use AnourValar\EloquentSerialize\Facades\EloquentSerializeFacade;
 use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Support\Concerns\EvaluatesClosures;
-use Filament\Tables\Contracts\HasTable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -189,10 +188,14 @@ class ExcelExport implements FromQuery, HasHeadings, HasMapping, ShouldAutoSize,
             return $this->model;
         }
 
-        if (($resource = $this->getResourceClass()) !== null) {
+        $table = $this->getLivewire()->getTable();
+
+        if (($relationship = $table->getRelationship()) !== null) {
+            $model = get_class($relationship->getRelated());
+        } elseif (($resource = $this->getResourceClass()) !== null) {
             $model = $resource::getModel();
-        } elseif (($livewire = $this->getLivewire()) instanceof HasTable) {
-            $model = $livewire->getTable()->getModel();
+        } else {
+            $model = $table->getModel();
         }
 
         return $this->model ??= $model;
@@ -222,10 +225,11 @@ class ExcelExport implements FromQuery, HasHeadings, HasMapping, ShouldAutoSize,
 
         $filename = Str::uuid().'-'.$this->getFilename();
         $userId = auth()->id();
+        $locale = app()->getLocale();
 
         $this
             ->queueExport($filename, 'filament-excel', $this->getWriterType())
-            ->chain([fn () => ExportFinishedEvent::dispatch($filename, $userId)]);
+            ->chain([fn () => ExportFinishedEvent::dispatch($filename, $userId, $locale)]);
 
         Notification::make()
             ->title(__('filament-excel::notifications.queued.title'))

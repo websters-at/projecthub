@@ -4,7 +4,6 @@ namespace Filament\Infolists\Concerns;
 
 use Exception;
 use Filament\Actions\Contracts\HasActions;
-use Filament\Forms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Actions\Action;
@@ -297,7 +296,7 @@ trait InteractsWithInfolists
         );
     }
 
-    public function unmountInfolistAction(bool $shouldCancelParentActions = true): void
+    public function unmountInfolistAction(bool $shouldCancelParentActions = true, bool $shouldCloseModal = true): void
     {
         $action = $this->getMountedInfolistAction();
 
@@ -327,7 +326,9 @@ trait InteractsWithInfolists
             $this->mountedInfolistActionsComponent = null;
             $this->mountedInfolistActionsInfolist = null;
 
-            $this->dispatch('close-modal', id: "{$this->getId()}-infolist-action");
+            if ($shouldCloseModal) {
+                $this->dispatch('close-modal', id: "{$this->getId()}-infolist-action");
+            }
 
             return;
         }
@@ -348,7 +349,7 @@ trait InteractsWithInfolists
     }
 
     /**
-     * @return array<string, Forms\Form>
+     * @return array<string, Form>
      */
     protected function getInteractsWithInfolistsForms(): array
     {

@@ -6,6 +6,33 @@ The format is based on [Keep a Changelog](https://keepachangelog.com), and this 
 
 ## Unreleased
 
+## v2.9.0 - 2025-02-17
+
+### Added
+- Add support for Laravel 12 ([#93](https://github.com/owenvoke/blade-fontawesome/pull/93))
+
+### Changed
+- Update to Font Awesome v6.7.2 ([#91](https://github.com/owenvoke/blade-fontawesome/pull/91))
+
+## v2.8.0 - 2024-11-25
+
+### Changed
+- Update to Font Awesome v6.7.0 ([#88](https://github.com/owenvoke/blade-fontawesome/pull/88))
+- Update to Font Awesome v6.7.1 ([#89](https://github.com/owenvoke/blade-fontawesome/pull/89))
+
+### Removed
+- Remove Safe PHP package ([#90](https://github.com/owenvoke/blade-fontawesome/pull/90))
+
+## v2.7.0 - 2024-11-01
+
+### Added
+- Update Font Awesome Sharp prefixes ([#77](https://github.com/owenvoke/blade-fontawesome/pull/77) and [#85](https://github.com/owenvoke/blade-fontawesome/pull/85))
+- Add support for Font Awesome Kits ([#83](https://github.com/owenvoke/blade-fontawesome/pull/83))
+- Add support for Duotone Solid Sharp icons ([#81](https://github.com/owenvoke/blade-fontawesome/pull/81))
+
+### Changed
+- Update to Font Awesome v6.6.0 ([#80](https://github.com/owenvoke/blade-fontawesome/pull/80))
+
 ## v2.6.0 - 2024-02-27
 
 ### Added

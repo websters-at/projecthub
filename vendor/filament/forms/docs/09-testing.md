@@ -227,7 +227,7 @@ Section::make('Comments')
 ```php
 use function Pest\Livewire\livewire;
 
-test('comments section exists' function () {
+test('comments section exists', function () {
     livewire(EditPost::class)
         ->assertFormComponentExists('comments-section');
 });
@@ -251,7 +251,7 @@ use Filament\Forms\Components\Component;
 
 use function Pest\Livewire\livewire;
 
-test('comments section has heading' function () {
+test('comments section has heading', function () {
     livewire(EditPost::class)
         ->assertFormComponentExists(
             'comments-section',
@@ -270,7 +270,7 @@ use Illuminate\Testing\Assert;
 
 use function Pest\Livewire\livewire;
 
-test('comments section is enabled' function () {
+test('comments section is enabled', function () {
     livewire(EditPost::class)
         ->assertFormComponentExists(
             'comments-section',
@@ -283,6 +283,56 @@ test('comments section is enabled' function () {
                 return true;
             },
         );
+});
+```
+
+### Wizard
+
+To go to a wizard's next step, use `goToNextWizardStep()`:
+
+```php
+use function Pest\Livewire\livewire;
+
+it('moves to next wizard step', function () {
+    livewire(CreatePost::class)
+        ->goToNextWizardStep()
+        ->assertHasFormErrors(['title']);
+});
+```
+
+You can also go to the previous step by calling `goToPreviousWizardStep()`:
+
+```php
+use function Pest\Livewire\livewire;
+
+it('moves to next wizard step', function () {
+    livewire(CreatePost::class)
+        ->goToPreviousWizardStep()
+        ->assertHasFormErrors(['title']);
+});
+```
+
+If you want to go to a specific step, use `goToWizardStep()`, then the `assertWizardCurrentStep` method which can ensure you are on the desired step without validation errors from the previous:
+
+```php
+use function Pest\Livewire\livewire;
+
+it('moves to the wizards second step', function () {
+    livewire(CreatePost::class)
+        ->goToWizardStep(2)
+        ->assertWizardCurrentStep(2);
+});
+```
+
+If you have multiple forms on a single Livewire component, any of the wizard test helpers can accept a `formName` parameter:
+
+```php
+use function Pest\Livewire\livewire;
+
+it('moves to next wizard step only for fooForm', function () {
+    livewire(CreatePost::class)
+        ->goToNextWizardStep(formName: 'fooForm')
+        ->assertHasFormErrors(['title'], formName: 'fooForm');
 });
 ```
 
@@ -340,7 +390,7 @@ it('can send invoices', function () {
         'invoice' => $invoice,
     ])
         ->mountFormComponentAction('customer_id', 'send')
-        ->setFormComponentActionData('customer_id', 'send', data: [
+        ->setFormComponentActionData([
             'email' => $email = fake()->email(),
         ])
 });

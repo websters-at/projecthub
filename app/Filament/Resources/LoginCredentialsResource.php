@@ -72,15 +72,12 @@ class LoginCredentialsResource extends Resource
                         ])
                         ->columns(1)->collapsible()
                         ->collapsed(false),
-
                 ]),
             ]);
-
     }
 
     public static function table(Table $table): Table
     {
-
         return $table
             ->columns([
                 TextColumn::make('name')

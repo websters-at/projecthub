@@ -8,6 +8,8 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Spatie\Permission\Contracts\Permission;
 use Spatie\Permission\Contracts\Role;
+use Spatie\Permission\Events\RoleAttached;
+use Spatie\Permission\Events\RoleDetached;
 use Spatie\Permission\PermissionRegistrar;
 
 trait HasRoles
@@ -59,9 +61,11 @@ trait HasRoles
             return $relation;
         }
 
-        $teamField = config('permission.table_names.roles').'.'.app(PermissionRegistrar::class)->teamsKey;
+        $teamsKey = app(PermissionRegistrar::class)->teamsKey;
+        $relation->withPivot($teamsKey);
+        $teamField = config('permission.table_names.roles').'.'.$teamsKey;
 
-        return $relation->wherePivot(app(PermissionRegistrar::class)->teamsKey, getPermissionsTeamId())
+        return $relation->wherePivot($teamsKey, getPermissionsTeamId())
             ->where(fn ($q) => $q->whereNull($teamField)->orWhere($teamField, getPermissionsTeamId()));
     }
 
@@ -125,9 +129,6 @@ trait HasRoles
                 }
 
                 $role = $this->getStoredRole($role);
-                if (! $role instanceof Role) {
-                    return $array;
-                }
 
                 if (! in_array($role->getKey(), $array)) {
                     $this->ensureModelSharesGuard($role);
@@ -153,26 +154,37 @@ trait HasRoles
             [app(PermissionRegistrar::class)->teamsKey => getPermissionsTeamId()] : [];
 
         if ($model->exists) {
+            if (app(PermissionRegistrar::class)->teams) {
+                // explicit reload in case team has been changed since last load
+                $this->load('roles');
+            }
+
             $currentRoles = $this->roles->map(fn ($role) => $role->getKey())->toArray();
 
             $this->roles()->attach(array_diff($roles, $currentRoles), $teamPivot);
             $model->unsetRelation('roles');
         } else {
             $class = \get_class($model);
+            $saved = false;
 
             $class::saved(
-                function ($object) use ($roles, $model, $teamPivot) {
-                    if ($model->getKey() != $object->getKey()) {
+                function ($object) use ($roles, $model, $teamPivot, &$saved) {
+                    if ($saved || $model->getKey() != $object->getKey()) {
                         return;
                     }
                     $model->roles()->attach($roles, $teamPivot);
                     $model->unsetRelation('roles');
+                    $saved = true;
                 }
             );
         }
 
         if (is_a($this, Permission::class)) {
             $this->forgetCachedPermissions();
+        }
+
+        if (config('permission.events_enabled')) {
+            event(new RoleAttached($this->getModel(), $roles));
         }
 
         return $this;
@@ -185,12 +197,18 @@ trait HasRoles
      */
     public function removeRole($role)
     {
-        $this->roles()->detach($this->getStoredRole($role));
+        $storedRole = $this->getStoredRole($role);
+
+        $this->roles()->detach($storedRole);
 
         $this->unsetRelation('roles');
 
         if (is_a($this, Permission::class)) {
             $this->forgetCachedPermissions();
+        }
+
+        if (config('permission.events_enabled')) {
+            event(new RoleDetached($this->getModel(), $storedRole));
         }
 
         return $this;
@@ -231,12 +249,14 @@ trait HasRoles
 
             return $this->roles
                 ->when($guard, fn ($q) => $q->where('guard_name', $guard))
-                ->contains(function ($role) use ($roles) {
-                    if ($role->name instanceof \BackedEnum) {
-                        return $role->name->value == $roles;
+                ->pluck('name')
+                ->contains(function ($name) use ($roles) {
+                    /** @var string|\BackedEnum $name */
+                    if ($name instanceof \BackedEnum) {
+                        return $name->value == $roles;
                     }
 
-                    return $role->name == $roles;
+                    return $name == $roles;
                 });
         }
 

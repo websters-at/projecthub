@@ -4,6 +4,11 @@ RUN apt-get update -y
 RUN apt-get install -y unzip libpq-dev libcurl4-gnutls-dev
 RUN docker-php-ext-install pdo pdo_mysql bcmath
 
+RUN apt-get update && apt-get install -y \
+    libicu-dev \
+    && docker-php-ext-install intl \
+    && docker-php-ext-enable intl
+
 RUN pecl install -o -f redis \
     && rm -rf /tmp/pear \
     && docker-php-ext-enable redis

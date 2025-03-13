@@ -79,6 +79,21 @@ Repeater::make('members')
     ->addActionLabel('Add member')
 ```
 
+### Aligning the add action button
+
+By default, the add action is aligned in the center. You may adjust this using the `addActionAlignment()` method, passing an `Alignment` option of `Alignment::Start` or `Alignment::End`:
+
+```php
+use Filament\Forms\Components\Repeater;
+use Filament\Support\Enums\Alignment;
+
+Repeater::make('members')
+    ->schema([
+        // ...
+    ])
+    ->addActionAlignment(Alignment::Start)
+```
+
 ### Preventing the user from adding items
 
 You may prevent the user from adding items to the repeater using the `addable(false)` method:
@@ -283,6 +298,8 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class OrderProduct extends Pivot
 {
+    public $incrementing = true;
+
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
@@ -295,7 +312,7 @@ class OrderProduct extends Pivot
 }
 ```
 
-> Please ensure that your pivot model has a primary key column, like `id`, to allow Filament to keep track of which repeater items have been created, updated and deleted.
+> Please ensure that your pivot model has a primary key column, like `id`, to allow Filament to keep track of which repeater items have been created, updated and deleted. To make sure that Filament keeps track of the primary key, the pivot model needs to have the `$incrementing` property set to `true`.
 
 Now you can use the `orderProducts` relationship with the repeater, and it will save the data to the `order_product` pivot table:
 
@@ -475,6 +492,8 @@ You are trying to retrieve the value of `client_id` from inside the repeater ite
 
 You can use `../` to go up a level in the data structure, so `$get('../client_id')` is `$get('repeater.client_id')` and `$get('../../client_id')` is `$get('client_id')`.
 
+The special case of `$get()` with no arguments, or `$get('')` or `$get('./')`, will always return the full data array for the current repeater item.
+
 ## Repeater validation
 
 As well as all rules listed on the [validation](../validation) page, there are additional rules that are specific to repeaters.
@@ -562,6 +581,23 @@ Repeater::make('members')
 ```
 
 This method will automatically enable the `distinct()` and `live()` methods on the field.
+
+In case you want to add another condition to [disable options](../select#disabling-specific-options) with, you can chain `disableOptionWhen()` with the `merge: true` argument:
+
+```php
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+
+Repeater::make('members')
+    ->schema([
+        Select::make('role')
+            ->options([
+                // ...
+            ])
+            ->disableOptionsWhenSelectedInSiblingRepeaterItems()
+            ->disableOptionWhen(fn (string $value): bool => $value === 'super_admin', merge: true),
+    ])
+```
 
 ## Customizing the repeater item actions
 
@@ -692,7 +728,7 @@ livewire(EditPost::class, ['record' => $post])
 $undoRepeaterFake();
 ```
 
-You may also find it useful to access test the number of items in a repeater by passing a function to the `assertFormSet()` method:
+You may also find it useful to test the number of items in a repeater by passing a function to the `assertFormSet()` method:
 
 ```php
 use Filament\Forms\Components\Repeater;
@@ -707,4 +743,24 @@ livewire(EditPost::class, ['record' => $post])
     });
 
 $undoRepeaterFake();
+```
+
+### Testing repeater actions
+
+In order to test that repeater actions are working as expected, you can utilize the `callFormComponentAction()` method to call your repeater actions and then [perform additional assertions](../testing#actions).
+
+To interact with an action on a particular repeater item, you need to pass in the `item` argument with the key of that repeater item. If your repeater is reading from a relationship, you should prefix the ID (key) of the related record with `record-` to form the key of the repeater item:  
+
+```php
+use App\Models\Quote;
+use Filament\Forms\Components\Repeater;
+use function Pest\Livewire\livewire;
+
+$quote = Quote::first();
+
+livewire(EditPost::class, ['record' => $post])
+    ->callFormComponentAction('quotes', 'sendQuote', arguments: [
+        'item' => "record-{$quote->getKey()}",
+    ])
+    ->assertNotified('Quote sent!');
 ```

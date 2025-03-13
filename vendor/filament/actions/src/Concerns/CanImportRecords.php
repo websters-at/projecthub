@@ -5,6 +5,8 @@ namespace Filament\Actions\Concerns;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Actions\ImportAction;
+use Filament\Actions\Imports\Events\ImportCompleted;
+use Filament\Actions\Imports\Events\ImportStarted;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;
 use Filament\Actions\Imports\Jobs\ImportCsv;
@@ -30,7 +32,7 @@ use Illuminate\Support\Number;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\File;
 use Illuminate\Validation\ValidationException;
-use League\Csv\ByteSequence;
+use League\Csv\Bom;
 use League\Csv\CharsetConverter;
 use League\Csv\Info;
 use League\Csv\Reader as CsvReader;
@@ -117,7 +119,7 @@ trait CanImportRecords
 
                     $csvColumns = $csvReader->getHeader();
 
-                    $lowercaseCsvColumnValues = array_map('strtolower', $csvColumns);
+                    $lowercaseCsvColumnValues = array_map(Str::lower(...), $csvColumns);
                     $lowercaseCsvColumnKeys = array_combine(
                         $lowercaseCsvColumnValues,
                         $csvColumns,
@@ -244,10 +246,14 @@ trait CanImportRecords
                     'options' => $options,
                 ]));
 
+            $columnMap = $data['columnMap'];
+
             $importer = $import->getImporter(
-                columnMap: $data['columnMap'],
+                columnMap: $columnMap,
                 options: $options,
             );
+
+            event(new ImportStarted($import, $columnMap, $options));
 
             Bus::batch($importJobs->all())
                 ->allowFailures()
@@ -263,8 +269,10 @@ trait CanImportRecords
                     filled($jobBatchName = $importer->getJobBatchName()),
                     fn (PendingBatch $batch) => $batch->name($jobBatchName),
                 )
-                ->finally(function () use ($import) {
+                ->finally(function () use ($columnMap, $import, $jobConnection, $options) {
                     $import->touch('completed_at');
+
+                    event(new ImportCompleted($import, $columnMap, $options));
 
                     if (! $import->user instanceof Authenticatable) {
                         return;
@@ -299,17 +307,29 @@ trait CanImportRecords
                                     ->markAsRead(),
                             ]),
                         )
-                        ->sendToDatabase($import->user, isEventDispatched: true);
+                        ->when(
+                            ($jobConnection === 'sync') ||
+                                (blank($jobConnection) && (config('queue.default') === 'sync')),
+                            fn (Notification $notification) => $notification
+                                ->persistent()
+                                ->send(),
+                            fn (Notification $notification) => $notification->sendToDatabase($import->user, isEventDispatched: true),
+                        );
                 })
                 ->dispatch();
 
-            Notification::make()
-                ->title($action->getSuccessNotificationTitle())
-                ->body(trans_choice('filament-actions::import.notifications.started.body', $import->total_rows, [
-                    'count' => Number::format($import->total_rows),
-                ]))
-                ->success()
-                ->send();
+            if (
+                (filled($jobConnection) && ($jobConnection !== 'sync')) ||
+                (blank($jobConnection) && (config('queue.default') !== 'sync'))
+            ) {
+                Notification::make()
+                    ->title($action->getSuccessNotificationTitle())
+                    ->body(trans_choice('filament-actions::import.notifications.started.body', $import->total_rows, [
+                        'count' => Number::format($import->total_rows),
+                    ]))
+                    ->success()
+                    ->send();
+            }
         });
 
         $this->registerModalActions([
@@ -322,8 +342,8 @@ trait CanImportRecords
                 ->action(function (): StreamedResponse {
                     $columns = $this->getImporter()::getColumns();
 
-                    $csv = Writer::createFromFileObject(new SplTempFileObject());
-                    $csv->setOutputBOM(ByteSequence::BOM_UTF8);
+                    $csv = Writer::createFromFileObject(new SplTempFileObject);
+                    $csv->setOutputBOM(Bom::Utf8);
 
                     if (filled($csvDelimiter = $this->getCsvDelimiter())) {
                         $csv->setDelimiter($csvDelimiter);
@@ -334,17 +354,26 @@ trait CanImportRecords
                         $columns,
                     ));
 
-                    $example = array_map(
-                        fn (ImportColumn $column) => $column->getExample(),
+                    $columnExamples = array_map(
+                        fn (ImportColumn $column): array => $column->getExamples(),
                         $columns,
                     );
 
-                    if (array_filter(
-                        $example,
-                        fn ($value): bool => filled($value),
-                    )) {
-                        $csv->insertOne($example);
+                    $exampleRowsCount = array_reduce(
+                        $columnExamples,
+                        fn (int $count, array $exampleData): int => max($count, count($exampleData)),
+                        initial: 0,
+                    );
+
+                    $exampleRows = [];
+
+                    foreach ($columnExamples as $exampleData) {
+                        for ($i = 0; $i < $exampleRowsCount; $i++) {
+                            $exampleRows[$i][] = $exampleData[$i] ?? '';
+                        }
                     }
+
+                    $csv->insertAll($exampleRows);
 
                     return response()->streamDownload(function () use ($csv) {
                         echo $csv->toString();
@@ -368,16 +397,19 @@ trait CanImportRecords
      */
     public function getUploadedFileStream(TemporaryUploadedFile $file)
     {
+        /** @phpstan-ignore-next-line */
+        $fileDisk = invade($file)->disk;
+
         $filePath = $file->getRealPath();
 
-        if (config('filesystems.disks.' . config('filament.default_filesystem_disk') . '.driver') !== 's3') {
-            $resource = fopen($filePath, mode: 'r');
+        if (config("filesystems.disks.{$fileDisk}.driver") !== 's3') {
+            $resource = $file->readStream();
         } else {
             /** @var AwsS3V3Adapter $s3Adapter */
-            $s3Adapter = Storage::disk('s3')->getAdapter();
+            $s3Adapter = Storage::disk($fileDisk)->getAdapter();
 
             invade($s3Adapter)->client->registerStreamWrapper(); /** @phpstan-ignore-line */
-            $fileS3Path = 's3://' . config('filesystems.disks.s3.bucket') . '/' . $filePath;
+            $fileS3Path = (string) str('s3://' . config("filesystems.disks.{$fileDisk}.bucket") . '/' . $filePath)->replace('\\', '/');
 
             $resource = fopen($fileS3Path, mode: 'r', context: stream_context_create([
                 's3' => [
