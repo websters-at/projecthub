@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit6cdb04c7ac229ccec2257c0f0510e600
+class ComposerStaticInitf4a7296a3912c0323aca92c75f94133e
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -276,8 +276,8 @@ class ComposerStaticInit6cdb04c7ac229ccec2257c0f0510e600
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
         ),
         'ZipStream\\' => 
         array (
@@ -469,8 +469,8 @@ class ComposerStaticInit6cdb04c7ac229ccec2257c0f0510e600
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-            1 => __DIR__ . '/..' . '/psr/http-message/src',
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            1 => __DIR__ . '/..' . '/psr/http-factory/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -574,8 +574,8 @@ class ComposerStaticInit6cdb04c7ac229ccec2257c0f0510e600
         ),
         'League\\Uri\\' => 
         array (
-            0 => __DIR__ . '/..' . '/league/uri',
-            1 => __DIR__ . '/..' . '/league/uri-interfaces',
+            0 => __DIR__ . '/..' . '/league/uri-interfaces',
+            1 => __DIR__ . '/..' . '/league/uri',
         ),
         'League\\MimeTypeDetection\\' => 
         array (
@@ -10345,10 +10345,10 @@ class ComposerStaticInit6cdb04c7ac229ccec2257c0f0510e600
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit6cdb04c7ac229ccec2257c0f0510e600::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit6cdb04c7ac229ccec2257c0f0510e600::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit6cdb04c7ac229ccec2257c0f0510e600::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit6cdb04c7ac229ccec2257c0f0510e600::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitf4a7296a3912c0323aca92c75f94133e::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitf4a7296a3912c0323aca92c75f94133e::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitf4a7296a3912c0323aca92c75f94133e::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitf4a7296a3912c0323aca92c75f94133e::$classMap;
 
         }, null, ClassLoader::class);
     }
