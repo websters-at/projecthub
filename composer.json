@@ -17,11 +17,11 @@
         "owenvoke/blade-fontawesome": "^2.6",
         "spatie/laravel-package-tools": "^1.92",
         "spatie/laravel-permission": "^6.7",
-        "timwassenburg/filament-timesheets": "^1.0"
+        "timwassenburg/filament-timesheets": "^1.0",
+        "fakerphp/faker": "^1.23"
     },
     "require-dev": {
         "doctrine/dbal": "^3.8",
-        "fakerphp/faker": "^1.23",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",
         "mockery/mockery": "^1.6",
