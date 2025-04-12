@@ -63,6 +63,7 @@ class GeneralTodoResource extends Resource
                         ->required(),
                     FileUpload::make('attachments')
                         ->multiple()
+                        ->disk('s3')
                         ->acceptedFileTypes(['image/*', 'application/pdf', 'text/plain'])
                         ->directory('todos_attachments')
                 ])->heading("General"),
