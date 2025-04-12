@@ -56,6 +56,7 @@ class GeneralSoftwareCredentialsResource extends Resource
                     FileUpload::make('attachments')
                         ->nullable()
                         ->multiple()
+                        ->downloadable()
                         ->label('Attachments')
                         ->directory('general_software_credentials_attachments')
                         ->preserveFilenames(),

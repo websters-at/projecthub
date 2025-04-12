@@ -114,7 +114,7 @@ class BillResource extends Resource
                     ->collapsible()
                     ->collapsed(false)
                     ->heading('Contract'),
-                Section::make('Contract Picture')->schema([
+                Section::make('Bill attachments')->schema([
                     FileUpload::make('attachments')
                         ->columns(1)
                         ->multiple()

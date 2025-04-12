@@ -60,6 +60,7 @@ class LoginCredentialsResource extends Resource
                             ->label('Attachments')
                             ->directory('login_credentials_attachments')
                             ->visibility('public')
+                            ->downloadable()
                             ->preserveFilenames(),
                     ])->collapsible(),
                     Section::make('Contracts')

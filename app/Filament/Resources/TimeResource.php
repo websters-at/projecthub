@@ -101,8 +101,6 @@ class TimeResource extends Resource
             ->columns([
                 TextColumn::make('date')->date(),
                 TextColumn::make('description')->markdown()->limit(30),
-                TextColumn::make('start_time')->time(),
-                TextColumn::make('end_time')->time(),
                 TextColumn::make('total_hours_worked'),
                 IconColumn::make('is_special')
                     ->icon(fn (bool $state): string => $state ? 'fas-check' : 'fas-x')

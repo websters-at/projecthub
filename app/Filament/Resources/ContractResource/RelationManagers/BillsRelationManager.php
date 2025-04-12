@@ -58,6 +58,7 @@ class BillsRelationManager extends RelationManager
                         ->directory('bills_attachments')
                         ->downloadable()
                         ->preserveFilenames()
+                        ->downloadable()
                         ->previewable()
                 ])->collapsible()
                     ->collapsed(false)

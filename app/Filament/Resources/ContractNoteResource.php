@@ -92,6 +92,7 @@ class ContractNoteResource extends Resource
                         ->multiple()
                         ->directory('contracts_notes')
                         ->preserveFilenames()
+                        ->downloadable()
                         ->acceptedFileTypes(['application/pdf', 'image/*', 'text/plain'])
                         ->maxSize(5120)
                         ->hint('Acceted formats: PDF oder Bilder.'),
