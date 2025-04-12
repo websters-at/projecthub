@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CallResource\Pages;
 use App\Filament\Resources\CallResource\RelationManagers;
 use App\Models\Call;
+use Filament\Tables\Columns\ToggleColumn;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ContractClassification;
 use Filament\Forms;
@@ -117,7 +118,7 @@ class CallResource extends Resource
                     ->label('User')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\ToggleColumn::make('is_done')
+                ToggleColumn::make('is_done')
                     ->label('Done')
             ])
             ->filters([

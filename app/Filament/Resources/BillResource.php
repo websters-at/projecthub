@@ -118,6 +118,7 @@ class BillResource extends Resource
                     FileUpload::make('attachments')
                         ->columns(1)
                         ->multiple()
+                        ->disk('s3')
                         ->nullable()
                         ->directory('bills_attachments')
                         ->downloadable()

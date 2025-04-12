@@ -61,6 +61,7 @@ class LoginCredentialsResource extends Resource
                             ->directory('login_credentials_attachments')
                             ->visibility('public')
                             ->downloadable()
+                            ->disk('s3')
                             ->preserveFilenames(),
                     ])->collapsible(),
                     Section::make('Contracts')

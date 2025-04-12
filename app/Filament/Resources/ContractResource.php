@@ -142,7 +142,7 @@
                         FileUpload::make('attachments')
                         ->columns(1)
                         ->multiple()
-                        ->nullable()
+                        ->nullable()->disk('s3')
                         ->directory('contracts_attachments')
                         ->downloadable()
                         ->preserveFilenames()

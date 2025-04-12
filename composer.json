@@ -7,18 +7,19 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "fakerphp/faker": "^1.23",
         "filament/filament": "^3.2",
         "filament/notifications": "^3.2",
         "hasnayeen/themes": "^3.0",
         "icetalker/filament-chatgpt-bot": "^1.1",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
+        "league/flysystem-aws-s3-v3": "^3.0",
         "openspout/openspout": "^4.22",
         "owenvoke/blade-fontawesome": "^2.6",
         "spatie/laravel-package-tools": "^1.92",
         "spatie/laravel-permission": "^6.7",
-        "timwassenburg/filament-timesheets": "^1.0",
-        "fakerphp/faker": "^1.23"
+        "timwassenburg/filament-timesheets": "^1.0"
     },
     "require-dev": {
         "doctrine/dbal": "^3.8",

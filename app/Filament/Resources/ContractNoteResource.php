@@ -90,6 +90,7 @@ class ContractNoteResource extends Resource
                     FileUpload::make('attachments')
                         ->label('Attachments')
                         ->multiple()
+                        ->disk('s3')
                         ->directory('contracts_notes')
                         ->preserveFilenames()
                         ->downloadable()

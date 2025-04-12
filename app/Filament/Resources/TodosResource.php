@@ -66,6 +66,7 @@ class TodosResource extends Resource
                     FileUpload::make('attachments')
                         ->multiple()
                         ->downloadable()
+                        ->disk('s3')
                         ->acceptedFileTypes(['image/*', 'application/pdf', 'text/plain'])
                         ->directory('todos_attachments')
                 ])->heading("General"),

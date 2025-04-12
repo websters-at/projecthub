@@ -57,6 +57,7 @@ class GeneralSoftwareCredentialsResource extends Resource
                         ->nullable()
                         ->multiple()
                         ->downloadable()
+                        ->disk('s3')
                         ->label('Attachments')
                         ->directory('general_software_credentials_attachments')
                         ->preserveFilenames(),
