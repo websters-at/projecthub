@@ -56,7 +56,6 @@ class TimeResource extends Resource
                     RichEditor::make('description')
                         ->nullable()
                         ->string()
-                        ->maxLength(255),
                 ])->heading('General')
                     ->collapsible()
                     ->collapsed(false),

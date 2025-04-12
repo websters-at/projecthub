@@ -88,8 +88,7 @@ class BillResource extends Resource
                         ->prefix("€"),
                     RichEditor::make('description')
                         ->nullable()
-                        ->string()
-                        ->maxLength(255),
+                        ->string(),
                     DatePicker::make('due_to'),
                     DatePicker::make('created_on')
                         ->nullable(),

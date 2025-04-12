@@ -27,6 +27,18 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password')
         ]);
 
+        $user3 = User::factory()->create([
+            'name' => 'Jonas Fröller',
+            'email' => 'jonas@webhoch.com',
+            'password' => bcrypt('password')
+        ]);
+
+        $user4 = User::factory()->create([
+            'name' => 'Michael Ruep',
+            'email' => 'michael@webhoch.com',
+            'password' => bcrypt('password')
+        ]);
+
         // Create the Admin role
         $role = Role::create(['name' => 'Admin']);
 
@@ -147,5 +159,7 @@ class DatabaseSeeder extends Seeder
         // Assign the Admin role to the users
         $user->assignRole($role);
         $user2->assignRole($role);
+        $user3->assignRole($role);
+        $user4->assignRole($role);
     }
 }

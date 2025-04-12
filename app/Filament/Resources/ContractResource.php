@@ -83,8 +83,7 @@
                                 ->maxLength(255),
                             RichEditor::make('description')
                                ->nullable()
-                                ->string()
-                               ->maxLength(255),
+                                ->string(),
                             Select::make('priority')
                                 ->options([
                                     "low" => "Low",
