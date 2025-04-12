@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->timestamp('on_date');
-            $table->string('description')->nullable();
+            $table->mediumText('description')->nullable();
             $table->boolean('is_done')->default(false);
             $table->unsignedBigInteger('contract_classification_id');
             $table->foreign('contract_classification_id')

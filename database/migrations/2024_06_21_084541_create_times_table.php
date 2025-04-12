@@ -18,7 +18,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('contract_classifications')
                 ->onDelete('cascade');
-            $table->string('description')
+            $table->mediumText('description')
                 ->nullable();
             $table->timestamp('date')
                 ->nullable();

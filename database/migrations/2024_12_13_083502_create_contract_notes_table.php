@@ -19,7 +19,8 @@ return new class extends Migration
                 ->on('contracts')
                 ->onDelete('cascade');
             $table->text('name');
-            $table->timestamp('date');
+            $table->timestamp('date')->nullable();
+            $table->mediumText('description')->nullable();
             $table->text('attachments')->nullable();
             $table->string('note')
                 ->nullable();

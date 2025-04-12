@@ -20,7 +20,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('customers')
                 ->onDelete('cascade');
-            $table->string('description')->nullable();
+            $table->mediumText('description')->nullable();
             $table->string('zip_code')->nullable();
             $table->boolean('is_finished')->default(false);
             $table->string('city')->nullable();

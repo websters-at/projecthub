@@ -27,7 +27,7 @@ return new class extends Migration
                 ->nullable();
             $table->date('due_to')
                 ->nullable();
-            $table->string('description')
+            $table->mediumText('description')
                 ->nullable();
             $table->string('attachments')
                 ->nullable();

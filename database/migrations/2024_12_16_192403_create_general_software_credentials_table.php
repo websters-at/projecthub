@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->nullable();
             $table->string('password')->nullable();
-            $table->string('description')->nullable();
+            $table->mediumText('description')->nullable();
             $table->string('attachments')->nullable();
             $table->timestamps();
         });

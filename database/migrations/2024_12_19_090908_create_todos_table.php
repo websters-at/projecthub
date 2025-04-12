@@ -20,7 +20,7 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->string('name');
             $table->string('priority')->default("low"); // low / mid / high
-            $table->string('description')->nullable();
+            $table->mediumText('description')->nullable();
             $table->timestamp('due_to');
             $table->boolean("is_done")->default(false);
             $table->string('attachments')->nullable();
