@@ -138,11 +138,12 @@
                         ])->columns(2)->collapsible()
                             ->collapsed(false),
 
-                    Section::make('Contract Picture')->schema([
+                    Section::make('Attachments')->schema([
                         FileUpload::make('attachments')
                         ->columns(1)
                         ->multiple()
-                        ->nullable()->disk('s3')
+                        ->nullable()
+                            ->disk('s3')
                         ->directory('contracts_attachments')
                         ->downloadable()
                         ->preserveFilenames()
