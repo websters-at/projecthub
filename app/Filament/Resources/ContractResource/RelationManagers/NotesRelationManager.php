@@ -24,37 +24,46 @@ class NotesRelationManager extends RelationManager
 {
     protected static string $relationship = 'notes';
 
+    public static function getModelLabel(): string
+    {
+        return __('messages.contract_note.resource.name');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('messages.contract_note.resource.name_plural');
+    }
+
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-
-                Section::make('General Information')->schema([
+                Section::make(__('messages.contract_note.form.section_general'))->schema([
                     TextInput::make('name')
-                        ->label('Title of the note')
+                        ->label(__('messages.contract_note.form.field_name'))
                         ->required()
                         ->maxLength(255)
-                        ->placeholder('Set a title for the note'),
+                        ->placeholder(__('messages.contract_note.form.field_name_placeholder')),
 
                     MarkdownEditor::make('description')
-                        ->label('Description')
-                        ->placeholder('Describe the note'),
+                        ->label(__('messages.contract_note.form.field_description'))
+                        ->placeholder(__('messages.contract_note.form.field_description_placeholder')),
 
                     DateTimePicker::make('date')
-                        ->label('Date')
+                        ->label(__('messages.contract_note.form.field_date'))
                         ->default(now())
                         ->required(),
                 ]),
-                Section::make('More Information')->schema([
+                Section::make(__('messages.contract_note.form.section_contract'))->schema([
                     FileUpload::make('attachments')
-                        ->label('Attachments')
+                        ->label(__('messages.contract_note.form.field_attachments'))
                         ->multiple()
                         ->directory('contracts_notes')
                         ->preserveFilenames()
                         ->downloadable()
                         ->acceptedFileTypes(['application/pdf', 'image/*', 'text/plain'])
                         ->maxSize(5120)
-                        ->hint('Acceted formats: PDF oder Bilder.'),
+                        ->hint(__('messages.contract_note.form.field_attachments_hint')),
                 ]),
             ]);
     }
@@ -69,20 +78,20 @@ class NotesRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name')
-                    ->label('Title')
+                    ->label(__('messages.contract_note.table.name'))
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('date')
-                    ->label('Date')
+                    ->label(__('messages.contract_note.table.date'))
                     ->sortable(),
                 TextColumn::make('contractClassification.contract.name')
-                    ->label('Contract')
+                    ->label(__('messages.contract_note.table.contract'))
                     ->sortable()
                     ->limit(10)
-                    ->searchable()
+                    ->searchable(),
             ])
             ->filters([
-                //
+                // Filters can be added here if needed
             ])
             ->headerActions([
                 CreateAction::make()->mutateFormDataUsing(function (array $data): array {
@@ -109,7 +118,6 @@ class NotesRelationManager extends RelationManager
                 ]),
             ]);
     }
-
     public static function getEloquentQuery(): Builder
     {
         $user = auth()->user();

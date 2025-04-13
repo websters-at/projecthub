@@ -29,42 +29,51 @@ class ContractsRelationManager extends RelationManager
 {
     protected static string $relationship = 'contracts';
 
-    public function form(Form $form): Form
+    public  function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make('General')->schema([
+                Section::make(__('messages.contract.form.section_general'))->schema([
                     TextInput::make('name')
                         ->required()
-                        ->maxLength(255),
+                        ->maxLength(255)
+                        ->label(__('messages.contract.form.field_name')),
                     RichEditor::make('description')
                         ->nullable()
                         ->string()
-                        ->maxLength(255),
+                        ->maxLength(255)
+                        ->label(__('messages.contract.form.field_description')),
                     DatePicker::make('due_to')
                         ->required()
+                        ->label(__('messages.contract.form.field_due_to')),
                 ])->collapsible()
                     ->collapsed(false),
-                Section::make('Address')->schema([
+
+                Section::make(__('messages.contract.form.section_location'))->schema([
                     TextInput::make('country')
                         ->nullable()
-                        ->maxLength(255),
+                        ->maxLength(255)
+                        ->label(__('messages.contract.form.field_country')),
                     TextInput::make('state')
                         ->nullable()
-                        ->maxLength(255),
+                        ->maxLength(255)
+                        ->label(__('messages.contract.form.field_state')),
                     TextInput::make('city')
                         ->nullable()
-                        ->maxLength(255),
+                        ->maxLength(255)
+                        ->label(__('messages.contract.form.field_city')),
                     TextInput::make('zip_code')
                         ->nullable()
-                        ->maxLength(255),
+                        ->maxLength(255)
+                        ->label(__('messages.contract.form.field_zip_code')),
                     TextInput::make('address')
                         ->nullable()
                         ->maxLength(255)
+                        ->label(__('messages.contract.form.field_address')),
                 ])->columns(2)->collapsible()
                     ->collapsed(false),
 
-                Section::make('Contract Attachment')->schema([
+                Section::make(__('messages.contract.form.section_attachments'))->schema([
                     FileUpload::make('attachments')
                         ->columns(1)
                         ->multiple()
@@ -73,20 +82,24 @@ class ContractsRelationManager extends RelationManager
                         ->downloadable()
                         ->preserveFilenames()
                         ->previewable()
+                        ->label(__('messages.contract.form.field_attachments')),
                 ])->collapsible()
                     ->collapsed(false),
-                Section::make('Employees')
-                    ->schema([
-                        Select::make('users')
-                            ->multiple()
-                            ->preload()
-                            ->relationship('users', 'email')
-                            ->searchable(),
-                    ])
+
+                Section::make(__('messages.contract.form.section_employees'))->schema([
+                    Select::make('users')
+                        ->multiple()
+                        ->preload()
+                        ->relationship('users', 'email')
+                        ->searchable()
+                        ->label(__('messages.contract.form.field_users')),
+                ])
                     ->columns(1)->collapsible()
                     ->collapsed(false),
             ]);
     }
+
+
     public function isReadOnly(): bool
     {
         return false;
@@ -100,18 +113,21 @@ class ContractsRelationManager extends RelationManager
                     ->date()
                     ->searchable()
                     ->sortable()
-                    ->limit(30),
+                    ->limit(30)
+                    ->label(__('messages.contract.table.due_to')),
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable()
-                    ->limit(30),
+                    ->limit(30)
+                    ->label(__('messages.contract.table.name')),
                 TextColumn::make('description')
                     ->limit(30)
                     ->searchable()
-                    ->markdown(),
+                    ->markdown()
+                    ->label(__('messages.contract.table.description')),
                 TextColumn::make('city')
                     ->limit(30)
-
+                    ->label(__('messages.contract.form.field_city')),
             ])
             ->filters([
 

@@ -31,10 +31,21 @@ class CallNotesResource extends Resource
     protected static ?string $navigationGroup = 'Calls';
 
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
-    public static function getNavigationBadge(): ?string
+
+    public static function getNavigationGroup(): ?string
     {
-        return static::$model::count();
+        return __('messages.call.resource.group');
     }
+
+    public static function getLabel(): string
+    {
+        return __('messages.call_note.resource.name');
+    }
+    public static function getPluralLabel(): string
+    {
+        return __('messages.call_note.resource.name_plural');
+    }
+
     public static function getGloballySearchableAttributes(): array
     {
         return [
@@ -58,57 +69,59 @@ class CallNotesResource extends Resource
     {
         return $form
             ->schema([
-                Section::make()->schema([
-                    TextInput::make('name')
-                        ->label('Title of the call note')
-                        ->required()
-                        ->maxLength(255)
-                        ->placeholder('Set a title for the call note'),
-                    MarkdownEditor::make('description')
-                        ->label('Description')
-                        ->placeholder('Describe the note'),
-                    Select::make('call_id')
-                        ->label('Call Note')
-                        ->options(function () {
-                            $user = Auth::user();
-                            return Call::whereHas('contract_classification', function ($query) use ($user) {
-                                $query->where('user_id', $user->id);
-                            })->pluck('name', 'id');
-                        })
-                        ->preload()
-                        ->searchable()
-                        ->required()
+                Section::make()
+                    ->schema([
+                        TextInput::make('name')
+                            ->label(__('messages.call_note.form.field_name'))
+                            ->required()
+                            ->maxLength(255)
+                            ->placeholder(__('messages.call_note.form.field_name')),
 
-                ])->heading("General"),
+                        MarkdownEditor::make('description')
+                            ->label(__('messages.call_note.form.field_description'))
+                            ->placeholder(__('messages.call_note.form.field_description')),
 
-
+                        Select::make('call_id')
+                            ->label(__('messages.call_note.form.field_call_id'))
+                            ->options(function () {
+                                $user = Auth::user();
+                                return Call::whereHas('contract_classification', function ($query) use ($user) {
+                                    $query->where('user_id', $user->id);
+                                })->pluck('name', 'id');
+                            })
+                            ->preload()
+                            ->searchable()
+                            ->required(),
+                    ])
+                    ->heading(__('messages.call_note.form.section_general')),
             ]);
     }
+
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->label('Title')
+                    ->label(__('messages.call_note.table.name'))
                     ->sortable()
                     ->searchable(),
 
                 Tables\Columns\TextColumn::make('description')
-                    ->label('Description')
+                    ->label(__('messages.call_note.table.description'))
                     ->limit(50)
                     ->sortable()
                     ->searchable()
                     ->markdown(),
 
                 Tables\Columns\TextColumn::make('call.name')
-                    ->label('Call')
+                    ->label(__('messages.call_note.table.call'))
                     ->sortable()
                     ->searchable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('call_id')
-                    ->label('Call')
+                    ->label(__('messages.call_note.table.filter_call'))
                     ->options(fn () => Call::all()->pluck('name', 'id'))
                     ->searchable(),
             ])
@@ -122,6 +135,7 @@ class CallNotesResource extends Resource
                 ]),
             ]);
     }
+
 
     public static function getRelations(): array
     {

@@ -25,27 +25,38 @@ class LoginCredentialsRelationManager extends RelationManager
 {
     protected static string $relationship = 'login_credentials';
 
+    public static function getModelLabel(): string
+    {
+        return __('messages.login_credentials.resource.name');
+    }
+    public static function getPluralModelLabel(): string
+    {
+        return __('messages.login_credentials.resource.name');
+    }
+
+
+
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Grid::make(1) // Ensures a single-column layout
+                Grid::make(1)
                 ->schema([
-                    Section::make('General')->schema([
+                    Section::make(__('messages.login_credentials.form.section_general'))->schema([
                         TextInput::make('name')
                             ->required()
-                            ->label('Name'),
+                            ->label(__('messages.login_credentials.form.field_name')),
                         MarkdownEditor::make('description')
-                            ->label('Description'),
+                            ->label(__('messages.login_credentials.form.field_description')),
                         TextInput::make('email')
                             ->email()
-                            ->label('Email'),
+                            ->label(__('messages.login_credentials.form.field_email')),
                         TextInput::make('password')
                             ->password()
-                            ->label('Password'),
+                            ->label(__('messages.login_credentials.form.field_password')),
                         FileUpload::make('attachments')
                             ->multiple()
-                            ->label('Attachments')
+                            ->label(__('messages.login_credentials.form.field_attachments'))
                             ->directory('login_credentials_attachments')
                             ->visibility('public')
                             ->preserveFilenames(),
@@ -65,15 +76,15 @@ class LoginCredentialsRelationManager extends RelationManager
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Name')
+                    ->label(__('messages.login_credentials.table.name'))
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('description')
-                    ->label('Description')
-                    ->limit(50)
+                    ->label(__('messages.login_credentials.table.description'))
+                    ->limit(50),
             ])
             ->filters([
-                //
+                // Add filters if needed based on the translations
             ])
             ->headerActions([
                 CreateAction::make()->mutateFormDataUsing(function (array $data): array {

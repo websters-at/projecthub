@@ -28,10 +28,22 @@ class CustomerResource extends Resource
     protected static ?string $navigationIcon = 'fas-handshake';
     protected static ?string $navigationGroup = 'Contracts';
     protected static ?int $navigationSort = 1;
-    public static function getNavigationBadge(): ?string
+
+    public static function getNavigationGroup(): ?string
     {
-        return static::$model::count();
+        return __('messages.customer.resource.group');
     }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('messages.customer.resource.name');
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return __('messages.customer.resource.name_plural');
+    }
+
 
     public static function getGloballySearchableAttributes(): array
     {
@@ -59,39 +71,53 @@ class CustomerResource extends Resource
     {
         return $form
             ->schema([
-                Section::make([
-                    TextInput::make('full_name')
-                        ->maxLength(255),
-                    TextInput::make('company_name')
-                        ->maxLength(255)
-                        ->required(),
-                     TextInput::make('email')
-                         ->email(),
-                    TextInput::make('phone')
-                        ->tel()
-                        ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/'),
-                    TextInput::make('tax_id'),
-                ])->heading("General"),
-                Section::make('Address')->schema([
-                    TextInput::make('country')
-                        ->nullable()
-                        ->maxLength(255),
-                    TextInput::make('state')
-                        ->nullable()
-                        ->maxLength(255),
-                    TextInput::make('city')
-                        ->nullable()
-                        ->maxLength(255),
-                    TextInput::make('zip_code')
-                        ->nullable()
-                        ->maxLength(255),
-                    TextInput::make('address')
-                        ->nullable()
-                        ->maxLength(255)
-                ])->columns(2)
+                Section::make(__('messages.customer.form.section_general'))
+                    ->schema([
+                        TextInput::make('full_name')
+                            ->maxLength(255)
+                            ->label(__('messages.customer.form.field_full_name')),
+                        TextInput::make('company_name')
+                            ->maxLength(255)
+                            ->required()
+                            ->label(__('messages.customer.form.field_company_name')),
+                        TextInput::make('email')
+                            ->email()
+                            ->label(__('messages.customer.form.field_email')),
+                        TextInput::make('phone')
+                            ->tel()
+                            ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/')
+                            ->label(__('messages.customer.form.field_phone')),
+                        TextInput::make('tax_id')
+                            ->label(__('messages.customer.form.field_tax_id')),
+                    ]),
+                Section::make(__('messages.customer.form.section_address'))
+                    ->schema([
+                        TextInput::make('country')
+                            ->nullable()
+                            ->maxLength(255)
+                            ->label(__('messages.customer.form.field_country')),
+                        TextInput::make('state')
+                            ->nullable()
+                            ->maxLength(255)
+                            ->label(__('messages.customer.form.field_state')),
+                        TextInput::make('city')
+                            ->nullable()
+                            ->maxLength(255)
+                            ->label(__('messages.customer.form.field_city')),
+                        TextInput::make('zip_code')
+                            ->nullable()
+                            ->maxLength(255)
+                            ->label(__('messages.customer.form.field_zip_code')),
+                        TextInput::make('address')
+                            ->nullable()
+                            ->maxLength(255)
+                            ->label(__('messages.customer.form.field_address')),
+                    ])
+                    ->columns(2)
                     ->collapsible(true),
             ]);
     }
+
 
     public static function table(Table $table): Table
     {
@@ -100,22 +126,26 @@ class CustomerResource extends Resource
                 TextColumn::make('company_name')
                     ->limit(30)
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('messages.customer.table.company_name')),
                 TextColumn::make('email')
                     ->limit(30)
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->label(__('messages.customer.table.email')),
                 TextColumn::make('phone')
-                   ->searchable()
-                    ->sortable(),
+                    ->searchable()
+                    ->sortable()
+                    ->label(__('messages.customer.table.phone')),
                 TextColumn::make('city')
                     ->limit(30)
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->label(__('messages.customer.table.city')),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('country')
-                    ->label('Country')
+                    ->label(__('messages.customer.table.filter_country'))
                     ->options(
                         Customer::query()
                             ->whereNotNull('country')
@@ -125,7 +155,7 @@ class CustomerResource extends Resource
                     )
                     ->searchable(),
                 Tables\Filters\SelectFilter::make('state')
-                    ->label('State')
+                    ->label(__('messages.customer.table.filter_state'))
                     ->options(
                         Customer::query()
                             ->whereNotNull('state')
@@ -135,7 +165,7 @@ class CustomerResource extends Resource
                     )
                     ->searchable(),
                 Tables\Filters\SelectFilter::make('city')
-                    ->label('City')
+                    ->label(__('messages.customer.table.filter_city'))
                     ->options(
                         Customer::query()
                             ->whereNotNull('city')
@@ -149,7 +179,6 @@ class CustomerResource extends Resource
                 EditAction::make(),
                 ViewAction::make(),
                 DeleteAction::make(),
-
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

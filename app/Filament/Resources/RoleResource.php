@@ -25,33 +25,45 @@ use Filament\Forms\Components\TextInput;
 class RoleResource extends Resource
 {
     protected static ?string $model = Role::class;
-    public static function getNavigationBadge(): ?string
-    {
-        return static::$model::count();
-    }
+
 
     protected static ?string $navigationIcon = 'heroicon-o-hand-raised';
 
     protected static ?string $navigationGroup = 'Settings';
     protected static ?int $navigationSort = 10;
 
+    public static function getNavigationGroup(): ?string
+    {
+        return __('messages.role.resource.group');
+    }
 
+    public static function getNavigationLabel(): string
+    {
+        return __('messages.role.resource.name');
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return __('messages.role.resource.name_plural');
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make()->schema([
-                    TextInput::make('name')
+                Section::make(__('messages.role.form.section_general'))->schema([
+                    Forms\Components\TextInput::make('name')
                         ->minLength(2)
                         ->maxLength(255)
                         ->required()
-                        ->unique(ignoreRecord: true),
+                        ->unique(ignoreRecord: true)
+                        ->label(__('messages.role.form.field_name')),
                     Select::make('permissions')
-                    ->multiple()
-                    ->relationship('permissions','name')
-                    ->searchable()
-                    ->preload()
+                        ->multiple()
+                        ->relationship('permissions', 'name')
+                        ->searchable()
+                        ->preload()
+                        ->label(__('messages.role.form.field_permissions')),
                 ])
             ]);
     }
@@ -60,15 +72,14 @@ class RoleResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('id')
-                    ->sortable()
-                    ->searchable(),
                 TextColumn::make('name')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('messages.role.table.name')),
                 TextColumn::make('created_at')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->label(__('messages.role.table.created_at')),
             ])
             ->filters([
                 //

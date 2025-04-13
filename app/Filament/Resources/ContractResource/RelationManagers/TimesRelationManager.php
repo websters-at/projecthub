@@ -35,35 +35,40 @@ class TimesRelationManager extends RelationManager
             ->schema([
                 Section::make([
                     DatePicker::make('date')
-                        ->required(),
+                        ->required()
+                        ->label(__('messages.time.form.field_date')),
                     RichEditor::make('description')
                         ->nullable()
                         ->string()
-                        ->maxLength(255),
-                ])->heading('General')
+                        ->maxLength(255)
+                        ->label(__('messages.time.form.field_description')),
+                ])->heading(__('messages.time.form.general'))
                     ->collapsible()
                     ->collapsed(false),
                 Section::make([
                     TextInput::make('total_hours_worked')
-                        ->required(),
+                        ->required()
+                        ->label(__('messages.time.form.field_total_hours_worked')),
                     TextInput::make('total_minutes_worked')
+                        ->label(__('messages.time.form.field_total_minutes_worked')),
                 ])->columns(2)
                     ->collapsible()
                     ->collapsed(false)
-                    ->heading('Time'),
+                    ->heading(__('messages.time.form.time')),
                 Section::make([
                     Toggle::make('is_special')
                         ->required()
+                        ->label(__('messages.time.form.field_is_special')),
                 ])->columns(1)
                     ->collapsible()
                     ->collapsed(false)
-                    ->heading('Specification')
+                    ->heading(__('messages.time.form.specification'))
             ]);
     }
 
     public function isReadOnly(): bool
     {
-        return true;
+        return false;
     }
 
     public function table(Table $table): Table
@@ -72,11 +77,14 @@ class TimesRelationManager extends RelationManager
             ->recordTitleAttribute('date')
             ->columns([
                 TextColumn::make('date')
-                    ->date(),
-                TextColumn::make('description')->markdown()->limit(30)  ,
-                TextColumn::make('start_time')
-                    ->time(),
-                TextColumn::make('total_hours_worked'),
+                    ->date()
+                    ->label(__('messages.time.table.date')),
+                TextColumn::make('description')
+                    ->markdown()
+                    ->limit(30)
+                    ->label(__('messages.time.table.description')),
+                TextColumn::make('total_hours_worked')
+                    ->label(__('messages.time.table.total_hours')),
                 IconColumn::make('is_special')
                     ->icon(fn (bool $state): string => match ($state) {
                         false => 'fas-x',
@@ -87,35 +95,39 @@ class TimesRelationManager extends RelationManager
                         true => 'success',
                     })
                     ->size(IconColumnSize::Medium)
+                    ->label(__('messages.time.table.is_special')),
             ])->modifyQueryUsing(function (Builder $query) {
                 $user = Auth::user();
                 $contractId = $this->ownerRecord->id;
-                if($user->hasPermissionTo('View All Times')){
+                if ($user->hasPermissionTo('View All Times')) {
                     return $query;
-                }else{
+                } else {
                     $query->whereHas('contractClassification', function (Builder $query) use ($user, $contractId) {
                         $query->where('user_id', $user->id)
                             ->where('contract_id', $contractId);
                     });
                 }
             })
-            ->filters([
-                //
-            ])
             ->headerActions([
                 CreateAction::make()->mutateFormDataUsing(function (array $data): array {
                     $user = Auth::user();
                     $contractId = $this->ownerRecord->id;
 
+                    // Fetch the contract classification
                     $contractClassification = ContractClassification::where('user_id', $user->id)
                         ->where('contract_id', $contractId)
                         ->first();
 
                     if ($contractClassification) {
+                        // Ensure the contract_classification_id is included in the data
                         $data['contract_classification_id'] = $contractClassification->id;
+                    } else {
+                        // If there's no contract classification, handle the case (e.g., throw an error or set a default value)
+                        // Optionally, you could set a default value or handle it in another way.
                     }
+
                     return $data;
-                })->visible(function(): bool{
+                })->visible(function (): bool {
                     $user = Auth::user();
                     $contractId = $this->ownerRecord->id;
 
@@ -125,7 +137,6 @@ class TimesRelationManager extends RelationManager
                 }),
             ])
             ->actions([
-                CreateAction::make(),
                 EditAction::make(),
                 DeleteAction::make(),
             ])
@@ -135,6 +146,7 @@ class TimesRelationManager extends RelationManager
                 ]),
             ]);
     }
+
 
     public static function getEloquentQuery(): Builder
     {

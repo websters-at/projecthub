@@ -13,7 +13,9 @@ class Bill extends Model
     protected $fillable = [
         "contract_classification_id",
         "name",
-        "is_paid",
+        "is_payed",
+        "is_flat_rate",
+        "flat_rate_amount",
         "hourly_rate",
         "attachments",
         "created_on",

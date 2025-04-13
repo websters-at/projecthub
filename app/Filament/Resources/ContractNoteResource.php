@@ -33,10 +33,22 @@ class ContractNoteResource extends Resource
     protected static ?int $navigationSort = 6;
 
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
-    public static function getNavigationBadge(): ?string
+    public static function getNavigationGroup(): ?string
     {
-        return static::$model::count();
+        return __('messages.contract_note.resource.group');
     }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('messages.contract_note.resource.name');
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return __('messages.contract_note.resource.name_plural');
+    }
+
+
     public static function getGloballySearchableAttributes(): array
     {
         return [
@@ -58,26 +70,26 @@ class ContractNoteResource extends Resource
     {
         return $form
             ->schema([
-                Section::make('General Information')->schema([
+                Section::make(__('messages.contract_note.form.section_general'))->schema([
                     TextInput::make('name')
-                        ->label('Title of the note')
+                        ->label(__('messages.contract_note.form.field_name'))
                         ->required()
                         ->maxLength(255)
-                        ->placeholder('Set a title for the note'),
+                        ->placeholder(__('messages.contract_note.form.field_name')),
 
                     MarkdownEditor::make('description')
-                        ->label('Description')
-                        ->placeholder('Describe the note'),
+                        ->label(__('messages.contract_note.form.field_description'))
+                        ->placeholder(__('messages.contract_note.form.field_description')),
 
                     DateTimePicker::make('date')
-                        ->label('Date')
+                        ->label(__('messages.contract_note.form.field_date'))
                         ->default(now())
                         ->required(),
                 ]),
 
-                Section::make('Contract')->schema([
+                Section::make(__('messages.contract_note.form.section_contract'))->schema([
                     Select::make('contract_id')
-                        ->label('Contract')
+                        ->label(__('messages.contract_note.form.field_contract'))
                         ->required()
                         ->options(function () {
                             $user = Auth::user();
@@ -88,7 +100,7 @@ class ContractNoteResource extends Resource
                         ->preload()
                         ->searchable(),
                     FileUpload::make('attachments')
-                        ->label('Attachments')
+                        ->label(__('messages.contract_note.form.field_attachments'))
                         ->multiple()
                         ->disk('s3')
                         ->directory('contracts_notes')
@@ -96,7 +108,7 @@ class ContractNoteResource extends Resource
                         ->downloadable()
                         ->acceptedFileTypes(['application/pdf', 'image/*', 'text/plain'])
                         ->maxSize(5120)
-                        ->hint('Acceted formats: PDF oder Bilder.'),
+                        ->hint(__('messages.contract_note.form.field_attachments_hint')),
                 ]),
 
             ]);
@@ -106,53 +118,42 @@ class ContractNoteResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')
-                    ->label('Title')
+                Tables\Columns\TextColumn::make('name')
+                    ->label(__('messages.contract_note.table.name'))
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('date')
-                    ->label('Date')
+
+                Tables\Columns\TextColumn::make('date')
+                    ->label(__('messages.contract_note.table.date'))
                     ->sortable(),
-                TextColumn::make('contract.name')
-                    ->label('Contract')
-                    ->sortable()
-                    ->limit(10)
-                    ->searchable(),
-                TextColumn::make('contract.customer.company_name')
-                    ->label('Customer')
+
+                Tables\Columns\TextColumn::make('contract.name')
+                    ->label(__('messages.contract_note.table.contract'))
                     ->sortable()
                     ->limit(10)
                     ->searchable(),
 
+                Tables\Columns\TextColumn::make('contract.customer.company_name')
+                    ->label(__('messages.contract_note.table.customer'))
+                    ->sortable()
+                    ->limit(10)
+                    ->searchable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('contract_id')
-                    ->label('Contract')
+                    ->label(__('messages.contract_note.table.contract'))
                     ->options(function () {
                         $user = Auth::user();
-                        return ContractClassification::where('user_id', $user->id)
-                            ->with('contract')
-                            ->get()
-                            ->pluck('contract.name', 'contract_id');
+                        return Contract::whereHas('classifications', function ($query) use ($user) {
+                            $query->where('user_id', $user->id);
+                        })->pluck('name', 'id');
                     })
                     ->searchable(),
-                Tables\Filters\Filter::make('date')
-                    ->label('Date Range')
-                    ->form([
-                        DatePicker::make('date_from')->label('From'),
-                        DatePicker::make('date_until')->label('To'),
-                    ])
-                    ->query(function (Builder $query, array $data) {
-                        return $query
-                            ->when($data['date_from'], fn ($query, $date) => $query->whereDate('date', '>=', $date))
-                            ->when($data['date_until'], fn ($query, $date) => $query->whereDate('date', '<=', $date));
-                    }),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -33,9 +33,19 @@ class LoginCredentialsResource extends Resource
     protected static ?int $navigationSort = 7;
 
     protected static ?string $navigationIcon = 'heroicon-o-finger-print';
-    public static function getNavigationBadge(): ?string
+    public static function getNavigationGroup(): ?string
     {
-        return static::$model::count();
+        return __('messages.login_credentials.resource.group');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('messages.login_credentials.resource.name');
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return __('messages.login_credentials.resource.name_plural');
     }
 
     public static function form(Form $form): Form
@@ -43,38 +53,38 @@ class LoginCredentialsResource extends Resource
         return $form
             ->schema([
                 Grid::make(1)
-                ->schema([
-                    Section::make('General')->schema([
-                        TextInput::make('name')
-                            ->required()
-                            ->label('Name'),
-                        MarkdownEditor::make('description')
-                            ->label('Description'),
-                        TextInput::make('email')
-                            ->email()
-                            ->label('Email'),
-                        TextInput::make('password')
-                            ->label('Password'),
-                        FileUpload::make('attachments')
-                            ->multiple()
-                            ->label('Attachments')
-                            ->directory('login_credentials_attachments')
-                            ->visibility('public')
-                            ->downloadable()
-                            ->disk('s3')
-                            ->preserveFilenames(),
-                    ])->collapsible(),
-                    Section::make('Contracts')
-                        ->schema([
-                            Select::make('contract')
+                    ->schema([
+                        Section::make(__('messages.login_credentials.form.section_general'))->schema([
+                            TextInput::make('name')
+                                ->required()
+                                ->label(__('messages.login_credentials.form.field_name')),
+                            MarkdownEditor::make('description')
+                                ->label(__('messages.login_credentials.form.field_description')),
+                            TextInput::make('email')
+                                ->email()
+                                ->label(__('messages.login_credentials.form.field_email')),
+                            TextInput::make('password')
+                                ->label(__('messages.login_credentials.form.field_password')),
+                            FileUpload::make('attachments')
                                 ->multiple()
-                                ->preload()
-                                ->relationship('contracts', 'name')
-                                ->searchable(),
-                        ])
-                        ->columns(1)->collapsible()
-                        ->collapsed(false),
-                ]),
+                                ->label(__('messages.login_credentials.form.field_attachments'))
+                                ->directory('login_credentials_attachments')
+                                ->visibility('public')
+                                ->downloadable()
+                                ->disk('s3')
+                                ->preserveFilenames(),
+                        ])->collapsible(),
+                        Section::make(__('messages.login_credentials.form.section_contracts'))
+                            ->schema([
+                                Select::make('contract')
+                                    ->multiple()
+                                    ->preload()
+                                    ->relationship('contracts', 'name')
+                                    ->searchable(),
+                            ])
+                            ->columns(1)->collapsible()
+                            ->collapsed(false),
+                    ]),
             ]);
     }
 
@@ -83,24 +93,23 @@ class LoginCredentialsResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Name')
+                    ->label(__('messages.login_credentials.table.name'))
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('contracts.name')
-                    ->label('Contracts')
+                    ->label(__('messages.login_credentials.table.contracts'))
                     ->formatStateUsing(fn ($state, $record) => $record->contracts->pluck('name')->join(', '))
                     ->sortable(),
                 TextColumn::make('description')
-                    ->label('Description')
+                    ->label(__('messages.login_credentials.table.description'))
                     ->limit(50),
             ])
             ->filters([
                 Filter::make('email')
-                    ->label('Email Domain')
+                    ->label(__('messages.login_credentials.filter.email.label'))
                     ->form([
                         TextInput::make('domain')
-                            ->label('Domain')
-                            ->placeholder('Enter domain (e.g., example.com)')
+                            ->label(__('messages.login_credentials.filter.email.placeholder')),
                     ])
                     ->query(function (Builder $query, array $data) {
                         return $query->when($data['domain'], function ($query, $domain) {
@@ -109,11 +118,11 @@ class LoginCredentialsResource extends Resource
                     }),
 
                 Filter::make('name')
-                    ->label('Name')
+                    ->label(__('messages.login_credentials.filter.name.label'))
                     ->form([
                         TextInput::make('name_contains')
-                            ->label('Contains')
-                            ->placeholder('Search by name'),
+                            ->label(__('messages.login_credentials.filter.name.placeholder'))
+                            ->placeholder(__('messages.login_credentials.filter.name.placeholder')),
                     ])
                     ->query(function (Builder $query, array $data) {
                         return $query->when($data['name_contains'], function ($query, $name) {
@@ -125,7 +134,6 @@ class LoginCredentialsResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
-
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\GeneralTodoResource\Pages;
-use App\Filament\Resources\GeneralTodoResource\RelationManagers;
 use App\Models\ContractClassification;
 use App\Models\GeneralTodo;
 use App\Models\User;
@@ -34,39 +33,59 @@ class GeneralTodoResource extends Resource
     protected static ?string $navigationGroup = 'General';
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
-    public static function getNavigationBadge(): ?string
+    public static function getModelLabel(): string
     {
-        return static::$model::count();
+        return __('messages.general_todo.resource.name');
     }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('messages.general_todo.resource.name_plural');
+    }
+    public static function getNavigationGroup(): ?string
+    {
+        return __('messages.general_todo.resource.group');
+    }
+
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make([
+                Section::make(__('messages.general_todo.form.general'))->schema([
                     TextInput::make('name')
+                        ->label(__('messages.general_todo.form.name'))
                         ->required()
                         ->maxLength(255),
+
                     DateTimePicker::make('due_to')
+                        ->label(__('messages.general_todo.form.due_to'))
                         ->required(),
-                    MarkdownEditor::make('description'),
+
+                    MarkdownEditor::make('description')
+                        ->label(__('messages.general_todo.form.description')),
+
                     Toggle::make('is_done')
-                        ->label('Completed')
+                        ->label(__('messages.general_todo.form.is_done'))
                         ->default(false),
+
                     Select::make('priority')
+                        ->label(__('messages.general_todo.form.priority'))
                         ->options([
-                            'low' => 'Low',
-                            'mid' => 'Medium',
-                            'high' => 'High',
+                            'low' => __('messages.general_todo.form.priority_options.low'),
+                            'mid' => __('messages.general_todo.form.priority_options.mid'),
+                            'high' => __('messages.general_todo.form.priority_options.high'),
                         ])
                         ->default('medium')
                         ->required(),
+
                     FileUpload::make('attachments')
+                        ->label(__('messages.general_todo.form.attachments'))
                         ->multiple()
                         ->disk('s3')
                         ->acceptedFileTypes(['image/*', 'application/pdf', 'text/plain'])
-                        ->directory('todos_attachments')
-                ])->heading("General"),
+                        ->directory('todos_attachments'),
+                ])
             ]);
     }
 
@@ -75,38 +94,47 @@ class GeneralTodoResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('messages.general_todo.table.name'))
                     ->searchable()
                     ->sortable(),
+
                 TextColumn::make('user.name')
-                    ->label('User')
+                    ->label(__('messages.general_todo.table.user'))
                     ->sortable(),
+
                 TextColumn::make('due_to')
+                    ->label(__('messages.general_todo.table.due_to'))
                     ->time()
                     ->sortable(),
+
                 TextColumn::make('priority')
+                    ->label(__('messages.general_todo.table.priority'))
                     ->sortable(),
+
                 ToggleColumn::make('is_done')
-                    ->label('Completed')
+                    ->label(__('messages.general_todo.table.is_done'))
                     ->sortable(),
             ])
             ->filters([
-               SelectFilter::make('priority')
-                    ->label('Priority')
+                SelectFilter::make('priority')
+                    ->label(__('messages.general_todo.filters.priority'))
                     ->options([
-                        'low' => 'Low',
-                        'mid' => 'Medium',
-                        'high' => 'High',
+                        'low' => __('messages.general_todo.form.priority_options.low'),
+                        'mid' => __('messages.general_todo.form.priority_options.mid'),
+                        'high' => __('messages.general_todo.form.priority_options.high'),
                     ])
                     ->searchable(),
+
                 Filter::make('is_done')
-                    ->label('Completion Status')
+                    ->label(__('messages.general_todo.filters.is_done'))
                     ->query(fn (Builder $query) => $query->where('is_done', true))
                     ->toggle(),
+
                 Filter::make('due_to')
-                    ->label('Due Date Range')
+                    ->label(__('messages.general_todo.filters.due_to'))
                     ->form([
-                        DateTimePicker::make('due_from')->label('From'),
-                        DateTimePicker::make('due_until')->label('To'),
+                        DateTimePicker::make('due_from')->label(__('messages.general_todo.filters.due_from')),
+                        DateTimePicker::make('due_until')->label(__('messages.general_todo.filters.due_until')),
                     ])
                     ->query(function (Builder $query, array $data) {
                         return $query
@@ -115,10 +143,8 @@ class GeneralTodoResource extends Resource
                     }),
 
                 SelectFilter::make('user_id')
-                    ->label('User')
-                    ->options(
-                        User::all()->pluck('name', 'id')
-                    )
+                    ->label(__('messages.general_todo.filters.user'))
+                    ->options(User::all()->pluck('name', 'id'))
                     ->searchable(),
             ])
             ->actions([

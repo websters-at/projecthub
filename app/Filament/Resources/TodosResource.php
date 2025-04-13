@@ -36,43 +36,59 @@ class TodosResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
     protected static ?int $navigationSort = 3;
-    public static function getNavigationBadge(): ?string
+
+    public static function getNavigationGroup(): ?string
     {
-        return static::$model::count();
+        return __('messages.todo.resource.group');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('messages.todo.resource.name');
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return __('messages.todo.resource.name_plural');
     }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Section::make([
+                Section::make(__('messages.todo.form.section_general'))->schema([
                     TextInput::make('name')
                         ->required()
-                        ->maxLength(255),
+                        ->maxLength(255)
+                        ->label(__('messages.todo.form.field_name')),
                     DateTimePicker::make('due_to')
-                        ->required(),
-                    MarkdownEditor::make('description'),
+                        ->required()
+                        ->label(__('messages.todo.form.field_due_to')),
+                    MarkdownEditor::make('description')
+                        ->label(__('messages.todo.form.field_description')),
                     Toggle::make('is_done')
-                        ->label('Completed')
+                        ->label(__('messages.todo.form.field_is_done'))
                         ->default(false),
                     Select::make('priority')
                         ->options([
-                            'low' => 'Low',
-                            'mid' => 'Medium',
-                            'high' => 'High',
+                            'low' => __('messages.todo.form.field_priority.low'),
+                            'mid' => __('messages.todo.form.field_priority.medium'),
+                            'high' => __('messages.todo.form.field_priority.high'),
                         ])
-                        ->default('medium')
-                        ->required(),
+                        ->default('mid')
+                        ->required()
+                        ->label(__('messages.todo.form.field_priority_label')),
                     FileUpload::make('attachments')
                         ->multiple()
                         ->downloadable()
                         ->disk('s3')
                         ->acceptedFileTypes(['image/*', 'application/pdf', 'text/plain'])
                         ->directory('todos_attachments')
-                ])->heading("General"),
-                Section::make('Contract')->schema([
+                        ->label(__('messages.todo.form.field_attachments'))
+                ])->heading(__('messages.todo.form.section_general')),
+                Section::make(__('messages.todo.form.section_contract'))->schema([
                     Select::make('contract_classification_id')
-                        ->label('Contract')
+                        ->label(__('messages.todo.form.field_contract_classification'))
                         ->options(function () {
                             $user = Auth::user();
                             return ContractClassification::where('user_id', $user->id)
@@ -93,41 +109,44 @@ class TodosResource extends Resource
             ->columns([
                 TextColumn::make('name')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->label(__('messages.todo.table.name')),
                 TextColumn::make('contract_classification.contract.name')
-                    ->label('Contract')
+                    ->label(__('messages.todo.table.contract'))
                     ->sortable(),
                 TextColumn::make('contract_classification.contract.customer.company_name')
-                    ->label('Customer')
+                    ->label(__('messages.todo.table.customer'))
                     ->sortable(),
                 TextColumn::make('due_to')
                     ->time()
-                    ->sortable(),
+                    ->sortable()
+                    ->label(__('messages.todo.table.due_to')),
                 TextColumn::make('priority')
-                    ->sortable(),
+                    ->sortable()
+                    ->label(__('messages.todo.table.priority')),
                 ToggleColumn::make('is_done')
-                    ->label('Completed')
+                    ->label(__('messages.todo.table.is_done'))
                     ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('priority')
-                    ->label('Priority')
+                    ->label(__('messages.todo.table.priority_label'))
                     ->options([
-                        'low' => 'Low',
-                        'mid' => 'Medium',
-                        'high' => 'High',
+                        'low' => __('messages.todo.form.field_priority.low'),
+                        'mid' => __('messages.todo.form.field_priority.medium'),
+                        'high' => __('messages.todo.form.field_priority.high'),
                     ]),
 
                 Filter::make('is_done')
-                    ->label('Completed')
+                    ->label(__('messages.todo.table.is_done'))
                     ->query(fn (Builder $query) => $query->where('is_done', true))
                     ->toggle(),
 
                 Filter::make('due_to')
-                    ->label('Due Date Range')
+                    ->label(__('messages.todo.table.due_to'))
                     ->form([
-                        DatePicker::make('due_from')->label('From'),
-                        DatePicker::make('due_until')->label('To'),
+                        DatePicker::make('due_from')->label(__('messages.todo.form.field_due_to'))->label(__('messages.todo.table.due_to')),
+                        DatePicker::make('due_until')->label(__('messages.todo.form.field_due_to'))
                     ])
                     ->query(function (Builder $query, array $data) {
                         return $query

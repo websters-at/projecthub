@@ -35,14 +35,24 @@ use Filament\Tables\Filters\Indicator;
 class TimeResource extends Resource
 {
     protected static ?string $model = Time::class;
-    public static function getNavigationBadge(): ?string
-    {
-        return static::$model::count();
-    }
 
     protected static ?string $navigationIcon = 'far-clock';
     protected static ?string $navigationGroup = 'Contracts';
     protected static ?int $navigationSort = 4;
+    public static function getNavigationGroup(): ?string
+    {
+        return __('messages.time.resource.group');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('messages.time.resource.name');
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return __('messages.time.resource.name_plural');
+    }
 
 
     public static function form(Form $form): Form
@@ -52,24 +62,26 @@ class TimeResource extends Resource
                 Section::make([
                     DateTimePicker::make('date')
                         ->default(now())
-                        ->required(),
+                        ->required()
+                        ->label(__('messages.time.form.field_date')), // translated label
                     RichEditor::make('description')
                         ->nullable()
                         ->string()
-                ])->heading('General')
-                    ->collapsible()
-                    ->collapsed(false),
+                        ->label(__('messages.time.form.field_description')), // translated label
+                ])->heading(__('messages.time.form.general'))->collapsible()->collapsed(false),
                 Section::make([
                     TextInput::make('total_hours_worked')
-                        ->required(),
+                        ->required()
+                        ->label(__('messages.time.form.field_total_hours_worked')), // translated label
                     TextInput::make('total_minutes_worked')
+                        ->label(__('messages.time.form.field_total_minutes_worked')), // translated label
                 ])->columns(2)
                     ->collapsible()
                     ->collapsed(false)
-                    ->heading('Time'),
+                    ->heading(__('messages.time.form.time')),
                 Section::make([
                     Select::make('contract_classification_id')
-                        ->label('Contract')
+                        ->label(__('messages.time.form.field_contract_label')) // translated label
                         ->options(function () {
                             $user = Auth::user();
                             return ContractClassification::where('user_id', $user->id)
@@ -83,14 +95,15 @@ class TimeResource extends Resource
                 ])->columns(1)
                     ->collapsible()
                     ->collapsed(false)
-                    ->heading('Contract'),
+                    ->heading(__('messages.time.form.contract')),
                 Section::make([
                     Toggle::make('is_special')
-                    ->default(false)
+                        ->default(false)
+                        ->label(__('messages.time.form.field_is_special')) // translated label
                 ])->columns(1)
                     ->collapsible()
                     ->collapsed(false)
-                    ->heading('Specification')
+                    ->heading(__('messages.time.form.specification'))
             ]);
     }
 
@@ -98,10 +111,21 @@ class TimeResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('date')->date(),
-                TextColumn::make('description')->markdown()->limit(30),
-                TextColumn::make('total_hours_worked'),
+                TextColumn::make('date')
+                    ->label(__('messages.time.table.date')) // Translated label
+                    ->date(),
+                TextColumn::make('description')
+                    ->label(__('messages.time.table.description')) // Translated label
+                    ->markdown()
+                    ->limit(30),
+                TextColumn::make('total_hours_worked')
+                    ->label(__('messages.time.table.total_hours')) // Translated label
+                    ->sortable(),
+                TextColumn::make('total_minutes_worked')
+                    ->label(__('messages.time.table.total_minutes')) // Translated label
+                    ->sortable(),
                 IconColumn::make('is_special')
+                    ->label(__('messages.time.table.is_special')) // Translated label
                     ->icon(fn (bool $state): string => $state ? 'fas-check' : 'fas-x')
                     ->color(fn (bool $state): string => $state ? 'success' : 'danger')
                     ->size(IconColumnSize::Medium)
@@ -109,7 +133,7 @@ class TimeResource extends Resource
             ->filters([
                 SelectFilter::make('contractClassificationUser')
                     ->relationship('contractClassification.user', 'email')
-                    ->label('Filter by User')
+                    ->label(__('messages.time.filters.contract_classification_user')) // Translated label
                     ->visible(fn() => Auth::user()->hasPermissionTo('View Special Times Filters'))
                     ->multiple()
                     ->searchable()
@@ -117,7 +141,7 @@ class TimeResource extends Resource
 
                 SelectFilter::make('contractClassificationContract')
                     ->relationship('contractClassification.contract', 'name')
-                    ->label('Filter by Contract')
+                    ->label(__('messages.time.filters.contract_classification_contract')) // Translated label
                     ->visible(fn() => Auth::user()->hasPermissionTo('View Special Times Filters'))
                     ->multiple()
                     ->searchable()
@@ -125,8 +149,10 @@ class TimeResource extends Resource
 
                 Filter::make('date')
                     ->form([
-                        DatePicker::make('from'),
-                        DatePicker::make('until'),
+                        DatePicker::make('from')
+                            ->label(__('messages.time.filters.date_from')), // Translated label
+                        DatePicker::make('until')
+                            ->label(__('messages.time.filters.date_until')), // Translated label
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
@@ -137,19 +163,17 @@ class TimeResource extends Resource
                         $indicators = [];
 
                         if ($data['from'] ?? null) {
-                            $indicators[] = Indicator::make('Date from ' . Carbon::parse($data['from'])->toFormattedDateString())
+                            $indicators[] = Indicator::make(__('messages.time.filters.date_from') . ' ' . Carbon::parse($data['from'])->toFormattedDateString())
                                 ->removeField('from');
                         }
 
                         if ($data['until'] ?? null) {
-                            $indicators[] = Indicator::make('Date until ' . Carbon::parse($data['until'])->toFormattedDateString())
+                            $indicators[] = Indicator::make(__('messages.time.filters.date_until') . ' ' . Carbon::parse($data['until'])->toFormattedDateString())
                                 ->removeField('until');
                         }
 
                         return $indicators;
                     }),
-
-
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -161,6 +185,8 @@ class TimeResource extends Resource
                 ]),
             ]);
     }
+
+
 
     public static function getRelations(): array
     {

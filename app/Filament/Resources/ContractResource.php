@@ -44,10 +44,22 @@
         protected static ?string $navigationGroup = 'Contracts';
         protected static ?int $navigationSort = 2;
 
-        public static function getNavigationBadge(): ?string
+        public static function getNavigationGroup(): ?string
         {
-            return static::$model::count();
+            return __('messages.contract.resource.group');
         }
+
+        public static function getNavigationLabel(): string
+        {
+            return __('messages.contract.resource.name');
+        }
+
+        public static function getPluralLabel(): string
+        {
+            return __('messages.contract.resource.name_plural');
+        }
+
+
 
         public static function getGloballySearchableAttributes(): array
         {
@@ -74,81 +86,60 @@
         {
             return $form
                 ->schema([
-                        Section::make('General')->schema([
-                            Toggle::make('is_finished')
-                                ->label("Done")
-                                ->nullable(),
-                            TextInput::make('name')
-                                ->required()
-                                ->maxLength(255),
-                            RichEditor::make('description')
-                               ->nullable()
-                                ->string(),
-                            Select::make('priority')
-                                ->options([
-                                    "low" => "Low",
-                                    "high" => "High",
-                                    "mid" => "Medium",
-                                ])
-                                ->searchable()
-                                ->label('Priority')
-                                ->required(),
-                            DateTimePicker::make('due_to')
-                            ->required(),
-
-                        ])->collapsible()
-                            ->collapsed(false),
-                    Section::make('Customer')->schema([
-                        Select::make('customer_id')
-                            ->options(Customer::all()
-                                ->pluck('company_name','id'))
+                    Section::make(__('messages.contract.form.section_general'))->schema([
+                        TextInput::make('name')->label(__('messages.contract.form.field_name'))->required()->maxLength(255),
+                        RichEditor::make('description')->label(__('messages.contract.form.field_description'))->nullable()->string(),
+                        Select::make('priority')
+                            ->label(__('messages.contract.form.field_priority'))
+                            ->options([
+                                'low' => 'Low',
+                                'mid' => 'Medium',
+                                'high' => 'High',
+                            ])
                             ->searchable()
-                        ->label('Customer')
-                        ->required()
-                    ])->columns(1)->collapsible()
-                        ->collapsed(false),
-                    Section::make('Employees')
-                        ->schema([
-                            Select::make('users')
-                                ->multiple()
-                                ->preload()
-                                ->relationship('users', 'email')
-                                ->searchable(),
-                        ])
-                        ->columns(1)->collapsible()
-                        ->collapsed(false),
+                            ->required(),
+                        DateTimePicker::make('due_to')->label(__('messages.contract.form.field_due_to'))->required(),
+                        Toggle::make('is_finished')->label(__('messages.contract.form.field_is_finished'))->nullable(),
 
-                        Section::make('Address')->schema([
-                            TextInput::make('country')
-                                ->nullable()
-                                ->maxLength(255),
-                            TextInput::make('state')
-                                ->nullable()
-                                ->maxLength(255),
-                            TextInput::make('city')
-                                ->nullable()
-                                ->maxLength(255),
-                             TextInput::make('zip_code')
-                                 ->nullable()
-                                 ->maxLength(255),
-                            TextInput::make('address')
-                                ->nullable()
-                                ->maxLength(255)
-                        ])->columns(2)->collapsible()
-                            ->collapsed(false),
+                    ])->collapsible()->collapsed(false),
 
-                    Section::make('Attachments')->schema([
+                    Section::make(__('messages.contract.form.section_customer'))->schema([
+                        Select::make('customer_id')
+                            ->label(__('messages.contract.form.field_customer'))
+                            ->options(Customer::all()->pluck('company_name', 'id'))
+                            ->searchable()
+                            ->required()
+                    ])->columns(1)->collapsible()->collapsed(false),
+
+                    Section::make(__('messages.contract.form.section_employees'))->schema([
+                        Select::make('users')
+                            ->label(__('messages.contract.form.field_users'))
+                            ->multiple()
+                            ->preload()
+                            ->relationship('users', 'email')
+                            ->searchable(),
+                    ])->columns(1)->collapsible()->collapsed(false),
+
+                    Section::make(__('messages.contract.form.section_location'))->schema([
+                        TextInput::make('country')->label(__('messages.contract.form.field_country'))->nullable()->maxLength(255),
+                        TextInput::make('state')->label(__('messages.contract.form.field_state'))->nullable()->maxLength(255),
+                        TextInput::make('city')->label(__('messages.contract.form.field_city'))->nullable()->maxLength(255),
+                        TextInput::make('zip_code')->label(__('messages.contract.form.field_zip_code'))->nullable()->maxLength(255),
+                        TextInput::make('address')->label(__('messages.contract.form.field_address'))->nullable()->maxLength(255),
+                    ])->columns(2)->collapsible()->collapsed(false),
+
+                    Section::make(__('messages.contract.form.section_attachments'))->schema([
                         FileUpload::make('attachments')
-                        ->columns(1)
-                        ->multiple()
-                        ->nullable()
+                            ->label(__('messages.contract.form.field_attachments'))
+                            ->columns(1)
+                            ->multiple()
+                            ->nullable()
                             ->disk('s3')
-                        ->directory('contracts_attachments')
-                        ->downloadable()
-                        ->preserveFilenames()
-                        ->previewable()
-                    ])->collapsible()
-                    ->collapsed(false)
+                            ->directory('contracts_attachments')
+                            ->downloadable()
+                            ->preserveFilenames()
+                            ->previewable()
+                    ])->collapsible()->collapsed(false),
                 ]);
         }
 
@@ -156,47 +147,38 @@
         {
             return $table
                 ->columns([
-                    TextColumn::make('due_to')
-                        ->dateTime()
-                        ->searchable()
-                        ->sortable()
-                        ->limit(30),
-                    TextColumn::make('name')
-                        ->searchable()
-                        ->sortable()
-                        ->limit(30),
-                    TextColumn::make('customer.company_name')
-                        ->limit(30)
-                        ->searchable()
-                        ->markdown(),
-                    ToggleColumn::make('is_finished')
-                        ->label('Done'),
-                    TextColumn::make('priority')
-                        ->searchable(),
+                    TextColumn::make('due_to')->label(__('messages.contract.table.due_to'))->dateTime()->searchable()->sortable()->limit(30),
+                    TextColumn::make('name')->label(__('messages.contract.table.name'))->searchable()->sortable()->limit(30),
+                    TextColumn::make('customer.company_name')->label(__('messages.contract.table.customer'))->limit(30)->searchable()->markdown(),
+                    ToggleColumn::make('is_finished')->label(__('messages.contract.table.is_finished')),
+                    TextColumn::make('priority')->label(__('messages.contract.table.priority'))->searchable(),
                 ])
                 ->filters([
                     SelectFilter::make('customer')
+                        ->label(__('messages.contract.table.filter_customer'))
                         ->relationship('customer', 'company_name')
                         ->searchable()
                         ->preload(),
+
                     SelectFilter::make('users')
+                        ->label(__('messages.contract.table.filter_users'))
                         ->relationship('users', 'email')
                         ->multiple()
                         ->searchable()
-                        ->visible(function(): bool{
-                            return Auth::user()->hasPermissionTo('View Special Contracts Filters');
-                    })->preload(),
+                        ->visible(fn () => Auth::user()->hasPermissionTo('View Special Contracts Filters'))
+                        ->preload(),
+
                     SelectFilter::make('priority')
+                        ->label(__('messages.contract.table.filter_priority'))
                         ->options([
                             'low' => 'Low',
                             'mid' => 'Medium',
                             'high' => 'High',
                         ])
-                        ->label('Priority')
                         ->searchable(),
 
                     Tables\Filters\Filter::make('due_to')
-                        ->label('Due Date Range')
+                        ->label(__('messages.contract.table.filter_due_to'))
                         ->form([
                             DatePicker::make('due_from')->label('From'),
                             DatePicker::make('due_until')->label('To'),
@@ -208,12 +190,12 @@
                         }),
 
                     Tables\Filters\Filter::make('is_finished')
-                        ->label('Done')
+                        ->label(__('messages.contract.table.filter_is_finished'))
                         ->query(fn (Builder $query) => $query->where('is_finished', true))
                         ->toggle(),
 
                     Tables\Filters\Filter::make('name')
-                        ->label('Contract Company Name')
+                        ->label(__('messages.contract.table.filter_name'))
                         ->form([
                             TextInput::make('name_contains')->label('Name Contains'),
                         ])

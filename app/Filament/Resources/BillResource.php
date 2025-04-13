@@ -1,13 +1,13 @@
 <?php
 
 namespace App\Filament\Resources;
+use Filament\Forms\Get;
 use Illuminate\Database\Eloquent\Model;
 use App\Filament\Resources\BillResource\Pages;
 use App\Filament\Resources\BillResource\Pages\CreateBill;
 use App\Filament\Resources\BillResource\Pages\EditBill;
 use App\Filament\Resources\BillResource\Pages\ListBills;
 use App\Filament\Resources\BillResource\Pages\ViewBill;
-use App\Filament\Resources\BillResource\RelationManagers;
 use App\Models\Bill;
 use App\Models\Contract;
 use App\Models\ContractClassification;
@@ -43,15 +43,38 @@ class BillResource extends Resource
     protected static ?string $model = Bill::class;
 
     protected static ?string $navigationGroup = 'Contracts';
-    protected static ?int $navigationSort = 5;
 
+    protected static ?int $navigationSort = 5;
 
     protected static ?string $navigationIcon = 'heroicon-o-banknotes';
 
-    public static function getNavigationBadge(): ?string
+    public static function getModelLabel(): string
     {
-        return static::$model::count();
+        return __('messages.bill.resource.name');
     }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('messages.bill.resource.name_plural');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('messages.bill.resource.group');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('messages.bill.resource.name');
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return __('messages.bill.resource.name_plural');
+    }
+
+
+
     public static function getGloballySearchableAttributes(): array
     {
         return [
@@ -78,27 +101,58 @@ class BillResource extends Resource
     {
         return $form
             ->schema([
-                Section::make('General')->schema(components: [
+                Section::make(__('messages.bill.form.section_general'))->schema([
                     TextInput::make('name')
+                        ->label(__('messages.bill.form.field_name'))
                         ->required()
                         ->maxLength(255),
+                    Toggle::make('is_flat_rate')
+                        ->label(__('messages.bill.form.field_is_flat_rate'))
+                        ->helperText(__('messages.bill.form.field_is_flat_rate_helper'))
+                        ->default(false)
+                        ->reactive()
+                        ->afterStateUpdated(function (Get $get, $set, $state) {
+                            if (! $state) {
+                                $set('flat_rate_amount', null);
+                            }
+                        }),
+
                     TextInput::make('hourly_rate')
-                        ->required()
+                        ->label(__('messages.bill.form.field_hourly_rate'))
                         ->numeric()
-                        ->prefix("€"),
+                        ->prefix('€')
+                        ->disabled(fn (Get $get): bool => $get('is_flat_rate'))
+                        ->requiredIf('is_flat_rate', false),
+
+                    TextInput::make('flat_rate_amount')
+                        ->label(__('messages.bill.form.field_flat_rate_amount'))
+                        ->numeric()
+                        ->prefix('€')
+                        ->disabled(fn (Get $get): bool => ! $get('is_flat_rate'))
+                        ->requiredIf('is_flat_rate', true),
+
+
                     RichEditor::make('description')
+                        ->label(__('messages.bill.form.field_description'))
                         ->nullable()
                         ->string(),
-                    DatePicker::make('due_to'),
+
+                    DatePicker::make('due_to')
+                        ->label(__('messages.bill.form.field_due_to')),
+
                     DatePicker::make('created_on')
-                        ->nullable(),
-                    Toggle::make('is_payed')
+                        ->label(__('messages.bill.form.field_created_on'))
                         ->nullable()
-                ])->collapsible()
-                    ->collapsed(false),
-                Section::make([
+                        ->default(now()),
+
+                    Toggle::make('is_payed')
+                        ->label(__('messages.bill.form.field_is_payed'))
+                        ->nullable()
+                ])->collapsible()->collapsed(false),
+
+                Section::make(__('messages.bill.form.section_contract'))->schema([
                     Select::make('contract_classification_id')
-                        ->label('Contract')
+                        ->label(__('messages.bill.form.field_contract'))
                         ->options(function () {
                             $user = Auth::user();
                             return ContractClassification::where('user_id', $user->id)
@@ -109,12 +163,11 @@ class BillResource extends Resource
                         ->preload()
                         ->searchable()
                         ->required()
-                ])->columns(1)
-                    ->collapsible()
-                    ->collapsed(false)
-                    ->heading('Contract'),
-                Section::make('Bill attachments')->schema([
+                ])->columns(1)->collapsible()->collapsed(false),
+
+                Section::make(__('messages.bill.form.section_attachments'))->schema([
                     FileUpload::make('attachments')
+                        ->label(__('messages.bill.form.field_attachments'))
                         ->columns(1)
                         ->multiple()
                         ->disk('s3')
@@ -123,8 +176,7 @@ class BillResource extends Resource
                         ->downloadable()
                         ->preserveFilenames()
                         ->previewable()
-                ])->collapsible()
-                    ->collapsed(false)
+                ])->collapsible()->collapsed(false)
             ]);
     }
 
@@ -133,26 +185,22 @@ class BillResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('contractClassification.user.name')
-                    ->label('User')
+                    ->label(__('messages.bill.table.user'))
                     ->sortable()
                     ->searchable(),
+
                 TextColumn::make('contractClassification.contract.name')
-                    ->label('Contract')
+                    ->label(__('messages.bill.table.contract'))
                     ->sortable()
                     ->limit(10)
                     ->searchable(),
-                TextColumn::make('name')
-                    ->label('Bill Name')
-                    ->sortable()
-                    ->searchable(),
-                TextColumn::make('description')
-                    ->label('Description')
-                    ->limit(10)
-                    ->markdown()
-                    ->sortable(),
+
                 TextColumn::make('hourly_rate')
-                    ->label('€')
+                    ->label(__('messages.bill.table.calculated_total'))
                     ->formatStateUsing(function ($state, $record) {
+                        if($record->is_flat_rate){
+                            return '/';
+                        }
                         $roundedTotalHours = $record
                             ->contractClassification
                             ->times
@@ -167,26 +215,83 @@ class BillResource extends Resource
                         $calculatedPrice = $state * $roundedTotalHours;
                         return $calculatedPrice . ' €';
                     }),
+                TextColumn::make('flat_rate_amount')
+                    ->label(__('messages.bill.form.field_flat_rate_amount'))
+                    ->formatStateUsing(function ($state, $record) {
+                        if ($record->is_flat_rate) {
+                            return $record->flat_rate_amount ? $record->flat_rate_amount . ' €' : '—';
+                        }
+                        return '/';
+                    }),
+
                 Tables\Columns\ToggleColumn::make('is_payed')
-                    ->label('Payed')
+                    ->label(__('messages.bill.table.is_payed')),
             ])
             ->filters([
+                Filter::make('user')
+                    ->label(__('messages.bill.filters.user.label'))
+                    ->form([
+                        Select::make('user_id')
+                            ->label(__('messages.bill.filters.user.label'))
+                            ->options(fn () => User::all()->pluck('name', 'id'))
+                            ->placeholder(__('messages.bill.filters.user.placeholder')),
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        return $query->when($data['user_id'], function ($query, $userId) {
+                            return $query->whereHas('contractClassification.user', function ($q) use ($userId) {
+                                $q->where('users.id', $userId);
+                            });
+                        });
+                    }),
+
+                Filter::make('contract')
+                    ->label(__('messages.bill.filters.contract.label'))
+                    ->form([
+                        Select::make('contract_id')
+                            ->label(__('messages.bill.filters.contract.label'))
+                            ->options(fn () => Contract::all()->pluck('name', 'id'))
+                            ->placeholder(__('messages.bill.filters.contract.placeholder')),
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        return $query->when($data['contract_id'], function ($query, $contractId) {
+                            return $query->whereHas('contractClassification.contract', function ($q) use ($contractId) {
+                                $q->where('contracts.id', $contractId);
+                            });
+                        });
+                    }),
+                Filter::make('created_on_range')
+                    ->label(__('messages.bill.filters.created_on'))
+                    ->form([
+                        DatePicker::make('created_from')
+                            ->label(__('messages.bill.filters.created_from')),
+                        DatePicker::make('created_until')
+                            ->label(__('messages.bill.filters.created_until')),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when($data['created_from'], fn ($q) => $q->whereDate('created_on', '>=', $data['created_from']))
+                            ->when($data['created_until'], fn ($q) => $q->whereDate('created_on', '<=', $data['created_until']));
+                    }),
+
                 Filter::make('is_payed')
-                    ->label('Payment Status')
-                    ->query(fn(Builder $query) => $query->where('is_payed', true))
-                    ->toggle()
+                    ->label(__('messages.bill.filters.payed'))
+                    ->query(fn(Builder $query) => $query->where('is_payed', true)),
+                Filter::make('is_flat_rate')
+                    ->label(__('messages.bill.filters.flat_rate'))
+                    ->query(fn(Builder $query) => $query->where('is_flat_rate', true)),
             ])
             ->actions([
-        ViewAction::make(),
-        EditAction::make(),
-        DeleteAction::make()
-    ])
-        ->bulkActions([
-            Tables\Actions\BulkActionGroup::make([
-                Tables\Actions\DeleteBulkAction::make(),
-            ]),
-        ]);
+                ViewAction::make(),
+                EditAction::make(),
+                DeleteAction::make()
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
     }
+
 
     public static function getEloquentQuery(): Builder
     {
