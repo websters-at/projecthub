@@ -250,7 +250,18 @@ class BillResource extends Resource
                     ->form([
                         Select::make('contract_id')
                             ->label(__('messages.bill.filters.contract.label'))
-                            ->options(fn () => Contract::all()->pluck('name', 'id'))
+                            ->options(function () {
+                                $user = Auth::user();
+
+                                // If admin → show all contracts
+                                if ($user->hasRole('Admin')) {
+                                    return Contract::pluck('name', 'id');
+                                }
+
+                                return Contract::whereHas('contract_classifications', function ($query) use ($user) {
+                                    $query->where('user_id', $user->id);
+                                })->pluck('name', 'id');
+                            })
                             ->placeholder(__('messages.bill.filters.contract.placeholder')),
                     ])
                     ->query(function (Builder $query, array $data) {
