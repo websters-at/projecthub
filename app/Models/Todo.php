@@ -25,4 +25,8 @@ class Todo extends Model
     public function contract_classification(): BelongsTo{
         return $this->belongsTo(ContractClassification::class);
     }
+    public function contract(): BelongsTo
+    {
+        return $this->belongsTo(Contract::class);
+    }
 }

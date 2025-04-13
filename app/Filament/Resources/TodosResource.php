@@ -7,6 +7,7 @@ use App\Filament\Resources\TodosResource\RelationManagers;
 use App\Models\ContractClassification;
 use App\Models\Todo;
 use App\Models\Todos;
+use Filament\Actions\DeleteAction;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
@@ -130,7 +131,7 @@ class TodosResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('priority')
-                    ->label(__('messages.todo.table.priority_label'))
+                    ->label(__('messages.todo.table.priority'))
                     ->options([
                         'low' => __('messages.todo.form.field_priority.low'),
                         'mid' => __('messages.todo.form.field_priority.medium'),
@@ -181,7 +182,7 @@ class TodosResource extends Resource
             return parent::getEloquentQuery();
         } else {
             return parent::getEloquentQuery()
-                ->whereHas('contract_classifications', function (Builder $query) use ($user) {
+                ->whereHas('contract_classification', function (Builder $query) use ($user) {
                     $query->where('user_id', $user->id);
                 });
         }

@@ -13,6 +13,7 @@ class ContractNote extends Model
     protected $fillable = [
         "name",
         "date",
+        "description",
         "note",
         "attachments",
         'contract_id'

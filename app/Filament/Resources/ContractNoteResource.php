@@ -169,7 +169,7 @@ class ContractNoteResource extends Resource
             return parent::getEloquentQuery();
         } else {
             return parent::getEloquentQuery()
-                ->whereHas('contractClassification', function (Builder $query) use ($user) {
+                ->whereHas('contract.contract_classifications', function (Builder $query) use ($user) {
                     $query->where('user_id', $user->id);
                 });
         }

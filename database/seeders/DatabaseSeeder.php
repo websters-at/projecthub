@@ -41,6 +41,9 @@ class DatabaseSeeder extends Seeder
 
         // Create the Admin role
         $role = Role::create(['name' => 'Admin']);
+        $mitarbeiterRole = Role::create(['name' => 'Mitarbeiter']);
+
+
 
         // Create permissions
         $permissions = [
@@ -149,6 +152,23 @@ class DatabaseSeeder extends Seeder
         foreach ($permissions as $permission) {
             Permission::create($permission);
         }
+        $mitarbeiterRole->givePermissionTo([
+            'View Bills',
+            'Create Bills',
+            'Update Bills',
+            'Delete Bills',
+            'Restore Bills',
+            'View Contracts',
+            'View Contract Notes',
+            'View General Todos',
+            'View Logins',
+            'View Todos',
+            'View Times',
+            'Create Times',
+            'Update Times',
+            'Delete Times',
+            'Restore Times',
+        ]);
 
         // Retrieve all permissions
         $allPermissions = Permission::all();
@@ -159,7 +179,7 @@ class DatabaseSeeder extends Seeder
         // Assign the Admin role to the users
         $user->assignRole($role);
         $user2->assignRole($role);
-        $user3->assignRole($role);
-        $user4->assignRole($role);
+        $user3->assignRole($mitarbeiterRole);
+        $user4->assignRole($mitarbeiterRole);
     }
 }

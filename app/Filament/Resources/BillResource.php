@@ -213,7 +213,7 @@ class BillResource extends Resource
                             ->sum();
 
                         $calculatedPrice = $state * $roundedTotalHours;
-                        return $calculatedPrice . ' €';
+                        return number_format($calculatedPrice, 2) . ' €';
                     }),
                 TextColumn::make('flat_rate_amount')
                     ->label(__('messages.bill.form.field_flat_rate_amount'))
