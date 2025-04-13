@@ -64,9 +64,20 @@ class BillStatsOverview extends StatsOverviewWidget
         });
 
         return [
-            Stat::make('Total Amount', number_format($total, 2) . ' €'),
-            Stat::make('Total Unpaid Amount', number_format($totalUnpaid, 2) . ' €'),
-            Stat::make('Total Paid Amount', number_format($totalPaid, 2) . ' €'),
+            Stat::make(__('messages.bill.bill_stats.total_amount'), number_format($total, 2) . ' €')
+                ->description(__('messages.bill.bill_stats.total_amount_description'))
+                ->descriptionIcon('heroicon-o-currency-euro')
+                ->color('primary'),
+
+            Stat::make(__('messages.bill.bill_stats.total_unpaid_amount'), number_format($totalUnpaid, 2) . ' €')
+                ->description(__('messages.bill.bill_stats.total_unpaid_amount_description'))
+                ->descriptionIcon('heroicon-o-exclamation-circle')
+                ->color('warning'),
+
+            Stat::make(__('messages.bill.bill_stats.total_paid_amount'), number_format($totalPaid, 2) . ' €')
+                ->description(__('messages.bill.bill_stats.total_paid_amount_description'))
+                ->descriptionIcon('heroicon-o-check-circle')
+                ->color('success'),
         ];
     }
 }

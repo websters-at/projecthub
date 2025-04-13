@@ -127,7 +127,6 @@ class DatabaseSeeder extends Seeder
             ['name' => 'View All Logins'],
             ['name' => 'View Special Logins Filters'],
 
-
             ['name' => 'Create General'],
             ['name' => 'View General'],
             ['name' => 'Restore General'],

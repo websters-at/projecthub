@@ -234,7 +234,8 @@ class BillResource extends Resource
                         Select::make('user_id')
                             ->label(__('messages.bill.filters.user.label'))
                             ->options(fn () => User::all()->pluck('name', 'id'))
-                            ->placeholder(__('messages.bill.filters.user.placeholder')),
+                            ->placeholder(__('messages.bill.filters.user.placeholder'))
+                            ->hidden(fn() => !auth()->user()->hasRole('Admin'))
                     ])
                     ->query(function (Builder $query, array $data) {
                         return $query->when($data['user_id'], function ($query, $userId) {

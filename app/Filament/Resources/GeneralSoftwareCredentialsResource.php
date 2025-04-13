@@ -35,6 +35,7 @@ class GeneralSoftwareCredentialsResource extends Resource
     {
         return __('messages.credentials.resource.name_plural');
     }
+
     public static function getNavigationGroup(): ?string
     {
         return __('messages.credentials.resource.group');
@@ -107,9 +108,7 @@ class GeneralSoftwareCredentialsResource extends Resource
                             ->label('Domain')
                             ->placeholder('example.com'),
                     ])
-                    ->query(fn (Builder $query, array $data) =>
-                    $query->when($data['domain'], fn ($query, $domain) =>
-                    $query->where('email', 'like', '%' . $domain)
+                    ->query(fn(Builder $query, array $data) => $query->when($data['domain'], fn($query, $domain) => $query->where('email', 'like', '%' . $domain)
                     )
                     ),
 
@@ -120,9 +119,7 @@ class GeneralSoftwareCredentialsResource extends Resource
                             ->label('Contains')
                             ->placeholder(__('messages.credentials.filters.name')),
                     ])
-                    ->query(fn (Builder $query, array $data) =>
-                    $query->when($data['name_contains'], fn ($query, $name) =>
-                    $query->where('name', 'like', '%' . $name . '%')
+                    ->query(fn(Builder $query, array $data) => $query->when($data['name_contains'], fn($query, $name) => $query->where('name', 'like', '%' . $name . '%')
                     )
                     ),
             ])

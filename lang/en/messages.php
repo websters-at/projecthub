@@ -262,6 +262,16 @@ return [
             'name' => 'Time Entry',        // Singular name for the resource
             'name_plural' => 'Time Entries',  // Plural name for the resource
         ],
+        'stats' => [
+            'total_time_raw' => 'Total Time (Raw)',
+            'total_time_raw_description' => 'Sum of all recorded times without rounding.',
+            'total_time_rounded' => 'Total Time (Rounded)',
+            'total_time_rounded_description' => 'Sum of all recorded times with commercial rounding (≥30 min rounded up).',
+            'special_time' => 'Special Time',
+            'special_time_description' => 'Sum of all times marked as "special".',
+            'entries_count' => 'Entries Count',
+            'entries_count_description' => 'Total number of time entries.',
+        ],
         'form' => [
             'general' => 'General',
             'field_date' => 'Date*',
@@ -303,6 +313,14 @@ return [
             'name' => 'Bill',
             'group' => 'Contracts',  // Navigation group label
             'name_plural' => 'Bills',
+        ],
+        'bill_stats' => [
+            'total_amount' => 'Total Amount',
+            'total_amount_description' => 'Sum of all billed amounts.',
+            'total_unpaid_amount' => 'Total Unpaid Amount',
+            'total_unpaid_amount_description' => 'Sum of amounts not yet paid.',
+            'total_paid_amount' => 'Total Paid Amount',
+            'total_paid_amount_description' => 'Sum of amounts already paid.',
         ],
         'form' => [
             'field_flat_rate_amount' => 'Flat rate amount',
@@ -416,6 +434,23 @@ return [
             'user' => 'User',
         ],
     ],
-
+    'user_stats' => [
+        'unpaid_bills' => 'Unpaid Bills',
+        'your_contracts' => 'Your Contracts',
+        'unpaid_bills_description' => 'Still open',
+        'your_contracts_description' => 'Total number of your contracts',
+    ],
+    'general_overview' => [
+        'todays_calls' => 'Today\'s Calls',
+        'unpaid_amount' => 'Unpaid Amount',
+        'contracts_due_3_days' => 'Contracts Due in 3 Days',
+        'todos_due_3_days' => 'Todos Due in 3 Days',
+        'general_todos_due_3_days' => 'General Todos Due in 3 Days',
+        'todays_calls_description' => 'Total calls created today',
+        'unpaid_amount_description' => 'Total amount of unpaid bills',
+        'contracts_due_3_days_description' => 'Contracts nearing due date',
+        'todos_due_3_days_description' => 'Todos nearing due date',
+        'general_todos_due_3_days_description' => 'General todos nearing due date',
+    ],
 
 ];

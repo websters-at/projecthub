@@ -5,17 +5,19 @@ namespace App\Filament\Resources\TimeResource\Pages;
 use App\Filament\Resources\TimeResource;
 use App\Filament\Resources\TimeResource\Widgets\TimesOverview;
 use Filament\Actions;
+use Filament\Pages\Concerns\ExposesTableToWidgets;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 
 class ListTimes extends ListRecords
 {
+    use ExposesTableToWidgets;
     protected static string $resource = TimeResource::class;
 
     protected function getHeaderWidgets(): array
     {
         return [
-            TimesOverview::class
+          TimesOverview::class
         ];
     }
     protected function getFooterWidgets(): array

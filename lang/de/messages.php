@@ -262,6 +262,16 @@ return [
             'name' => 'Zeiteintrag',      // Singular name for the resource
             'name_plural' => 'Zeiteinträge', // Plural name for the resource
         ],
+        'stats' => [
+            'total_time_raw' => 'Gesamtzeit (Roh)',
+            'total_time_raw_description' => 'Summe aller erfassten Zeiten ohne Rundung.',
+            'total_time_rounded' => 'Gesamtzeit (Gerundet)',
+            'total_time_rounded_description' => 'Summe aller erfassten Zeiten mit kaufmännischer Rundung (≥30 min aufgerundet).',
+            'special_time' => 'Sonderzeit',
+            'special_time_description' => 'Summe aller als "besonders" markierten Zeiten.',
+            'entries_count' => 'Anzahl der Einträge',
+            'entries_count_description' => 'Gesamtzahl der Zeiteinträge.',
+        ],
         'form' => [
             'general' => 'Allgemein',
             'field_date' => 'Datum*',
@@ -303,6 +313,14 @@ return [
             'name' => 'Rechnung',
             'group' => 'Aufträge',  // Navigation group label
             'name_plural' => 'Rechnungen',
+        ],
+        'bill_stats' => [
+            'total_amount' => 'Gesamtbetrag',
+            'total_amount_description' => 'Summe aller in Rechnung gestellten Beträge.',
+            'total_unpaid_amount' => 'Gesamtbetrag Unbezahlt',
+            'total_unpaid_amount_description' => 'Summe der noch nicht bezahlten Beträge.',
+            'total_paid_amount' => 'Gesamtbetrag Bezahlt',
+            'total_paid_amount_description' => 'Summe der bereits bezahlten Beträge.',
         ],
         'form' => [
             'field_flat_rate_amount'=>'Pauschalbetrag',
@@ -416,6 +434,23 @@ return [
             'user' => 'Benutzer',
         ],
     ],
-
+    'user_stats' => [
+        'unpaid_bills' => 'Offene Rechnungen',
+        'your_contracts' => 'Ihre Aufträge',
+        'unpaid_bills_description' => 'Noch offen',
+        'your_contracts_description' => 'Gesamtanzahl Ihrer Aufträge',
+    ],
+    'general_overview' => [
+        'todays_calls' => 'Anrufe von heute',
+        'unpaid_amount' => 'Offener Betrag',
+        'contracts_due_3_days' => 'Aufträge, die in 3 Tagen fällig sind',
+        'todos_due_3_days' => 'Todos, die in 3 Tagen fällig sind',
+        'general_todos_due_3_days' => 'Allgemeine Todos, die in 3 Tagen fällig sind',
+        'todays_calls_description' => 'Gesamtanzahl der heute erstellten Anrufe',
+        'unpaid_amount_description' => 'Gesamtsumme aller offenen Rechnungen',
+        'contracts_due_3_days_description' => 'Aufträge, die kurz vor dem Fälligkeitsdatum stehen',
+        'todos_due_3_days_description' => 'Todos, die bald fällig werden',
+        'general_todos_due_3_days_description' => 'Allgemeine Todos, die bald fällig werden',
+    ],
 
 ];

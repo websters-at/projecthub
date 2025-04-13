@@ -138,11 +138,12 @@ class TimeResource extends Resource
                     ->multiple()
                     ->searchable()
                     ->preload(),
-
                 SelectFilter::make('contractClassificationContract')
-                    ->relationship('contractClassification.contract', 'name')
-                    ->label(__('messages.time.filters.contract_classification_contract')) // Translated label
-                    ->visible(fn() => Auth::user()->hasPermissionTo('View Special Times Filters'))
+                    ->relationship('contractClassification.contract', 'name', function (Builder $query) {
+                        $contractIds = Auth::user()->contractClassifications()->pluck('contract_id');
+                        $query->whereIn('id', $contractIds);
+                    })
+                    ->label(__('messages.time.filters.contract_classification_contract'))
                     ->multiple()
                     ->searchable()
                     ->preload(),
@@ -156,8 +157,8 @@ class TimeResource extends Resource
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
-                            ->when($data['from'], fn (Builder $query, $date): Builder => $query->whereDate('date', '>=', $date))
-                            ->when($data['until'], fn (Builder $query, $date): Builder => $query->whereDate('date', '<=', $date));
+                            ->when($data['from'] ?? null, fn (Builder $query, $date): Builder => $query->whereDate('date', '>=', $date))
+                            ->when($data['until'] ?? null, fn (Builder $query, $date): Builder => $query->whereDate('date', '<=', $date));
                     })
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
@@ -173,8 +174,8 @@ class TimeResource extends Resource
                         }
 
                         return $indicators;
-                    }),
-            ])
+                    })
+        ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),

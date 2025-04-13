@@ -84,10 +84,10 @@ class NotesRelationManager extends RelationManager
                 TextColumn::make('date')
                     ->label(__('messages.contract_note.table.date'))
                     ->sortable(),
-                TextColumn::make('contractClassification.contract.name')
+                TextColumn::make('contract.name')
                     ->label(__('messages.contract_note.table.contract'))
                     ->sortable()
-                    ->limit(10)
+                    ->limit(30)
                     ->searchable(),
             ])
             ->filters([
