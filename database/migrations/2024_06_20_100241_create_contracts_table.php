@@ -21,11 +21,11 @@ return new class extends Migration
                 ->on('customers')
                 ->onDelete('cascade');
             $table->mediumText('description')->nullable();
-            $table->string('zip_code')->nullable();
             $table->boolean('is_finished')->default(false);
+            $table->dateTime('due_to');
             $table->string('city')->nullable();
             $table->string('state')->nullable();
-            $table->dateTime('due_to');
+            $table->string('zip_code')->nullable();
             $table->string('country')->nullable();
             $table->string('attachments')->nullable();
             $table->string('address')->nullable();

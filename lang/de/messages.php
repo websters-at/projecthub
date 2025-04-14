@@ -28,6 +28,7 @@ return [
             'name_plural' => 'Anrufe',
         ],
         'form' => [
+            'field_customer'=>'Kunde',
             'section_general' => 'Allgemein',
             'section_contract' => 'Auftrag',
             'field_name' => 'Name',
@@ -47,6 +48,7 @@ return [
             'filter_from' => 'Von',
             'filter_until' => 'Bis',
             'filter_contract' => 'Auftrag',
+            'filter_customer' => 'Kunde'
         ],
     ],
     'contract_note' => [

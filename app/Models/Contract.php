@@ -17,9 +17,9 @@ class Contract extends Model
     protected $fillable = [
         "name",
         "description",
-        "zip_code",
         "is_finished",
         "customer_id",
+        "zip_code",
         "city",
         "state",
         "country",

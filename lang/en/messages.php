@@ -27,6 +27,7 @@ return [
             'name_plural' => 'Calls',
         ],
         'form' => [
+            'field_customer'=>'Customer',
             'section_general' => 'General',
             'section_contract' => 'Contract',
             'field_name' => 'Name',
@@ -46,6 +47,8 @@ return [
             'filter_from' => 'From',
             'filter_until' => 'To',
             'filter_contract' => 'Contract',
+            'filter_customer' => 'Customer'
+
         ],
     ],
     'contract_note' => [

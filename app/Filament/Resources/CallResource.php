@@ -4,7 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CallResource\Pages;
 use App\Filament\Resources\CallResource\RelationManagers;
+use App\Filament\Resources\CallResource\RelationManagers\CallNotesRelationManagerRelationManager;
 use App\Models\Call;
+use App\Models\Customer;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Tables\Columns\ToggleColumn;
 use Illuminate\Database\Eloquent\Model;
@@ -41,7 +43,7 @@ class CallResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return __('messages.call.resource.name'); // Translated resource name
+        return __('messages.call.resource.name');
     }
     public static function getPluralLabel(): string
     {
@@ -75,36 +77,53 @@ class CallResource extends Resource
     {
         return $form
             ->schema([
-                Section::make(__('messages.call.form.section_general'))->schema([ // Translated heading
-
+                Section::make(__('messages.call.form.section_general'))->schema([
+                    Select::make('customer_id')
+                        ->label(__('messages.call.form.field_customer'))
+                        ->options(Customer::all()->pluck('company_name', 'id'))
+                        ->searchable()
+                        ->preload()
+                        ->nullable(),
                     TextInput::make('name')
                         ->required()
-                        ->label(__('messages.call.form.field_name')), // Translated field
+                        ->label(__('messages.call.form.field_name')),
                     DateTimePicker::make('on_date')
                         ->default(now())
-                        ->label(__('messages.call.form.field_on_date')) // Translated field
+                        ->label(__('messages.call.form.field_on_date'))
                         ->required(),
                     MarkdownEditor::make('description')
-                        ->label(__('messages.call.form.field_description')) // Translated field
+                        ->label(__('messages.call.form.field_description'))
                         ->nullable(),
                     Toggle::make('is_done')
-                        ->label(__('messages.call.form.field_is_done')) // Translated field
+                        ->label(__('messages.call.form.field_is_done'))
                         ->nullable(),
                 ]),
-                Section::make(__('messages.call.form.section_contract'))->schema([ // Translated heading
+                Section::make(__('messages.call.form.section_contract'))->schema([
                     Select::make('contract_classification_id')
-                        ->label(__('messages.call.form.field_contract')) // Translated field
+                        ->label(__('messages.call.form.field_contract'))
                         ->options(function () {
                             $user = Auth::user();
-                            return ContractClassification::where('user_id', $user->id)
-                                ->with('contract')
-                                ->get()
-                                ->pluck('contract.name', 'id');
+                            if ($user->hasRole('Admin')) {
+                                return ContractClassification::with('contract')
+                                    ->get()
+                                    ->pluck('contract.name', 'id');
+                            } else {
+                                return ContractClassification::where('user_id', $user->id)
+                                    ->with('contract')
+                                    ->get()
+                                    ->pluck('contract.name', 'id');
+                            }
                         })
                         ->preload()
-                        ->searchable()
-                        ->required(),
-                ])
+                        ->searchable(),
+                ]),
+                Section::make(__('messages.contract.form.section_location'))->schema([
+                    TextInput::make('country')->label(__('messages.contract.form.field_country'))->nullable()->maxLength(255),
+                    TextInput::make('state')->label(__('messages.contract.form.field_state'))->nullable()->maxLength(255),
+                    TextInput::make('city')->label(__('messages.contract.form.field_city'))->nullable()->maxLength(255),
+                    TextInput::make('zip_code')->label(__('messages.contract.form.field_zip_code'))->nullable()->maxLength(255),
+                    TextInput::make('address')->label(__('messages.contract.form.field_address'))->nullable()->maxLength(255),
+                ])->columns(2)->collapsible()->collapsed(false),
             ]);
     }
 
@@ -124,46 +143,56 @@ class CallResource extends Resource
                     ->limit(10)
                     ->searchable(),
                 TextColumn::make('contract_classification.contract.name')
-                    ->label(__('messages.call.table.field_contract')) // Translated field
+                    ->label(__('messages.call.table.field_contract'))
                     ->sortable()
                     ->limit(10)
                     ->searchable(),
                 TextColumn::make('contract_classification.user.name')
-                    ->label(__('messages.call.table.field_user')) // Translated field
+                    ->label(__('messages.call.table.field_user'))
                     ->sortable()
                     ->searchable(),
                 ToggleColumn::make('is_done')
-                    ->label(__('messages.call.table.field_is_done')) // Translated field
+                    ->label(__('messages.call.table.field_is_done'))
             ])
             ->filters([
-                // Filter by completion status
-                Tables\Filters\Filter::make('is_done')
-                    ->label(__('messages.call.table.filter_is_done')) // Translated filter
-                    ->query(fn(Builder $query) => $query->where('is_done', true))
-                    ->toggle(),
-
-                Tables\Filters\Filter::make('on_date')
-                    ->label(__('messages.call.table.filter_on_date')) // Translated filter
-                    ->form([
-                        Forms\Components\DatePicker::make('on_date_from')->label(__('messages.call.table.filter_from')), // Translated field
-                        Forms\Components\DatePicker::make('on_date_until')->label(__('messages.call.table.filter_until')), // Translated field
-                    ])
-                    ->query(function (Builder $query, array $data) {
-                        return $query
-                            ->when($data['on_date_from'], fn($query, $date) => $query->whereDate('on_date', '>=', $date))
-                            ->when($data['on_date_until'], fn($query, $date) => $query->whereDate('on_date', '<=', $date));
-                    }),
-
                 Tables\Filters\SelectFilter::make('contract_classification_id')
                     ->label(__('messages.call.table.filter_contract')) // Translated filter
                     ->options(function () {
                         $user = Auth::user();
+
+                        if ($user->hasRole('Admin')) {
+                            return ContractClassification::with('contract')
+                                ->get()
+                                ->pluck('contract.name', 'id');
+                        }
+
                         return ContractClassification::where('user_id', $user->id)
                             ->with('contract')
                             ->get()
                             ->pluck('contract.name', 'id');
                     })
                     ->searchable(),
+                Tables\Filters\SelectFilter::make('customer_id')
+                    ->label(__('messages.call.table.filter_customer')) // Translated filter label
+                    ->relationship('customer', 'company_name') // Assumes 'customer' relationship exists in Call model
+                    ->searchable()
+                    ->preload(),
+                Tables\Filters\Filter::make('is_done')
+                    ->label(__('messages.call.table.filter_is_done'))
+                    ->query(fn(Builder $query) => $query->where('is_done', true))
+                    ->toggle(),
+
+                Tables\Filters\Filter::make('on_date')
+                    ->label(__('messages.call.table.filter_on_date'))
+                    ->form([
+                        Forms\Components\DatePicker::make('on_date_from')->label(__('messages.call.table.filter_from')),
+                        Forms\Components\DatePicker::make('on_date_until')->label(__('messages.call.table.filter_until')),
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        return $query
+                            ->when($data['on_date_from'], fn($query, $date) => $query->whereDate('on_date', '>=', $date))
+                            ->when($data['on_date_until'], fn($query, $date) => $query->whereDate('on_date', '<=', $date));
+                    }),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -181,7 +210,7 @@ class CallResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+           CallNotesRelationManagerRelationManager::class
         ];
     }
 
