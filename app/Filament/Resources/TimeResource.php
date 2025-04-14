@@ -139,14 +139,25 @@ class TimeResource extends Resource
                     ->searchable()
                     ->preload(),
                 SelectFilter::make('contractClassificationContract')
-                    ->relationship('contractClassification.contract', 'name', function (Builder $query) {
-                        $contractIds = Auth::user()->contractClassifications()->pluck('contract_id');
-                        $query->whereIn('id', $contractIds);
-                    })
+                    ->relationship(
+                        'contractClassification.contract',
+                        'name',
+                        function (Builder $query) {
+                            if (! Auth::user()->hasPermissionTo('View Special Times Filters')) {
+                                $query->whereIn(
+                                    'contracts.id',
+                                    Auth::user()
+                                        ->contractClassifications()
+                                        ->pluck('contract_id')
+                                );
+                            }
+                        }
+                    )
                     ->label(__('messages.time.filters.contract_classification_contract'))
                     ->multiple()
                     ->searchable()
                     ->preload(),
+
 
                 Filter::make('date')
                     ->form([

@@ -173,10 +173,8 @@ class DatabaseSeeder extends Seeder
         // Retrieve all permissions
         $allPermissions = Permission::all();
 
-        // Assign all permissions to the Admin role
         $role->givePermissionTo($allPermissions);
 
-        // Assign the Admin role to the users
         $user->assignRole($role);
         $user2->assignRole($mitarbeiterRole);
         $user3->assignRole($mitarbeiterRole);
