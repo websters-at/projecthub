@@ -288,6 +288,10 @@ class BillResource extends Resource
                 Filter::make('is_payed')
                     ->label(__('messages.bill.filters.payed'))
                     ->query(fn(Builder $query) => $query->where('is_payed', true)),
+                Filter::make('is_not_payed')
+                    ->label(__('messages.bill.filters.not_payed'))
+                    ->query(fn(Builder $query) => $query->where('is_payed', false)),
+
                 Filter::make('is_flat_rate')
                     ->label(__('messages.bill.filters.flat_rate'))
                     ->query(fn(Builder $query) => $query->where('is_flat_rate', true)),

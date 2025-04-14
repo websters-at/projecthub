@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ContractLoginCredentials;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
@@ -177,8 +178,23 @@ class DatabaseSeeder extends Seeder
 
         // Assign the Admin role to the users
         $user->assignRole($role);
-        $user2->assignRole($role);
+        $user2->assignRole($mitarbeiterRole);
         $user3->assignRole($mitarbeiterRole);
         $user4->assignRole($mitarbeiterRole);
+
+
+
+
+        $this->call([
+            CustomerSeeder::class,
+            ContractSeeder::class,
+            ContractClassificationSeeder::class,
+            TimeSeeder::class,
+            BillSeeder::class,
+            CallSeeder::class,
+            CallNoteSeeder::class,
+            ContractLoginCredentialSeeder::class,
+            ContractNoteSeeder::class,
+        ]);
     }
 }

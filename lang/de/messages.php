@@ -350,6 +350,7 @@ return [
         ],
         'filters' => [
             'payed' => 'Bezahlt',
+            'not_payed' => 'Nicht Bezahlt',
             'flat_rate' => 'Pauschalbetrag',
 
             'user' => [

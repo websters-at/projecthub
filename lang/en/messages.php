@@ -350,6 +350,7 @@ return [
         ],
         'filters' => [
             'payed' => 'Paid',
+            'not_payed' => 'Not Paid',
             'flat_rate' => 'Flat Rate',
 
             'user' => [

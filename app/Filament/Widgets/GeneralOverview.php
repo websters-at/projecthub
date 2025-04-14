@@ -23,12 +23,22 @@ class GeneralOverview extends BaseWidget
     {
         $todaysCallsCount = Call::whereDate('on_date', Carbon::today())->count();
 
-        // Unpaid bills total (considering flat or hourly rate)
+        // Correct unpaid bills total calculation
         $unpaidBillsTotal = Bill::where('is_payed', false)
-            ->sum(\DB::raw("CASE 
-                WHEN is_flat_rate = true THEN flat_rate_amount 
-                ELSE hourly_rate 
-            END"));
+            ->get()
+            ->sum(function (Bill $bill) {
+                if ($bill->is_flat_rate) {
+                    return $bill->flat_rate_amount;
+                }
+
+                $hours = $bill->contractClassification
+                    ->times
+                    ->map(fn($time) => $time->total_hours_worked + $time->total_minutes_worked / 60)
+                    ->map(fn($h) => ($h - floor($h)) >= 0.5 ? ceil($h) : $h)
+                    ->sum();
+
+                return $bill->hourly_rate * $hours;
+            });
 
         $upcomingContractsCount = Contract::whereBetween('due_to', [
             Carbon::today(),
