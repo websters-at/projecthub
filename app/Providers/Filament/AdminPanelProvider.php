@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Providers\Filament;
-
-
 use App\Filament\Resources\DashboardResource\Pages\Dashboard;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -60,7 +58,7 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->plugins([
-               ThemesPlugin::make(),
+               ThemesPlugin::make()->canViewThemesPage(fn () => auth()->check() && auth()->user()->hasRole('Admin')),
             ])
             ->widgets([
 
