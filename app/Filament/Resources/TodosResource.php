@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TodosResource\Pages;
 use App\Filament\Resources\TodosResource\RelationManagers;
+use App\Models\Contract;
 use App\Models\ContractClassification;
 use App\Models\Todo;
 use App\Models\Todos;
@@ -156,6 +157,20 @@ class TodosResource extends Resource
                         return $query
                             ->when($data['due_from'], fn ($query, $date) => $query->whereDate('due_to', '>=', $date))
                             ->when($data['due_until'], fn ($query, $date) => $query->whereDate('due_to', '<=', $date));
+                    }),
+                SelectFilter::make('contract')
+                    ->label('Contract')
+                    ->options(function () {
+                        $userId = Auth::id();
+                        return Contract::whereHas('contract_classifications', function (Builder $query) use ($userId) {
+                            $query->where('user_id', $userId);
+                        })->pluck('name', 'id');
+                    })
+                    ->query(function (Builder $query, array $data): Builder {
+                        if (!empty($data['contract'])) {
+                            return $query->where('contract_id', $data['contract']);
+                        }
+                        return $query;
                     }),
 
             ])
