@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CallResource\Pages;
 use App\Filament\Resources\CallResource\RelationManagers;
 use App\Models\Call;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Tables\Columns\ToggleColumn;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ContractClassification;
@@ -23,6 +24,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
+use SebastianBergmann\CodeCoverage\Filter;
 
 class CallResource extends Resource
 {
@@ -101,7 +103,7 @@ class CallResource extends Resource
                         })
                         ->preload()
                         ->searchable()
-                        ->required()
+                        ->required(),
                 ])
             ]);
     }
@@ -186,7 +188,6 @@ class CallResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         $user = auth()->user();
-
         if ($user && $user->hasPermissionTo('View All Calls')) {
             return parent::getEloquentQuery();
         } else {

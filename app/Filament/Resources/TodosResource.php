@@ -28,6 +28,8 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TodosResource extends Resource
 {
@@ -52,7 +54,6 @@ class TodosResource extends Resource
     {
         return __('messages.todo.resource.name_plural');
     }
-
     public static function form(Form $form): Form
     {
         return $form
@@ -87,18 +88,13 @@ class TodosResource extends Resource
                         ->directory('todos_attachments')
                         ->label(__('messages.todo.form.field_attachments'))
                 ])->heading(__('messages.todo.form.section_general')),
+
                 Section::make(__('messages.todo.form.section_contract'))->schema([
-                    Select::make('contract_classification_id')
-                        ->label(__('messages.todo.form.field_contract_classification'))
-                        ->options(function () {
-                            $user = Auth::user();
-                            return ContractClassification::where('user_id', $user->id)
-                                ->with('contract')
-                                ->get()
-                                ->pluck('contract.name', 'id');
-                        })
-                        ->preload()
+                    Select::make('contract_id')
+                        ->label(__('messages.todo.form.field_contract_classification')) // Du kannst ggf. eine neue Übersetzung hinzufügen
+                        ->relationship('contract', 'name')
                         ->searchable()
+                        ->preload()
                         ->required()
                 ])
             ]);
@@ -112,19 +108,26 @@ class TodosResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->label(__('messages.todo.table.name')),
-                TextColumn::make('contract_classification.contract.name')
+
+                // Ändere hier 'contract_classification.contract.name' zu 'contract.name'
+                TextColumn::make('contract.name')
                     ->label(__('messages.todo.table.contract'))
                     ->sortable(),
-                TextColumn::make('contract_classification.contract.customer.company_name')
+
+                // Ändere hier 'contract_classification.contract.customer.company_name' zu 'contract.customer.company_name'
+                TextColumn::make('contract.customer.company_name')
                     ->label(__('messages.todo.table.customer'))
                     ->sortable(),
+
                 TextColumn::make('due_to')
                     ->time()
                     ->sortable()
                     ->label(__('messages.todo.table.due_to')),
+
                 TextColumn::make('priority')
                     ->sortable()
                     ->label(__('messages.todo.table.priority')),
+
                 ToggleColumn::make('is_done')
                     ->label(__('messages.todo.table.is_done'))
                     ->sortable(),
@@ -146,7 +149,7 @@ class TodosResource extends Resource
                 Filter::make('due_to')
                     ->label(__('messages.todo.table.due_to'))
                     ->form([
-                        DatePicker::make('due_from')->label(__('messages.todo.form.field_due_to'))->label(__('messages.todo.table.due_to')),
+                        DatePicker::make('due_from')->label(__('messages.todo.form.field_due_to')),
                         DatePicker::make('due_until')->label(__('messages.todo.form.field_due_to'))
                     ])
                     ->query(function (Builder $query, array $data) {
@@ -167,6 +170,7 @@ class TodosResource extends Resource
             ]);
     }
 
+
     public static function getRelations(): array
     {
         return [
@@ -174,19 +178,21 @@ class TodosResource extends Resource
         ];
     }
 
+
     public static function getEloquentQuery(): Builder
     {
         $user = auth()->user();
 
-        if ($user && $user->hasPermissionTo('View All Contracts')) {
+        if ($user && $user->hasPermissionTo('View All Todos')) {
             return parent::getEloquentQuery();
-        } else {
-            return parent::getEloquentQuery()
-                ->whereHas('contract_classification', function (Builder $query) use ($user) {
-                    $query->where('user_id', $user->id);
-                });
         }
+
+        return parent::getEloquentQuery()
+            ->whereHas('contract.contract_classifications', function (Builder $query) use ($user) {
+                $query->where('user_id', $user->id);
+            });
     }
+
 
     public static function getPages(): array
     {

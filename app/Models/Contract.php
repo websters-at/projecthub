@@ -47,6 +47,10 @@ class Contract extends Model
             ContractNote::class,
         );
     }
+    public function todos(): HasMany
+    {
+        return $this->hasMany(Todo::class);
+    }
 
     public function bills(): HasManyThrough
     {

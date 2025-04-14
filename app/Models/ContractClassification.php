@@ -22,6 +22,11 @@ class ContractClassification extends Model
         return $this->belongsTo(Contract::class);
     }
 
+    public function todos(): HasMany
+    {
+        return $this->hasMany(Todo::class);
+    }
+
     public function notes(): HasMany
     {
         return $this->hasMany(Note::class);

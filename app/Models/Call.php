@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Call extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         "contract_classification_id",
         "name",

@@ -14,16 +14,17 @@ class Todo extends Model
         "due_to",
         "description",
         "attachments",
+        "contract_id",
         "contract_classification_id",
         "is_done",
         "priority"
     ];
-
     public $casts = [
         'attachments' => 'array',
     ];
-    public function contract_classification(): BelongsTo{
-        return $this->belongsTo(ContractClassification::class);
+    public function contract_classification(): BelongsTo
+    {
+        return $this->belongsTo(ContractClassification::class, 'contract_classification_id');
     }
     public function contract(): BelongsTo
     {
