@@ -20,10 +20,8 @@ class UserStatsWidget extends BaseWidget
     {
         $user = Auth::user();
 
-        // Get contract classifications related to the user
         $contractClassificationIds = ContractClassification::where('user_id', $user->id)->pluck('id');
 
-        // Calculate unpaid bills for the user
         $unpaidTotal = Bill::whereIn('contract_classification_id', $contractClassificationIds)
             ->where('is_payed', false)
             ->get()

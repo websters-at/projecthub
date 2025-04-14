@@ -14,7 +14,6 @@ class TodayCallsWidget extends BaseWidget
 {
     protected static ?string $heading = 'Today\'s Calls';
 
-    // Ensure the widget spans the full width of the dashboard
     protected int | string | array $columnSpan = 'full';
 
     public static function canView(): bool
