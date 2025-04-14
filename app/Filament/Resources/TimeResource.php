@@ -155,7 +155,14 @@ class TimeResource extends Resource
                     ->multiple()
                     ->searchable()
                     ->preload(),
-
+                Filter::make('billed')
+                    ->label(__('messages.time.filters.billed'))
+                    ->visible(Auth::user()->hasPermissionTo('View Special Times Filters'))
+                    ->query(fn(Builder $query) => $query->where('billed', true)),
+                Filter::make('notBilled')
+                    ->label(__('messages.time.filters.not_billed'))
+                    ->visible(Auth::user()->hasPermissionTo('View Special Times Filters'))
+                    ->query(fn(Builder $query) => $query->where('billed', false)),
 
                 Filter::make('date')
                     ->form([

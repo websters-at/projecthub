@@ -320,6 +320,9 @@ return [
             'contract_classification_contract' => 'Contract',
             'date_from' => 'From',
             'date_until' => 'Until',
+            'billed' => 'Billed',
+            'not_billed' => 'Not Billed',
+
         ],
         'bulk_actions' => [
             'select_all' => 'Select All Entries for Bulk Action',

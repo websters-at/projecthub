@@ -133,12 +133,12 @@ class CallResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('on_date')
-                    ->label(__('messages.call.table.field_on_date')) // Translated field
+                    ->label(__('messages.call.table.field_on_date'))
                     ->dateTime()
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('customer.company_name')
-                    ->label(__('messages.call.table.field_customer')) // Translated field
+                    ->label(__('messages.call.table.field_customer'))
                     ->sortable()
                     ->limit(25)
                     ->searchable(),

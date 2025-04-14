@@ -23,8 +23,10 @@ class TodayCallsWidget extends BaseWidget
 
     protected function getTableQuery(): Builder
     {
+        dd(Carbon::today());
         return Call::whereDate('on_date', Carbon::today())
-            ->where('is_done', false);
+            ->where('is_done', false)
+            ->orderBy('on_date', 'asc');
     }
 
     protected function getTableColumns(): array

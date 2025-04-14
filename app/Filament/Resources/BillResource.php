@@ -259,7 +259,6 @@ class BillResource extends Resource
                             ->options(function () {
                                 $user = Auth::user();
 
-                                // If admin → show all contracts
                                 if ($user->hasRole('Admin')) {
                                     return Contract::pluck('name', 'id');
                                 }

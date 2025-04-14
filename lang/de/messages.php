@@ -315,6 +315,8 @@ return [
             'is_special' => 'Sonderzeit',
         ],
         'filters' => [
+            'billed' => 'Verrechnet',
+            'not_billed' => 'Nicht Verrechnet',
             'contract_classification_user' => 'Benutzer',
             'contract_classification_contract' => 'Auftrag',
             'date_from' => 'Von',
