@@ -8,6 +8,7 @@ use App\Models\Contract;
 use App\Models\ContractClassification;
 use App\Models\Todo;
 use App\Models\Todos;
+use App\Models\User;
 use Filament\Actions\DeleteAction;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
@@ -135,19 +136,45 @@ class TodosResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                SelectFilter::make('contract')
-                    ->label(__('messages.call.form.section_contract'))
-                    ->options(function () {
-                        $userId = Auth::id();
-                        return Contract::whereHas('contract_classifications', function (Builder $query) use ($userId) {
-                            $query->where('user_id', $userId);
-                        })->pluck('name', 'id');
-                    })
-                    ->query(function (Builder $query, array $data): Builder {
-                        if (!empty($data['contract'])) {
-                            return $query->where('contract_id', $data['contract']);
-                        }
-                        return $query;
+                Filter::make('user')
+                    ->label(__('messages.todo.filters.user.label'))
+                    ->form([
+                        Select::make('user_id')
+                            ->label(__('messages.todo.filters.user.label'))
+                            ->options(fn () => User::all()->pluck('name', 'id'))
+                            ->placeholder(__('messages.todo.filters.user.placeholder'))
+                            ->hidden(fn () => !auth()->user()->hasRole('Admin'))
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        return $query->when($data['user_id'], function ($query, $userId) {
+                            return $query->whereHas('contract.contract_classifications', function ($q) use ($userId) {
+                                $q->where('user_id', $userId);
+                            });
+                        });
+                    }),
+
+                Filter::make('contract')
+                    ->label(__('messages.todo.filters.contract.label'))
+                    ->form([
+                        Select::make('contract_id')
+                            ->label(__('messages.todo.filters.contract.label'))
+                            ->options(function () {
+                                $user = Auth::user();
+
+                                if ($user->hasRole('Admin')) {
+                                    return Contract::pluck('name', 'id');
+                                }
+
+                                return Contract::whereHas('contract_classifications', function ($query) use ($user) {
+                                    $query->where('user_id', $user->id);
+                                })->pluck('name', 'id');
+                            })
+                            ->placeholder(__('messages.todo.filters.contract.placeholder')),
+                    ])
+                    ->query(function (Builder $query, array $data) {
+                        return $query->when($data['contract_id'], function ($query, $contractId) {
+                            return $query->where('contract_id', $contractId);
+                        });
                     }),
                 SelectFilter::make('priority')
                     ->label(__('messages.todo.table.priority'))

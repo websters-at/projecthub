@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Filament\Resources;
+
 use Filament\Forms\Get;
 use Illuminate\Database\Eloquent\Model;
 use App\Filament\Resources\BillResource\Pages;
@@ -74,7 +75,6 @@ class BillResource extends Resource
     }
 
 
-
     public static function getGloballySearchableAttributes(): array
     {
         return [
@@ -91,6 +91,7 @@ class BillResource extends Resource
             'contractClassification.contract.customer.email',
         ];
     }
+
     public static function getGlobalSearchResultTitle(Model $record): string
     {
         $contractName = $record->contractClassification->contract->name ?? 'No Contract';
@@ -112,7 +113,7 @@ class BillResource extends Resource
                         ->default(false)
                         ->reactive()
                         ->afterStateUpdated(function (Get $get, $set, $state) {
-                            if (! $state) {
+                            if (!$state) {
                                 $set('flat_rate_amount', null);
                             }
                         }),
@@ -121,14 +122,14 @@ class BillResource extends Resource
                         ->label(__('messages.bill.form.field_hourly_rate'))
                         ->numeric()
                         ->prefix('€')
-                        ->disabled(fn (Get $get): bool => $get('is_flat_rate'))
+                        ->disabled(fn(Get $get): bool => $get('is_flat_rate'))
                         ->requiredIf('is_flat_rate', false),
 
                     TextInput::make('flat_rate_amount')
                         ->label(__('messages.bill.form.field_flat_rate_amount'))
                         ->numeric()
                         ->prefix('€')
-                        ->disabled(fn (Get $get): bool => ! $get('is_flat_rate'))
+                        ->disabled(fn(Get $get): bool => !$get('is_flat_rate'))
                         ->requiredIf('is_flat_rate', true),
 
 
@@ -184,6 +185,11 @@ class BillResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('name')
+                    ->label(__('messages.bill.resource.name'))
+                    ->limit(20)
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('contractClassification.user.name')
                     ->label(__('messages.bill.table.user'))
                     ->sortable()
@@ -198,7 +204,7 @@ class BillResource extends Resource
                 TextColumn::make('hourly_rate')
                     ->label(__('messages.bill.table.calculated_total'))
                     ->formatStateUsing(function ($state, $record) {
-                        if($record->is_flat_rate){
+                        if ($record->is_flat_rate) {
                             return '/';
                         }
                         $roundedTotalHours = $record
@@ -233,7 +239,7 @@ class BillResource extends Resource
                     ->form([
                         Select::make('user_id')
                             ->label(__('messages.bill.filters.user.label'))
-                            ->options(fn () => User::all()->pluck('name', 'id'))
+                            ->options(fn() => User::all()->pluck('name', 'id'))
                             ->placeholder(__('messages.bill.filters.user.placeholder'))
                             ->hidden(fn() => !auth()->user()->hasRole('Admin'))
                     ])
@@ -281,8 +287,8 @@ class BillResource extends Resource
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
-                            ->when($data['created_from'], fn ($q) => $q->whereDate('created_on', '>=', $data['created_from']))
-                            ->when($data['created_until'], fn ($q) => $q->whereDate('created_on', '<=', $data['created_until']));
+                            ->when($data['created_from'], fn($q) => $q->whereDate('created_on', '>=', $data['created_from']))
+                            ->when($data['created_until'], fn($q) => $q->whereDate('created_on', '<=', $data['created_until']));
                     }),
 
                 Filter::make('is_payed')

@@ -255,6 +255,16 @@ return [
             'priority' => 'Priority',
             'is_done' => 'Completed',
         ],
+        'filters' => [
+            'user' => [
+                'label' => 'User',
+                'placeholder' => 'Select user',
+            ],
+            'contract' => [
+                'label' => 'Contract',
+                'placeholder' => 'Select contract',
+            ]
+        ]
     ],
     'time' => [
         'resource' => [

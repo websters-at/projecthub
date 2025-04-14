@@ -11,6 +11,7 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
@@ -29,6 +30,15 @@ class ContractsRelationManager extends RelationManager
 {
     protected static string $relationship = 'contracts';
 
+    public static function getModelLabel(): string
+    {
+        return __('messages.contract.resource.name');
+    }
+    public static function getPluralModelLabel(): string
+    {
+        return __('messages.contract.resource.name_plural');
+    }
+
     public  function form(Form $form): Form
     {
         return $form
@@ -43,9 +53,19 @@ class ContractsRelationManager extends RelationManager
                         ->string()
                         ->maxLength(255)
                         ->label(__('messages.contract.form.field_description')),
+                    Select::make('priority')
+                        ->label(__('messages.contract.form.field_priority'))
+                        ->options([
+                            'low' => 'Low',
+                            'mid' => 'Medium',
+                            'high' => 'High',
+                        ])
+                        ->searchable()
+                        ->required(),
                     DatePicker::make('due_to')
                         ->required()
                         ->label(__('messages.contract.form.field_due_to')),
+                    Toggle::make('is_finished')->label(__('messages.contract.form.field_is_finished'))->nullable(),
                 ])->collapsible()
                     ->collapsed(false),
 
