@@ -172,9 +172,10 @@ class BillResource extends Resource
                         ->multiple()
                         ->disk('s3')
                         ->nullable()
-                        ->acceptedFileTypes(['image/*', 'application/pdf', 'text/plain'])
                         ->directory('bills_attachments')
                         ->downloadable()
+                        ->preserveFilenames()
+                        ->previewable()
                 ])->collapsible()->collapsed(false)
             ]);
     }

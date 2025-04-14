@@ -84,8 +84,9 @@ class TodosResource extends Resource
                     FileUpload::make('attachments')
                         ->multiple()
                         ->downloadable()
+                        ->previewable()
+                        ->preserveFilenames()
                         ->disk('s3')
-                        ->acceptedFileTypes(['image/*', 'application/pdf', 'text/plain'])
                         ->directory('todos_attachments')
                         ->label(__('messages.todo.form.field_attachments'))
                 ])->heading(__('messages.todo.form.section_general')),
