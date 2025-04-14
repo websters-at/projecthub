@@ -28,6 +28,7 @@ return new class extends Migration
                 ->nullable();
             $table->boolean('is_special')
                 ->nullable();
+            $table->boolean('billed')->default(false);
             $table->timestamps();
         });
     }

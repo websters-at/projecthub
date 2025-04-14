@@ -281,6 +281,10 @@ return [
             'special_time_description' => 'Sum of all times marked as "special".',
             'entries_count' => 'Entries Count',
             'entries_count_description' => 'Total number of time entries.',
+            'unbilled_time' => 'Unbilled Time',
+            'unbilled_time_description' => 'Total time not yet billed',
+            'avg_time_per_contract' => 'Avg. Time per Contract',
+            'avg_time_per_contract_description' => 'Average time worked per contract',
         ],
         'form' => [
             'general' => 'General',
@@ -301,6 +305,7 @@ return [
             'create_and_add_another' => 'Create & Add Another',
         ],
         'table' => [
+            'billed' => 'Billed',
             'date' => 'Date',
             'description' => 'Description',
             'total_hours' => 'Total Hours',
@@ -316,6 +321,14 @@ return [
         'bulk_actions' => [
             'select_all' => 'Select All Entries for Bulk Action',
             'deselect_all' => 'Deselect All Entries for Bulk Action',
+            'mark_as_billed' => [
+                'label' => 'Mark as Billed',
+                'description' => 'Set selected entries as billed',
+            ],
+            'mark_as_not_billed' => [
+                'label' => 'Mark as not Billed',
+                'description' => 'Set selected entries as not billed',
+            ],
         ],
     ],
     'bill' => [

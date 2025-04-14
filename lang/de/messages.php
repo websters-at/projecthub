@@ -281,6 +281,10 @@ return [
             'special_time_description' => 'Summe aller als "besonders" markierten Zeiten.',
             'entries_count' => 'Anzahl der Einträge',
             'entries_count_description' => 'Gesamtzahl der Zeiteinträge.',
+            'unbilled_time' => 'Nicht verrechnete Zeit',
+            'unbilled_time_description' => 'Gesamtzeit ohne Weiterverrechnung',
+            'avg_time_per_contract' => 'Ø Zeit je Auftrag',
+            'avg_time_per_contract_description' => 'Durchschnittliche Zeit pro Auftrag',
         ],
         'form' => [
             'general' => 'Allgemein',
@@ -301,6 +305,7 @@ return [
             'create_and_add_another' => 'Erstellen & weiteren Eintrag hinzufügen',
         ],
         'table' => [
+            'billed' => 'Verrechnet',
             'date' => 'Datum',
             'description' => 'Beschreibung',
             'total_hours' => 'Gesamtstunden',
@@ -316,6 +321,14 @@ return [
         'bulk_actions' => [
             'select_all' => 'Alle Einträge für Stapelverarbeitung auswählen',
             'deselect_all' => 'Alle Einträge für Stapelverarbeitung abwählen',
+            'mark_as_billed' => [
+                'label' => 'Als abgerechnet markieren',
+                'description' => 'Ausgewählte Einträge als abgerechnet setzen',
+            ],
+            'mark_as_not_billed' => [
+                'label' => 'Als nicht abgerechnet markieren',
+                'description' => 'Ausgewählte Einträge als nicht abgerechnet setzen',
+            ],
         ],
     ],
     'bill' => [

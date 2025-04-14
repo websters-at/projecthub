@@ -12,7 +12,7 @@ class TimesOverview extends StatsOverviewWidget
 {
     use InteractsWithPageTable;
 
-    public array $tableColumnSearches = []; // keep this
+    public array $tableColumnSearches = [];
 
     protected function getTablePage(): string
     {
@@ -23,47 +23,62 @@ class TimesOverview extends StatsOverviewWidget
     {
         $times = $this->getPageTableQuery()->get();
 
-        $totalRawMinutes = $times->sum(function (Time $t) {
-            return $t->total_hours_worked * 60 + $t->total_minutes_worked;
-        });
+        // Calculate total raw minutes from all entries
+        $totalRawMinutes = $times->sum(fn(Time $t) =>
+            $t->total_hours_worked * 60 + $t->total_minutes_worked
+        );
 
-        $specialMinutes = $times
-            ->where('is_special', true)
-            ->sum(function (Time $t) {
-                return $t->total_hours_worked * 60 + $t->total_minutes_worked;
-            });
+        $format = fn(int $minutes): string =>
+            intdiv($minutes, 60).'h '.($minutes % 60).'min';
 
-        $totalRoundedMinutes = $times->sum(function (Time $t) {
-            $minutes  = $t->total_hours_worked * 60 + $t->total_minutes_worked;
-            $remainder = $minutes % 60;
-            $base      = $minutes - $remainder;
+        // Calculate average per contract
+        $groupedByContract = $times->groupBy('contract_classification_id');
+        $avgPerContract = $groupedByContract->count() > 0
+            ? intval($groupedByContract->avg(fn($group) =>
+            $group->sum(fn(Time $t) =>
+                $t->total_hours_worked * 60 + $t->total_minutes_worked
+            )
+            ))
+            : 0;
 
-            return $remainder >= 30
-                ? $base + 60
-                : $minutes;
-        });
 
-        $format = function (int $minutes): string {
-            $h = intdiv($minutes, 60);
-            $m = $minutes % 60;
-            return "{$h}h {$m}min";
-        };
-
-        return [
+        $stats = [
             Stat::make(__('messages.time.stats.total_time_raw'), $format($totalRawMinutes))
                 ->description(__('messages.time.stats.total_time_raw_description'))
                 ->descriptionIcon('heroicon-o-clock')
-                ->color('primary'),
+                ->color('info'),
+        ];
 
-            Stat::make(__('messages.time.stats.special_time'), $format($specialMinutes))
-                ->description(__('messages.time.stats.special_time_description'))
-                ->descriptionIcon('heroicon-o-star')
-                ->color('warning'),
+        if (auth()->user()->hasRole("Admin")) {
+            $unbilledMinutes = $times
+                ->where('billed', false)
+                ->sum(fn(Time $t) =>
+                    $t->total_hours_worked * 60 + $t->total_minutes_worked
+                );
 
-            Stat::make(__('messages.time.stats.entries_count'), $times->count())
+            $stats[] = Stat::make(__('messages.time.stats.unbilled_time'), $format($unbilledMinutes))
+                ->description(__('messages.time.stats.unbilled_time_description'))
+                ->descriptionIcon('heroicon-o-currency-euro')
+                ->color('danger')
+                ->chartColor('danger');
+
+            $stats[] = Stat::make(__('messages.time.stats.avg_time_per_contract'), $format($avgPerContract))
+                ->description(__('messages.time.stats.avg_time_per_contract_description'))
+                ->descriptionIcon('heroicon-o-chart-bar')
+                ->color('warning');
+        }
+        else {
+            $stats[] = Stat::make(__('messages.time.stats.avg_time_per_contract'), $format($avgPerContract))
+                ->description(__('messages.time.stats.avg_time_per_contract_description'))
+                ->descriptionIcon('heroicon-o-chart-bar')
+                ->color('info');
+
+            $stats[] = Stat::make(__('messages.time.stats.entries_count'), $times->count())
                 ->description(__('messages.time.stats.entries_count_description'))
                 ->descriptionIcon('heroicon-o-document-text')
-                ->color('success'),
-        ];
+                ->color('gray');
+        }
+
+        return $stats;
     }
 }

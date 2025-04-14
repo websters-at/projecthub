@@ -14,6 +14,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
@@ -23,6 +24,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class TimesRelationManager extends RelationManager
@@ -55,14 +57,6 @@ class TimesRelationManager extends RelationManager
                     ->collapsible()
                     ->collapsed(false)
                     ->heading(__('messages.time.form.time')),
-                Section::make([
-                    Toggle::make('is_special')
-                        ->required()
-                        ->label(__('messages.time.form.field_is_special')),
-                ])->columns(1)
-                    ->collapsible()
-                    ->collapsed(false)
-                    ->heading(__('messages.time.form.specification'))
             ]);
     }
 
@@ -85,17 +79,13 @@ class TimesRelationManager extends RelationManager
                     ->label(__('messages.time.table.description')),
                 TextColumn::make('total_hours_worked')
                     ->label(__('messages.time.table.total_hours')),
-                IconColumn::make('is_special')
-                    ->icon(fn (bool $state): string => match ($state) {
-                        false => 'fas-x',
-                        true => 'fas-check',
-                    })
-                    ->color(fn (bool $state): string => match ($state) {
-                        false => 'danger',
-                        true => 'success',
-                    })
-                    ->size(IconColumnSize::Medium)
-                    ->label(__('messages.time.table.is_special')),
+                IconColumn::make('billed')
+                    ->label(__('messages.time.table.billed'))
+                    ->boolean()
+                    ->visible(Auth::user()->hasRole('Admin'))
+                    ->icon(fn(bool $state): string => $state ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle')
+                    ->color(fn(bool $state): string => $state ? 'success' : 'danger')
+                    ->size(IconColumnSize::Medium),
             ])->modifyQueryUsing(function (Builder $query) {
                 $user = Auth::user();
                 $contractId = $this->ownerRecord->id;
@@ -121,9 +111,6 @@ class TimesRelationManager extends RelationManager
                     if ($contractClassification) {
                         // Ensure the contract_classification_id is included in the data
                         $data['contract_classification_id'] = $contractClassification->id;
-                    } else {
-                        // If there's no contract classification, handle the case (e.g., throw an error or set a default value)
-                        // Optionally, you could set a default value or handle it in another way.
                     }
 
                     return $data;
@@ -139,10 +126,35 @@ class TimesRelationManager extends RelationManager
             ->actions([
                 EditAction::make(),
                 DeleteAction::make(),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    BulkAction::make('markAsBilled')
+                        ->visible(Auth::user()->hasRole('Admin'))
+                        ->label(__('messages.time.bulk_actions.mark_as_billed.label'))
+                        ->requiresConfirmation()
+                        ->action(function (Collection $records) {
+                            $records->each(function ($record) {
+                                $record->update(['billed' => true]);
+                            });
+                        })
+                        ->deselectRecordsAfterCompletion()
+                        ->color('success')
+                        ->icon('heroicon-o-currency-euro'),
+                    BulkAction::make('markAsNotBilled')
+                        ->label(__('messages.time.bulk_actions.mark_as_not_billed.label'))
+                        ->visible(Auth::user()->hasRole('Admin'))
+                        ->requiresConfirmation()
+                        ->action(function (Collection $records) {
+                            $records->each(function ($record) {
+                                $record->update(['billed' => false]);
+                            });
+                        })
+                        ->deselectRecordsAfterCompletion()
+                        ->color('danger')
+                        ->icon('heroicon-o-currency-euro'),
                 ]),
             ]);
     }

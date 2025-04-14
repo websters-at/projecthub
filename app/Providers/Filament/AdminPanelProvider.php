@@ -12,12 +12,15 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets;
+use Hasnayeen\Themes\Http\Middleware\SetTheme;
+use Hasnayeen\Themes\ThemesPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use TimWassenburg\FilamentTimesheets\FilamentTimesheetsPlugin;
 
@@ -50,14 +53,14 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                \Hasnayeen\Themes\Http\Middleware\SetTheme::class
+                SetTheme::class
             ])
           #  ->plugin(FilamentTimesheetsPlugin::make()) # TODO: REMOVE LATER ON...
             ->authMiddleware([
                 Authenticate::class,
             ])
             ->plugins([
-                \Hasnayeen\Themes\ThemesPlugin::make()
+               ThemesPlugin::make(),
             ])
             ->widgets([
 

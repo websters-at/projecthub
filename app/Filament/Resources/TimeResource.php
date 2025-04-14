@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Filament\Resources;
+
 use Carbon\Carbon;
 use App\Filament\Resources\TimeResource\Pages;
 use App\Filament\Resources\TimeResource\RelationManagers;
@@ -21,12 +22,14 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\IconColumn\IconColumnSize;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 use Filament\Tables\Filters\Filter;
@@ -39,6 +42,7 @@ class TimeResource extends Resource
     protected static ?string $navigationIcon = 'far-clock';
     protected static ?string $navigationGroup = 'Contracts';
     protected static ?int $navigationSort = 4;
+
     public static function getNavigationGroup(): ?string
     {
         return __('messages.time.resource.group');
@@ -96,14 +100,6 @@ class TimeResource extends Resource
                     ->collapsible()
                     ->collapsed(false)
                     ->heading(__('messages.time.form.contract')),
-                Section::make([
-                    Toggle::make('is_special')
-                        ->default(false)
-                        ->label(__('messages.time.form.field_is_special')) // translated label
-                ])->columns(1)
-                    ->collapsible()
-                    ->collapsed(false)
-                    ->heading(__('messages.time.form.specification'))
             ]);
     }
 
@@ -124,11 +120,13 @@ class TimeResource extends Resource
                 TextColumn::make('total_minutes_worked')
                     ->label(__('messages.time.table.total_minutes')) // Translated label
                     ->sortable(),
-                IconColumn::make('is_special')
-                    ->label(__('messages.time.table.is_special')) // Translated label
-                    ->icon(fn (bool $state): string => $state ? 'fas-check' : 'fas-x')
-                    ->color(fn (bool $state): string => $state ? 'success' : 'danger')
-                    ->size(IconColumnSize::Medium)
+                IconColumn::make('billed')
+                    ->label(__('messages.time.table.billed'))
+                    ->boolean()
+                    ->visible(Auth::user()->hasRole('Admin'))
+                    ->icon(fn(bool $state): string => $state ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle')
+                    ->color(fn(bool $state): string => $state ? 'success' : 'danger')
+                    ->size(IconColumnSize::Medium),
             ])
             ->filters([
                 SelectFilter::make('contractClassificationUser')
@@ -143,7 +141,7 @@ class TimeResource extends Resource
                         'contractClassification.contract',
                         'name',
                         function (Builder $query) {
-                            if (! Auth::user()->hasPermissionTo('View Special Times Filters')) {
+                            if (!Auth::user()->hasPermissionTo('View Special Times Filters')) {
                                 $query->whereIn(
                                     'contracts.id',
                                     Auth::user()
@@ -168,8 +166,8 @@ class TimeResource extends Resource
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
-                            ->when($data['from'] ?? null, fn (Builder $query, $date): Builder => $query->whereDate('date', '>=', $date))
-                            ->when($data['until'] ?? null, fn (Builder $query, $date): Builder => $query->whereDate('date', '<=', $date));
+                            ->when($data['from'] ?? null, fn(Builder $query, $date): Builder => $query->whereDate('date', '>=', $date))
+                            ->when($data['until'] ?? null, fn(Builder $query, $date): Builder => $query->whereDate('date', '<=', $date));
                     })
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
@@ -186,7 +184,7 @@ class TimeResource extends Resource
 
                         return $indicators;
                     })
-        ])
+            ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
@@ -194,10 +192,36 @@ class TimeResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    BulkAction::make('markAsBilled')
+                        ->visible(Auth::user()->hasRole('Admin'))
+                        ->label(__('messages.time.bulk_actions.mark_as_billed.label'))
+                        ->requiresConfirmation()
+                        ->action(function (Collection $records) {
+                            $records->each(function ($record) {
+                                $record->update(['billed' => true]);
+                            });
+                        })
+                        ->deselectRecordsAfterCompletion()
+                        ->color('success')
+                        ->icon('heroicon-o-currency-euro'),
+                    BulkAction::make('markAsNotBilled')
+                        ->label(__('messages.time.bulk_actions.mark_as_not_billed.label'))
+                        ->visible(Auth::user()->hasRole('Admin'))
+                        ->requiresConfirmation()
+                        ->action(function (Collection $records) {
+                            $records->each(function ($record) {
+                                $record->update(['billed' => false]);
+                            });
+                        })
+                        ->deselectRecordsAfterCompletion()
+                        ->color('danger')
+                        ->icon('heroicon-o-currency-euro'),
+
                 ]),
+
+
             ]);
     }
-
 
 
     public static function getRelations(): array
@@ -221,6 +245,7 @@ class TimeResource extends Resource
                 });
         }
     }
+
     public static function getPages(): array
     {
         return [
