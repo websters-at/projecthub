@@ -112,14 +112,8 @@ class TodosResource extends Resource
                     ->sortable()
                     ->label(__('messages.todo.table.name')),
 
-                // Ändere hier 'contract_classification.contract.name' zu 'contract.name'
                 TextColumn::make('contract.name')
                     ->label(__('messages.todo.table.contract'))
-                    ->sortable(),
-
-                // Ändere hier 'contract_classification.contract.customer.company_name' zu 'contract.customer.company_name'
-                TextColumn::make('contract.customer.company_name')
-                    ->label(__('messages.todo.table.customer'))
                     ->sortable(),
 
                 TextColumn::make('due_to')
@@ -152,7 +146,6 @@ class TodosResource extends Resource
                             });
                         });
                     }),
-
                 Filter::make('contract')
                     ->label(__('messages.todo.filters.contract.label'))
                     ->form([
