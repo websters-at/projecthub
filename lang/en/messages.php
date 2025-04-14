@@ -469,6 +469,8 @@ return [
     ],
     'general_overview' => [
         'todays_calls' => 'Today\'s Calls',
+        'unbilled_time' => 'Unbilled Time',
+        'unbilled_time_description' => 'Total time worked that has not yet been billed.',
         'unpaid_amount' => 'Unpaid Amount',
         'contracts_due_3_days' => 'Contracts Due in 3 Days',
         'todos_due_3_days' => 'Todos Due in 3 Days',

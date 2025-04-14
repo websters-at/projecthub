@@ -168,18 +168,22 @@ class DatabaseSeeder extends Seeder
             'Update Times',
             'Delete Times',
             'Restore Times',
+            'Create Todos',
+            'Delete Todos',
+            'Update Todos',
+            'Create Contract Notes',
+            'Delete Contract Notes',
+            'Update Contract Notes'
         ]);
 
-        // Retrieve all permissions
         $allPermissions = Permission::all();
 
         $role->givePermissionTo($allPermissions);
 
         $user->assignRole($role);
-        $user2->assignRole($mitarbeiterRole);
+        $user2->assignRole($role);
         $user3->assignRole($mitarbeiterRole);
         $user4->assignRole($mitarbeiterRole);
-
 
 
 

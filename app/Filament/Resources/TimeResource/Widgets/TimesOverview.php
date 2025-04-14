@@ -46,7 +46,7 @@ class TimesOverview extends StatsOverviewWidget
             Stat::make(__('messages.time.stats.total_time_raw'), $format($totalRawMinutes))
                 ->description(__('messages.time.stats.total_time_raw_description'))
                 ->descriptionIcon('heroicon-o-clock')
-                ->color('info'),
+                ->color('danger'),
         ];
 
         if (auth()->user()->hasRole("Admin")) {
@@ -76,7 +76,7 @@ class TimesOverview extends StatsOverviewWidget
             $stats[] = Stat::make(__('messages.time.stats.entries_count'), $times->count())
                 ->description(__('messages.time.stats.entries_count_description'))
                 ->descriptionIcon('heroicon-o-document-text')
-                ->color('gray');
+                ->color('gray'); // Right position
         }
 
         return $stats;

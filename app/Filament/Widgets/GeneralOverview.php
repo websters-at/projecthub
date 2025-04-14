@@ -7,6 +7,7 @@ use App\Models\Call;
 use App\Models\Contract;
 use App\Models\GeneralTodo;
 use App\Models\Todo;
+use App\Models\Time;
 use Carbon\Carbon;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -14,72 +15,68 @@ use Illuminate\Support\Facades\Auth;
 
 class GeneralOverview extends BaseWidget
 {
+    // Make the widget visible to everyone:
     public static function canView(): bool
     {
-        return Auth::user()->hasRole('Admin');
+        return true;
     }
 
     protected function getStats(): array
     {
-        $todaysCallsCount = Call::whereDate('on_date', Carbon::today())->count();
+        $stats = [];
 
-        // Correct unpaid bills total calculation
+        // 1) Today's calls
+        $stats[] = Stat::make(__('messages.general_overview.todays_calls'), Call::whereDate('on_date', Carbon::today())->count())
+            ->description(__('messages.general_overview.todays_calls_description'))
+            ->descriptionIcon('heroicon-o-phone')
+            ->color('success');
+
+        // 2) Unpaid bills
         $unpaidBillsTotal = Bill::where('is_payed', false)
             ->get()
             ->sum(function (Bill $bill) {
                 if ($bill->is_flat_rate) {
                     return $bill->flat_rate_amount;
                 }
-
                 $hours = $bill->contractClassification
                     ->times
                     ->map(fn($time) => $time->total_hours_worked + $time->total_minutes_worked / 60)
                     ->map(fn($h) => ($h - floor($h)) >= 0.5 ? ceil($h) : $h)
                     ->sum();
-
                 return $bill->hourly_rate * $hours;
             });
+        $stats[] = Stat::make(__('messages.general_overview.unpaid_amount'), number_format($unpaidBillsTotal, 2) . ' €')
+            ->description(__('messages.general_overview.unpaid_amount_description'))
+            ->descriptionIcon('heroicon-o-banknotes')
+            ->color('danger');
 
-        $upcomingContractsCount = Contract::whereBetween('due_to', [
-            Carbon::today(),
-            Carbon::today()->addDays(3),
-        ])->count();
+        // 3) Unbilled time (only for admins)
+        if (Auth::user()->hasRole('Admin')) {
+            $unbilledMinutes = Time::where('billed', false)
+                ->get()
+                ->sum(fn(Time $t) => $t->total_hours_worked * 60 + $t->total_minutes_worked);
+            $format = fn(int $m) => intdiv($m, 60) . 'h ' . ($m % 60) . 'min';
+            $stats[] = Stat::make(__('messages.general_overview.unbilled_time'), $format($unbilledMinutes))
+                ->description(__('messages.general_overview.unbilled_time_description'))
+                ->descriptionIcon('heroicon-o-clock')
+                ->color('warning');
+        }
 
-        $todosDueCount = Todo::whereBetween('due_to', [
-            Carbon::today(),
-            Carbon::today()->addDays(3),
-        ])->count();
+        $stats[] = Stat::make(__('messages.general_overview.contracts_due_3_days'), Contract::whereBetween('due_to', [Carbon::today(), Carbon::today()->addDays(3)])->count())
+            ->description(__('messages.general_overview.contracts_due_3_days_description'))
+            ->descriptionIcon('fas-list-check')
+            ->color('warning');
 
-        $generalTodosDueCount = GeneralTodo::whereBetween('due_to', [
-            Carbon::today(),
-            Carbon::today()->addDays(3),
-        ])->count();
+        $stats[] = Stat::make(__('messages.general_overview.todos_due_3_days'), Todo::whereBetween('due_to', [Carbon::today(), Carbon::today()->addDays(3)])->count())
+            ->description(__('messages.general_overview.todos_due_3_days_description'))
+            ->descriptionIcon('heroicon-o-check-circle')
+            ->color('primary');
 
-        return [
-            Stat::make(__('messages.general_overview.todays_calls'), $todaysCallsCount)
-                ->description(__('messages.general_overview.todays_calls_description'))
-                ->descriptionIcon('heroicon-o-phone')
-                ->color('success'),
+        $stats[] = Stat::make(__('messages.general_overview.general_todos_due_3_days'), GeneralTodo::whereBetween('due_to', [Carbon::today(), Carbon::today()->addDays(3)])->count())
+            ->description(__('messages.general_overview.general_todos_due_3_days_description'))
+            ->descriptionIcon('heroicon-o-clipboard-document')
+            ->color('secondary');
 
-            Stat::make(__('messages.general_overview.unpaid_amount'), number_format($unpaidBillsTotal, 2) . ' €')
-                ->description(__('messages.general_overview.unpaid_amount_description'))
-                ->descriptionIcon('heroicon-o-banknotes')
-                ->color('danger'),
-
-            Stat::make(__('messages.general_overview.contracts_due_3_days'), $upcomingContractsCount)
-                ->description(__('messages.general_overview.contracts_due_3_days_description'))
-                ->descriptionIcon('fas-list-check')
-                ->color('warning'),
-
-            Stat::make(__('messages.general_overview.todos_due_3_days'), $todosDueCount)
-                ->description(__('messages.general_overview.todos_due_3_days_description'))
-                ->descriptionIcon('heroicon-o-check-circle')
-                ->color('primary'),
-
-            Stat::make(__('messages.general_overview.general_todos_due_3_days'), $generalTodosDueCount)
-                ->description(__('messages.general_overview.general_todos_due_3_days_description'))
-                ->descriptionIcon('heroicon-o-clipboard-document')
-                ->color('secondary'),
-        ];
+        return $stats;
     }
 }

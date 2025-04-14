@@ -137,19 +137,15 @@ class CallResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('contract_classification.contract.customer.company_name')
+                TextColumn::make('customer.company_name')
                     ->label(__('messages.call.table.field_customer')) // Translated field
                     ->sortable()
-                    ->limit(10)
+                    ->limit(25)
                     ->searchable(),
                 TextColumn::make('contract_classification.contract.name')
                     ->label(__('messages.call.table.field_contract'))
                     ->sortable()
-                    ->limit(10)
-                    ->searchable(),
-                TextColumn::make('contract_classification.user.name')
-                    ->label(__('messages.call.table.field_user'))
-                    ->sortable()
+                    ->limit(25)
                     ->searchable(),
                 ToggleColumn::make('is_done')
                     ->label(__('messages.call.table.field_is_done'))

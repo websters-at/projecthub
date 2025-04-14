@@ -469,6 +469,8 @@ return [
     'general_overview' => [
         'todays_calls' => 'Anrufe von heute',
         'unpaid_amount' => 'Offener Betrag',
+        'unbilled_time' => 'Unabgerechnete Zeit',
+        'unbilled_time_description' => 'Gesamtarbeitszeit, die noch nicht verrechnet wurde.',
         'contracts_due_3_days' => 'Aufträge, die in 3 Tagen fällig sind',
         'todos_due_3_days' => 'Todos, die in 3 Tagen fällig sind',
         'general_todos_due_3_days' => 'Allgemeine Todos, die in 3 Tagen fällig sind',

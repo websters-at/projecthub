@@ -5,7 +5,6 @@ namespace App\Filament\Resources\CallResource\RelationManagers;
 use App\Models\Contract;
 use App\Models\ContractClassification;
 
-use Filament\Actions\CreateAction;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -14,6 +13,7 @@ use Filament\Forms\Form;
 
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
@@ -70,7 +70,9 @@ class CallNotesRelationManagerRelationManager extends RelationManager
                     ->markdown(),
 
             ])
-
+            ->headerActions([
+                CreateAction::make(),
+            ])
             ->actions([
                ViewAction::make(),
                EditAction::make(),
@@ -86,7 +88,6 @@ class CallNotesRelationManagerRelationManager extends RelationManager
     {
         return false;
     }
-
 
 
 
