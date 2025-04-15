@@ -2,7 +2,10 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\BillResource\RelationManagers\TimeRelationManagerRelationManager;
 use Filament\Forms\Get;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\IconColumn\IconColumnSize;
 use Illuminate\Database\Eloquent\Model;
 use App\Filament\Resources\BillResource\Pages;
 use App\Filament\Resources\BillResource\Pages\CreateBill;
@@ -132,6 +135,12 @@ class BillResource extends Resource
                         ->disabled(fn(Get $get): bool => !$get('is_flat_rate'))
                         ->requiredIf('is_flat_rate', true),
 
+                    TextInput::make('flat_rate_hours')
+                        ->label(__('messages.bill.form.field_flat_rate_hours'))
+                        ->numeric()
+                        ->prefix('h')
+                        ->disabled(fn(Get $get): bool => !$get('is_flat_rate'))
+                        ->requiredIf('is_flat_rate', true),
 
                     RichEditor::make('description')
                         ->label(__('messages.bill.form.field_description'))
@@ -190,11 +199,10 @@ class BillResource extends Resource
                     ->limit(20)
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('contractClassification.user.name')
+               TextColumn::make('contractClassification.user.name')
                     ->label(__('messages.bill.table.user'))
                     ->sortable()
                     ->searchable(),
-
                 TextColumn::make('contractClassification.contract.name')
                     ->label(__('messages.bill.table.contract'))
                     ->sortable()
@@ -230,14 +238,13 @@ class BillResource extends Resource
                         return '/';
                     }),
 
-                Tables\Columns\ToggleColumn::make('is_payed')
-                    ->label(__('messages.bill.table.is_payed')),
             ])
             ->filters([
                 Filter::make('user')
                     ->label(__('messages.bill.filters.user.label'))
                     ->form([
                         Select::make('user_id')
+                            ->searchable()
                             ->label(__('messages.bill.filters.user.label'))
                             ->options(fn() => User::all()->pluck('name', 'id'))
                             ->placeholder(__('messages.bill.filters.user.placeholder'))
@@ -255,6 +262,7 @@ class BillResource extends Resource
                     ->label(__('messages.bill.filters.contract.label'))
                     ->form([
                         Select::make('contract_id')
+                            ->searchable()
                             ->label(__('messages.bill.filters.contract.label'))
                             ->options(function () {
                                 $user = Auth::user();
@@ -331,7 +339,6 @@ class BillResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
         ];
     }
 

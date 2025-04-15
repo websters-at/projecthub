@@ -367,6 +367,8 @@ return [
         ],
         'form' => [
             'field_flat_rate_amount'=>'Pauschalbetrag',
+            'field_flat_rate_hours'=>'Stunden',
+            'field_flat_rate_minutes'=>'Minuten',
             'field_is_flat_rate_helper'=>"Handelt es sich um einen Pauschalbetrag?",
             'field_is_flat_rate' => 'Pauschalbetrag',
             'section_general' => 'Allgemeine Informationen',

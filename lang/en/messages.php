@@ -368,6 +368,8 @@ return [
             'total_paid_amount_description' => 'Sum of amounts already paid.',
         ],
         'form' => [
+            'field_flat_rate_hours'=>'Hours',
+            'field_flat_rate_minutes'=>'Minutes',
             'field_flat_rate_amount' => 'Flat rate amount',
             'field_is_flat_rate_helper' => "Is this a flat rate?",
             'field_is_flat_rate' => 'flat rate',

@@ -18,8 +18,11 @@ return new class extends Migration
                 ->references('id')
                 ->on('contract_classifications')
                 ->onDelete('cascade');
-            $table->boolean('is_flat_rate')->default(false);  // Neues Feld für pauschale Beträge
+            $table->boolean('is_flat_rate')->default(false);
             $table->double('flat_rate_amount')->nullable();
+            $table->integer('flat_rate_hours')->nullable();
+            $table->integer('flat_rate_minutes')->nullable();
+            $table->boolean('billed')->default(false);
             $table->string('name');
             $table->boolean('is_payed')
                 ->default(false);

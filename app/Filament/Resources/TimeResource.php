@@ -67,25 +67,25 @@ class TimeResource extends Resource
                     DateTimePicker::make('date')
                         ->default(now())
                         ->required()
-                        ->label(__('messages.time.form.field_date')), // translated label
+                        ->label(__('messages.time.form.field_date')),
                     RichEditor::make('description')
                         ->nullable()
                         ->string()
-                        ->label(__('messages.time.form.field_description')), // translated label
+                        ->label(__('messages.time.form.field_description')),
                 ])->heading(__('messages.time.form.general'))->collapsible()->collapsed(false),
                 Section::make([
                     TextInput::make('total_hours_worked')
                         ->required()
-                        ->label(__('messages.time.form.field_total_hours_worked')), // translated label
+                        ->label(__('messages.time.form.field_total_hours_worked')),
                     TextInput::make('total_minutes_worked')
-                        ->label(__('messages.time.form.field_total_minutes_worked')), // translated label
+                        ->label(__('messages.time.form.field_total_minutes_worked')),
                 ])->columns(2)
                     ->collapsible()
                     ->collapsed(false)
                     ->heading(__('messages.time.form.time')),
                 Section::make([
                     Select::make('contract_classification_id')
-                        ->label(__('messages.time.form.field_contract_label')) // translated label
+                        ->label(__('messages.time.form.field_contract_label'))
                         ->options(function () {
                             $user = Auth::user();
                             return ContractClassification::where('user_id', $user->id)
@@ -117,10 +117,10 @@ class TimeResource extends Resource
                     ->limit(30),
                 TextColumn::make('total_hours_worked')
                     ->sortable()
-                    ->label(__('messages.time.table.total_hours')) // Translated label
+                    ->label(__('messages.time.table.total_hours'))
                     ->sortable(),
                 TextColumn::make('total_minutes_worked')
-                    ->label(__('messages.time.table.total_minutes')) // Translated label
+                    ->label(__('messages.time.table.total_minutes'))
                     ->sortable(),
                 IconColumn::make('billed')
                     ->sortable()
