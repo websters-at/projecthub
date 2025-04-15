@@ -26,6 +26,14 @@ return [
             'name' => 'Call',
             'name_plural' => 'Calls',
         ],
+        'stats' => [
+            'today' => 'Calls Today',
+            'today_description' => 'Total calls scheduled for today.',
+            'upcoming' => 'Upcoming Calls',
+            'upcoming_description' => 'Total calls scheduled for the next 3 days.',
+            'open' => 'Open Calls',
+            'open_description' => 'Total calls that are not marked as "done".',
+        ],
         'form' => [
             'field_customer'=>'Customer',
             'section_general' => 'General',

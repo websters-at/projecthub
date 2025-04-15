@@ -108,6 +108,7 @@ class TimeResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('date')
+                    ->sortable()
                     ->label(__('messages.time.table.date')) // Translated label
                     ->date(),
                 TextColumn::make('description')
@@ -115,12 +116,14 @@ class TimeResource extends Resource
                     ->markdown()
                     ->limit(30),
                 TextColumn::make('total_hours_worked')
+                    ->sortable()
                     ->label(__('messages.time.table.total_hours')) // Translated label
                     ->sortable(),
                 TextColumn::make('total_minutes_worked')
                     ->label(__('messages.time.table.total_minutes')) // Translated label
                     ->sortable(),
                 IconColumn::make('billed')
+                    ->sortable()
                     ->label(__('messages.time.table.billed'))
                     ->boolean()
                     ->visible(Auth::user()->hasRole('Admin'))

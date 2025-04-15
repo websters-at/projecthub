@@ -27,6 +27,14 @@ return [
             'name' => 'Anruf',
             'name_plural' => 'Anrufe',
         ],
+        'stats' => [
+            'today' => 'Anrufe Heute',
+            'today_description' => 'Gesamtzahl der für heute geplanten Anrufe.',
+            'upcoming' => 'Kommende Anrufe',
+            'upcoming_description' => 'Gesamtzahl der für die nächsten 3 Tage geplanten Anrufe.',
+            'open' => 'Offene Anrufe',
+            'open_description' => 'Gesamtzahl der Anrufe, die nicht als "erledigt" markiert sind.',
+        ],
         'form' => [
             'field_customer'=>'Kunde',
             'section_general' => 'Allgemein',

@@ -4,6 +4,7 @@ namespace App\Filament\Widgets;
 
 use App\Models\Call;
 use Carbon\Carbon;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Widgets\TableWidget as BaseWidget;
@@ -23,10 +24,16 @@ class TodayCallsWidget extends BaseWidget
 
     protected function getTableQuery(): Builder
     {
-        dd(Carbon::today());
-        return Call::whereDate('on_date', Carbon::today())
-            ->where('is_done', false)
-            ->orderBy('on_date', 'asc');
+        return Call::whereDate('on_date', Carbon::today());
+    }
+    protected function getTableActions(): array
+    {
+        return [
+            Action::make('view')
+                ->label('View Call')
+                ->url(fn (Call $record): string => '/admin/calls/'. $record->id)
+                ->openUrlInNewTab(),
+        ];
     }
 
     protected function getTableColumns(): array
@@ -52,10 +59,5 @@ class TodayCallsWidget extends BaseWidget
         ];
     }
 
-    protected function getTableActions(): array
-    {
-        return [
-            Tables\Actions\ViewAction::make(),
-        ];
-    }
+
 }
