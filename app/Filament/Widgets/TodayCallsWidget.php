@@ -30,11 +30,11 @@ class TodayCallsWidget extends BaseWidget
             );
     }
 
-    // Remove the canView() method to show widget to all users
-    // protected static function canView(): bool
-    // {
-    //     return auth()->user()?->hasRole('Admin');
-    // }
+
+    public static function canView(): bool
+    {
+       return auth()->user()?->hasRole('Admin');
+     }
 
     protected function getTableColumns(): array
     {
