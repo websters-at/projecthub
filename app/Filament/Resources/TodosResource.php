@@ -94,11 +94,22 @@ class TodosResource extends Resource
 
                 Section::make(__('messages.todo.form.section_contract'))->schema([
                     Select::make('contract_id')
-                        ->label(__('messages.todo.form.field_contract_classification')) // Du kannst ggf. eine neue Übersetzung hinzufügen
-                        ->relationship('contract', 'name')
-                        ->searchable()
-                        ->preload()
+                        ->label(__('messages.todo.form.field_contract_classification'))
                         ->required()
+                        ->options(function () {
+                            $user = Auth::user();
+
+                            if ($user->hasRole('Admin')) {
+                                return Contract::pluck('name', 'id');
+                            }
+
+                            return Contract::whereHas('classifications', function ($query) use ($user) {
+                                $query->where('user_id', $user->id);
+                            })->pluck('name', 'id');
+                        })
+                        ->preload()
+                        ->searchable(),
+
                 ])
             ]);
     }
@@ -117,7 +128,7 @@ class TodosResource extends Resource
                     ->sortable(),
 
                 TextColumn::make('due_to')
-                    ->time()
+                    ->dateTime()
                     ->sortable()
                     ->label(__('messages.todo.table.due_to')),
 

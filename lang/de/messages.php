@@ -241,6 +241,14 @@ return [
             'name' => 'To-Do',
             'name_plural' => 'To-Dos',
         ],
+        'stats' => [
+            'today' => 'Todos Heute',
+            'today_description' => 'Gesamtzahl der für heute geplanten Todos.',
+            'upcoming' => 'Kommende Todos',
+            'upcoming_description' => 'Gesamtzahl der für die nächsten 3 Tage geplanten Todos.',
+            'open' => 'Offene Todos',
+            'open_description' => 'Gesamtzahl der Todos, die nicht als "erledigt" markiert sind.',
+        ],
         'form' => [
             'section_general' => 'Allgemein',
             'field_name' => 'Name',
@@ -475,6 +483,8 @@ return [
         'your_contracts' => 'Ihre Aufträge',
         'unpaid_bills_description' => 'Noch offen',
         'your_contracts_description' => 'Gesamtanzahl Ihrer Aufträge',
+        'open_todos' => 'Offene Aufgaben',
+        'open_todos_description' => 'Die Anzahl der offenen Aufgaben, die noch bearbeitet werden müssen',
     ],
     'general_overview' => [
         'todays_calls' => 'Anrufe von heute',
@@ -490,5 +500,13 @@ return [
         'todos_due_3_days_description' => 'Todos, die bald fällig werden',
         'general_todos_due_3_days_description' => 'Allgemeine Todos, die bald fällig werden',
     ],
-
+    'contract_stats' => [
+        'heading' => 'Auftragsstatistiken',
+        'due_today' => 'Aufträge, die heute fällig sind',
+        'due_in_3_days' => 'Aufträge, die in 3 Tagen fällig sind',
+        'completed' => 'Abgeschlossene Aufträge',
+        'due_today_desc' => 'Aufträge, die heute fällig sind',
+        'due_in_3_days_desc' => 'Aufträge, die in den nächsten 3 Tagen fällig sind',
+        'completed_desc' => 'Aufträge, die als abgeschlossen markiert sind',
+    ],
 ];

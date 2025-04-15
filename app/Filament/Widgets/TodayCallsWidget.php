@@ -8,33 +8,33 @@ use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Widgets\TableWidget as BaseWidget;
-use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 
 class TodayCallsWidget extends BaseWidget
 {
     protected static ?string $heading = 'Today\'s Calls';
-
-    protected int | string | array $columnSpan = 'full';
-
-    public static function canView(): bool
-    {
-        return auth()->user()?->hasRole('Admin');
-    }
+    public static ?int $sort=2;
+    protected int|string|array $columnSpan = 'full';
 
     protected function getTableQuery(): Builder
     {
-        return Call::whereDate('on_date', Carbon::today());
+        return Call::query()
+            ->whereDate('on_date', Carbon::today())
+            ->when(
+                !auth()->user()->hasRole('Admin'),
+                function ($query) {
+                    $query->whereHas('contract_classification.contract.users', function ($subQuery) {
+                        $subQuery->where('user_id', auth()->id());
+                    });
+                }
+            );
     }
-    protected function getTableActions(): array
-    {
-        return [
-            Action::make('view')
-                ->label('View Call')
-                ->url(fn (Call $record): string => '/admin/calls/'. $record->id)
-                ->openUrlInNewTab(),
-        ];
-    }
+
+    // Remove the canView() method to show widget to all users
+    // protected static function canView(): bool
+    // {
+    //     return auth()->user()?->hasRole('Admin');
+    // }
 
     protected function getTableColumns(): array
     {
@@ -59,5 +59,13 @@ class TodayCallsWidget extends BaseWidget
         ];
     }
 
-
+    protected function getTableActions(): array
+    {
+        return [
+            Action::make('view')
+                ->label('View Call')
+                ->url(fn (Call $record): string => '/admin/calls/'. $record->id)
+                ->openUrlInNewTab(),
+        ];
+    }
 }

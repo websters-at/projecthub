@@ -1,10 +1,9 @@
 <?php
 namespace App\Filament\Widgets;
 
-
 use App\Models\Bill;
-use App\Models\Contract;
 use App\Models\ContractClassification;
+use App\Models\Todo;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Facades\Auth;
@@ -41,16 +40,28 @@ class UserStatsWidget extends BaseWidget
 
         $totalContracts = ContractClassification::where('user_id', $user->id)->count();
 
+        // Count of open todos for the user
+        $openTodosCount = Todo::where('is_done', false)
+            ->whereHas('contract', function ($query) use ($user) {
+                $query->whereHas('contract_classifications', function ($q) use ($user) {
+                    $q->where('user_id', $user->id);
+                });
+            })
+            ->count();
 
         return [
             Stat::make(__('messages.user_stats.unpaid_bills'), number_format($unpaidTotal, 2) . ' €')
                 ->description(__('messages.user_stats.unpaid_bills_description'))
-                ->color('danger'),
+                ,
 
             Stat::make(__('messages.user_stats.your_contracts'), $totalContracts)
                 ->description(__('messages.user_stats.your_contracts_description'))
-                ->color('primary'),
+              ,
 
+            // Add the open todos stat
+            Stat::make(__('messages.user_stats.open_todos'), $openTodosCount)
+                ->description(__('messages.user_stats.open_todos_description'))
+                ,
         ];
     }
 }

@@ -23,7 +23,6 @@ class TimesOverview extends StatsOverviewWidget
     {
         $times = $this->getPageTableQuery()->get();
 
-        // Calculate total raw minutes from all entries
         $totalRawMinutes = $times->sum(fn(Time $t) =>
             $t->total_hours_worked * 60 + $t->total_minutes_worked
         );
@@ -31,7 +30,6 @@ class TimesOverview extends StatsOverviewWidget
         $format = fn(int $minutes): string =>
             intdiv($minutes, 60).'h '.($minutes % 60).'min';
 
-        // Calculate average per contract
         $groupedByContract = $times->groupBy('contract_classification_id');
         $avgPerContract = $groupedByContract->count() > 0
             ? intval($groupedByContract->avg(fn($group) =>
@@ -46,7 +44,7 @@ class TimesOverview extends StatsOverviewWidget
             Stat::make(__('messages.time.stats.total_time_raw'), $format($totalRawMinutes))
                 ->description(__('messages.time.stats.total_time_raw_description'))
                 ->descriptionIcon('heroicon-o-clock')
-                ->color('danger'),
+               ,
         ];
 
         if (auth()->user()->hasRole("Admin")) {
@@ -59,24 +57,23 @@ class TimesOverview extends StatsOverviewWidget
             $stats[] = Stat::make(__('messages.time.stats.unbilled_time'), $format($unbilledMinutes))
                 ->description(__('messages.time.stats.unbilled_time_description'))
                 ->descriptionIcon('heroicon-o-currency-euro')
-                ->color('danger')
-                ->chartColor('danger');
+            ;
 
             $stats[] = Stat::make(__('messages.time.stats.avg_time_per_contract'), $format($avgPerContract))
                 ->description(__('messages.time.stats.avg_time_per_contract_description'))
                 ->descriptionIcon('heroicon-o-chart-bar')
-                ->color('warning');
+      ;
         }
         else {
             $stats[] = Stat::make(__('messages.time.stats.avg_time_per_contract'), $format($avgPerContract))
                 ->description(__('messages.time.stats.avg_time_per_contract_description'))
                 ->descriptionIcon('heroicon-o-chart-bar')
-                ->color('info');
+      ;
 
             $stats[] = Stat::make(__('messages.time.stats.entries_count'), $times->count())
                 ->description(__('messages.time.stats.entries_count_description'))
                 ->descriptionIcon('heroicon-o-document-text')
-                ->color('gray'); // Right position
+               ;
         }
 
         return $stats;

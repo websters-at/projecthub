@@ -266,6 +266,14 @@ return [
             'priority' => 'Priority',
             'is_done' => 'Completed',
         ],
+        'stats' => [
+            'today' => 'Todos Today',
+            'today_description' => 'Total todos scheduled for today.',
+            'upcoming' => 'Upcoming Todos',
+            'upcoming_description' => 'Total todos scheduled for the next 3 days.',
+            'open' => 'Open Todos',
+            'open_description' => 'Total todos that are not marked as "done".',
+        ],
         'filters' => [
             'user' => [
                 'label' => 'User',
@@ -477,6 +485,8 @@ return [
         'your_contracts' => 'Your Contracts',
         'unpaid_bills_description' => 'Still open',
         'your_contracts_description' => 'Total number of your contracts',
+        'open_todos' => 'Open Todos',
+        'open_todos_description' => 'The number of todos that are still open and need attention',
     ],
     'general_overview' => [
         'todays_calls' => 'Today\'s Calls',
@@ -492,5 +502,13 @@ return [
         'todos_due_3_days_description' => 'Todos nearing due date',
         'general_todos_due_3_days_description' => 'General todos nearing due date',
     ],
-
+   'contract_stats' => [
+        'heading' => 'Contract Statistics',
+        'due_today' => 'Contracts Due Today',
+        'due_in_3_days' => 'Contracts Due in 3 Days',
+        'completed' => 'Completed Contracts',
+        'due_today_desc' => 'Contracts that are due today',
+        'due_in_3_days_desc' => 'Contracts that are due in the next 3 days',
+        'completed_desc' => 'Contracts that have been marked as completed',
+    ],
 ];
