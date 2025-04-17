@@ -29,6 +29,7 @@
     use Filament\Tables\Actions\ViewAction;
     use Filament\Tables\Columns\TextColumn;
     use Filament\Tables\Columns\ToggleColumn;
+    use Filament\Tables\Filters\Filter;
     use Filament\Tables\Filters\SelectFilter;
     use Filament\Tables\Table;
     use Illuminate\Database\Eloquent\Model;
@@ -189,10 +190,14 @@
                                 ->when($data['due_until'], fn ($query, $date) => $query->whereDate('due_to', '<=', $date));
                         }),
 
-                    Tables\Filters\Filter::make('is_finished')
+
+                    Filter::make('is_finished')
                         ->label(__('messages.contract.table.filter_is_finished'))
-                        ->query(fn (Builder $query) => $query->where('is_finished', true))
-                        ->toggle(),
+                        ->query(fn(Builder $query) => $query->where('is_finished', true)),
+
+                    Filter::make('is_not_finished')
+                        ->label(__('messages.contract.table.filter_is_not_finished'))
+                        ->query(fn(Builder $query) => $query->where('is_finished', false)),
 
                     Tables\Filters\Filter::make('name')
                         ->label(__('messages.contract.table.filter_name'))

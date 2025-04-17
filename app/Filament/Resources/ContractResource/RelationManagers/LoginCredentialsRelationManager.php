@@ -52,7 +52,6 @@ class LoginCredentialsRelationManager extends RelationManager
                             ->email()
                             ->label(__('messages.login_credentials.form.field_email')),
                         TextInput::make('password')
-                            ->password()
                             ->label(__('messages.login_credentials.form.field_password')),
                         FileUpload::make('attachments')
                             ->multiple()

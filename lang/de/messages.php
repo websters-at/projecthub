@@ -119,6 +119,7 @@ return [
             'filter_users' => 'Mitarbeiter',
             'filter_due_to' => 'Fälligkeitszeitraum',
             'filter_is_finished' => 'Erledigt',
+            'filter_is_not_finished' => 'Nicht Erledigt',
             'filter_name' => 'Firmenname des Auftrags',
         ],
     ],
