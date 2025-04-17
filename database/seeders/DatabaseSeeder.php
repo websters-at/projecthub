@@ -187,7 +187,7 @@ class DatabaseSeeder extends Seeder
 
 
 
-        $this->call([
+        /*$this->call([
             CustomerSeeder::class,
             ContractSeeder::class,
             ContractClassificationSeeder::class,
@@ -197,6 +197,6 @@ class DatabaseSeeder extends Seeder
             CallNoteSeeder::class,
             ContractLoginCredentialSeeder::class,
             ContractNoteSeeder::class,
-        ]);
+        ]);*/
     }
 }
