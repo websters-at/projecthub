@@ -144,7 +144,11 @@ class DatabaseSeeder extends Seeder
             ['name' => 'View All General Todos'],
             ['name' => 'View Special General Todos Filters'],
 
-
+            ['name' => 'View All Users'],
+            ['name' => 'View Users'],
+            ['name' => 'Update Users'],
+            ['name' => 'Create Users'],
+            ['name' => 'Delete Users'],
 
             ['name' => 'Root']
         ];
@@ -153,6 +157,8 @@ class DatabaseSeeder extends Seeder
             Permission::create($permission);
         }
         $mitarbeiterRole->givePermissionTo([
+            'View All Users',
+            'Update Users',
             'View Bills',
             'Create Bills',
             'Update Bills',
@@ -200,7 +206,7 @@ class DatabaseSeeder extends Seeder
         }
 
 
-        /*$this->call([
+        $this->call([
             CustomerSeeder::class,
             ContractSeeder::class,
             ContractClassificationSeeder::class,
@@ -210,6 +216,6 @@ class DatabaseSeeder extends Seeder
             CallNoteSeeder::class,
             ContractLoginCredentialSeeder::class,
             ContractNoteSeeder::class,
-        ]);*/
+        ]);
     }
 }

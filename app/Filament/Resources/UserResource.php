@@ -68,9 +68,20 @@ class UserResource extends Resource
                         ->multiple()
                         ->relationship('roles', 'name')
                         ->preload()
+                        ->disabled(fn (): bool => ! auth()->user()->hasRole('Admin'))
                         ->label(__('messages.user.form.field_roles')),
                 ])->columns(2)
             ]);
+    }
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        if (! auth()->user()->hasPermissionTo('View All Logins')) {
+            $query->where('id', auth()->id());
+        }
+
+        return $query;
     }
 
 
