@@ -76,11 +76,24 @@ class LoginCredentialsResource extends Resource
                         ])->collapsible(),
                         Section::make(__('messages.login_credentials.form.section_contracts'))
                             ->schema([
-                                Select::make('contract')
+                                Select::make('contracts')
+                                    ->label(__('messages.login_credentials.form.section_contracts'))
                                     ->multiple()
                                     ->preload()
-                                    ->relationship('contracts', 'name')
-                                    ->searchable(),
+                                    ->searchable()
+                                    ->relationship(
+                                        name: 'contracts',
+                                        titleAttribute: 'name',
+                                        modifyQueryUsing: function (Builder $query) {
+                                            $user = auth()->user();
+
+                                            if (! $user->hasPermissionTo('View All Contracts')) {
+                                                $query->whereHas('classifications', fn (Builder $q) =>
+                                                $q->where('user_id', $user->id)
+                                                );
+                                            }
+                                        },
+                                    ),
                             ])
                             ->columns(1)->collapsible()
                             ->collapsed(false),
