@@ -121,10 +121,12 @@ class TodosResource extends Resource
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable()
+                    ->limit(25)
                     ->label(__('messages.todo.table.name')),
 
                 TextColumn::make('contract.name')
                     ->label(__('messages.todo.table.contract'))
+                    ->limit(20)
                     ->sortable(),
 
                 TextColumn::make('due_to')
