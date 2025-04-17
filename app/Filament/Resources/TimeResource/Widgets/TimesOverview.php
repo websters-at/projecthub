@@ -39,7 +39,7 @@ class TimesOverview extends StatsOverviewWidget
             ))
             : 0;
 
-
+#
         $stats = [
             Stat::make(__('messages.time.stats.total_time_raw'), $format($totalRawMinutes))
                 ->description(__('messages.time.stats.total_time_raw_description'))

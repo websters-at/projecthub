@@ -44,8 +44,6 @@ class DatabaseSeeder extends Seeder
         $role = Role::create(['name' => 'Admin']);
         $mitarbeiterRole = Role::create(['name' => 'Mitarbeiter']);
 
-
-
         // Create permissions
         $permissions = [
             ['name' => 'Create Contracts'],
