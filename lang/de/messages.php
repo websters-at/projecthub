@@ -496,7 +496,7 @@ return [
         'contracts_due_3_days' => 'Aufträge, die in 3 Tagen fällig sind',
         'todos_due_3_days' => 'Todos, die in 3 Tagen fällig sind',
         'general_todos_due_3_days' => 'Allgemeine Todos, die in 3 Tagen fällig sind',
-        'todays_calls_description' => 'Gesamtanzahl der heute erstellten Anrufe',
+        'todays_calls_description' => 'Gesamtanzahl der heute anstehenden Anrufe',
         'unpaid_amount_description' => 'Gesamtsumme aller offenen Rechnungen',
         'contracts_due_3_days_description' => 'Aufträge, die kurz vor dem Fälligkeitsdatum stehen',
         'todos_due_3_days_description' => 'Todos, die bald fällig werden',

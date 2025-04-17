@@ -498,7 +498,7 @@ return [
         'contracts_due_3_days' => 'Contracts Due in 3 Days',
         'todos_due_3_days' => 'Todos Due in 3 Days',
         'general_todos_due_3_days' => 'General Todos Due in 3 Days',
-        'todays_calls_description' => 'Total calls created today',
+        'todays_calls_description' => 'Total number of calls pending today',
         'unpaid_amount_description' => 'Total amount of unpaid bills',
         'contracts_due_3_days_description' => 'Contracts nearing due date',
         'todos_due_3_days_description' => 'Todos nearing due date',

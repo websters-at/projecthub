@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Create users
-        $user = User::factory()->create([
+       /* $user = User::factory()->create([
             'name' => 'Stevan Vlajic',
             'email' => 'stevan@webhoch.com',
             'password' => bcrypt('password')
@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Michael Ruep',
             'email' => 'michael@webhoch.com',
             'password' => bcrypt('password')
-        ]);
+        ]);*/
 
         // Create the Admin role
         $role = Role::create(['name' => 'Admin']);
@@ -179,12 +179,25 @@ class DatabaseSeeder extends Seeder
         $allPermissions = Permission::all();
 
         $role->givePermissionTo($allPermissions);
+        $users = [
+            ['name' => 'Stevan Vlajic', 'email' => 'stevan@webhoch.com', 'is_admin' => false],
+            ['name' => 'Jonathan Hochmeir', 'email' => 'jonathan@webhoch.com', 'is_admin' => true],
+            ['name' => 'Michael Ruep', 'email' => 'michaelruep@webhoch.com', 'is_admin' => false],
+            ['name' => 'Michael Schmidt', 'email' => 'michaelschmidt@webhoch.com', 'is_admin' => false],
+            ['name' => 'Elias Reinhart', 'email' => 'eliasreinhart@webhoch.com', 'is_admin' => false],
+            ['name' => 'Amer Besic', 'email' => 'amerbesic@webhoch.com', 'is_admin' => false],
+            ['name' => 'Boffin Coders', 'email' => 'boffinconders@webhoch.com', 'is_admin' => false],
+            ['name' => 'Deborah Benza', 'email' => 'deborahbenza@webhoch.com', 'is_admin' => false],
+        ];
 
-        $user->assignRole($role);
-        $user2->assignRole($role);
-        $user3->assignRole($mitarbeiterRole);
-        $user4->assignRole($mitarbeiterRole);
-
+        foreach ($users as $userData) {
+            $user = User::factory()->create([
+                'name' => $userData['name'],
+                'email' => $userData['email'],
+                'password' => bcrypt('password'),
+            ]);
+            $user->assignRole($userData['is_admin'] ? $role : $mitarbeiterRole);
+        }
 
 
         /*$this->call([
