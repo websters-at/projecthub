@@ -99,7 +99,7 @@ return [
             'field_priority' => 'Priority',
             'field_due_to' => 'Due Date',
             'field_is_finished' => 'Finished',
-            'field_is_not_finished' => 'Not Finished',
+            'filter_is_not_finished' => 'Not Finished',
 
             'field_customer' => 'Customer',
             'field_users' => 'Employees',
