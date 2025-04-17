@@ -42,12 +42,10 @@ class NotesRelationManager extends RelationManager
                     TextInput::make('name')
                         ->label(__('messages.contract_note.form.field_name'))
                         ->required()
-                        ->maxLength(255)
-                        ->placeholder(__('messages.contract_note.form.field_name_placeholder')),
+                        ->maxLength(255),
 
                     MarkdownEditor::make('description')
-                        ->label(__('messages.contract_note.form.field_description'))
-                        ->placeholder(__('messages.contract_note.form.field_description_placeholder')),
+                        ->label(__('messages.contract_note.form.field_description')),
 
                     DateTimePicker::make('date')
                         ->label(__('messages.contract_note.form.field_date'))
@@ -63,7 +61,6 @@ class NotesRelationManager extends RelationManager
                         ->downloadable()
                         ->acceptedFileTypes(['application/pdf', 'image/*', 'text/plain'])
                         ->maxSize(5120)
-                        ->hint(__('messages.contract_note.form.field_attachments_hint')),
                 ]),
             ]);
     }

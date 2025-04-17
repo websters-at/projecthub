@@ -6,6 +6,7 @@ use App\Models\ContractClassification;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -70,7 +71,14 @@ class BillsRelationManager extends RelationManager
                     ->label(__('messages.bill.form.field_flat_rate_amount'))
                     ->numeric()
                     ->prefix('€')
-                    ->disabled(fn (Get $get): bool => ! $get('is_flat_rate'))
+                    ->disabled(fn(Get $get): bool => !$get('is_flat_rate'))
+                    ->requiredIf('is_flat_rate', true),
+
+                TextInput::make('flat_rate_hours')
+                    ->label(__('messages.bill.form.field_flat_rate_hours'))
+                    ->numeric()
+                    ->prefix('h')
+                    ->disabled(fn(Get $get): bool => !$get('is_flat_rate'))
                     ->requiredIf('is_flat_rate', true),
 
                 RichEditor::make('description')
@@ -88,6 +96,15 @@ class BillsRelationManager extends RelationManager
                 Toggle::make('is_payed')
                     ->label(__('messages.bill.form.field_is_payed'))
                     ->nullable(),
+                Hidden::make('contract_classification_id')
+                    ->default(fn ($livewire) => ContractClassification::query()
+                        ->where('contract_id', $livewire->ownerRecord->id)
+                        ->where('user_id', Auth::id())
+                        ->value('id')
+                    )
+                    ->dehydrated()
+
+                    ->required()
             ])->columns(2)->collapsible(),
 
             Section::make(__('messages.bill.form.section_attachments'))->schema([
