@@ -6,6 +6,7 @@ use App\Filament\Resources\CustomerResource\Pages;
 use App\Filament\Resources\CustomerResource\RelationManagers;
 use App\Models\Customer;
 use Filament\Forms;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -89,6 +90,8 @@ class CustomerResource extends Resource
                             ->label(__('messages.customer.form.field_phone')),
                         TextInput::make('tax_id')
                             ->label(__('messages.customer.form.field_tax_id')),
+                        MarkdownEditor::make('description')->label(__('messages.contract.form.field_description'))->nullable()->string(),
+
                     ]),
                 Section::make(__('messages.customer.form.section_address'))
                     ->schema([

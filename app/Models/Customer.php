@@ -20,6 +20,7 @@ class Customer extends Model
         "zip_code",
         "city",
         "state",
+        "description",
         "country"
     ];
 

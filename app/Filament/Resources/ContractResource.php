@@ -12,6 +12,7 @@
     use Filament\Forms\Components\DatePicker;
     use Filament\Forms\Components\DateTimePicker;
     use Filament\Forms\Components\FileUpload;
+    use Filament\Forms\Components\MarkdownEditor;
     use Filament\Forms\Components\RichEditor;
     use Filament\Forms\Components\Section;
     use Filament\Forms\Components\Select;
@@ -89,7 +90,7 @@
                 ->schema([
                     Section::make(__('messages.contract.form.section_general'))->schema([
                         TextInput::make('name')->label(__('messages.contract.form.field_name'))->required()->maxLength(255),
-                        RichEditor::make('description')->label(__('messages.contract.form.field_description'))->nullable()->string(),
+                        MarkdownEditor::make('description')->label(__('messages.contract.form.field_description'))->nullable()->string(),
                         Select::make('priority')
                             ->label(__('messages.contract.form.field_priority'))
                             ->options([
