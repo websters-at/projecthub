@@ -225,6 +225,7 @@
             return [
                 RelationManagers\TimesRelationManager::class,
                 RelationManagers\NotesRelationManager::class,
+                RelationManagers\TodosRelationManager::class,
                 RelationManagers\BillsRelationManager::class,
                 RelationManagers\LoginCredentialsRelationManager::class,
             ];

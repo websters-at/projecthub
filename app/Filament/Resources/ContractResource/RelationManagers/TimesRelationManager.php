@@ -103,13 +103,11 @@ class TimesRelationManager extends RelationManager
                     $user = Auth::user();
                     $contractId = $this->ownerRecord->id;
 
-                    // Fetch the contract classification
                     $contractClassification = ContractClassification::where('user_id', $user->id)
                         ->where('contract_id', $contractId)
                         ->first();
 
                     if ($contractClassification) {
-                        // Ensure the contract_classification_id is included in the data
                         $data['contract_classification_id'] = $contractClassification->id;
                     }
 

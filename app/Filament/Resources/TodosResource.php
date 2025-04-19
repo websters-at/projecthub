@@ -70,9 +70,6 @@ class TodosResource extends Resource
                         ->label(__('messages.todo.form.field_due_to')),
                     MarkdownEditor::make('description')
                         ->label(__('messages.todo.form.field_description')),
-                    Toggle::make('is_done')
-                        ->label(__('messages.todo.form.field_is_done'))
-                        ->default(false),
                     Select::make('priority')
                         ->options([
                             'low' => __('messages.todo.form.field_priority.low'),
@@ -82,6 +79,9 @@ class TodosResource extends Resource
                         ->default('mid')
                         ->required()
                         ->label(__('messages.todo.form.field_priority_label')),
+                    Toggle::make('is_done')
+                        ->label(__('messages.todo.form.field_is_done'))
+                        ->default(false),
                     FileUpload::make('attachments')
                         ->multiple()
                         ->downloadable()
@@ -175,6 +175,7 @@ class TodosResource extends Resource
                                     $query->where('user_id', $user->id);
                                 })->pluck('name', 'id');
                             })
+                            ->searchable()
                             ->placeholder(__('messages.todo.filters.contract.placeholder')),
                     ])
                     ->query(function (Builder $query, array $data) {
