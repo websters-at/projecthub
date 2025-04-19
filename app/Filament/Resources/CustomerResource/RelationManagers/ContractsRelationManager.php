@@ -46,12 +46,10 @@ class ContractsRelationManager extends RelationManager
                 Section::make(__('messages.contract.form.section_general'))->schema([
                     TextInput::make('name')
                         ->required()
-                        ->maxLength(255)
                         ->label(__('messages.contract.form.field_name')),
                     RichEditor::make('description')
                         ->nullable()
                         ->string()
-                        ->maxLength(255)
                         ->label(__('messages.contract.form.field_description')),
                     Select::make('priority')
                         ->label(__('messages.contract.form.field_priority'))
@@ -72,23 +70,18 @@ class ContractsRelationManager extends RelationManager
                 Section::make(__('messages.contract.form.section_location'))->schema([
                     TextInput::make('country')
                         ->nullable()
-                        ->maxLength(255)
                         ->label(__('messages.contract.form.field_country')),
                     TextInput::make('state')
                         ->nullable()
-                        ->maxLength(255)
                         ->label(__('messages.contract.form.field_state')),
                     TextInput::make('city')
                         ->nullable()
-                        ->maxLength(255)
                         ->label(__('messages.contract.form.field_city')),
                     TextInput::make('zip_code')
                         ->nullable()
-                        ->maxLength(255)
                         ->label(__('messages.contract.form.field_zip_code')),
                     TextInput::make('address')
                         ->nullable()
-                        ->maxLength(255)
                         ->label(__('messages.contract.form.field_address')),
                 ])->columns(2)->collapsible()
                     ->collapsed(false),
