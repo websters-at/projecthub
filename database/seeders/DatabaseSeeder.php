@@ -188,14 +188,9 @@ class DatabaseSeeder extends Seeder
 
         $role->givePermissionTo($allPermissions);
         $users = [
+            ['name' => 'Websters Office', 'email' => 'office@websters.at', 'is_admin' => true],
             ['name' => 'Stevan Vlajic', 'email' => 'stevan@webhoch.com', 'is_admin' => false],
-            ['name' => 'Jonathan Hochmeir', 'email' => 'jonathan@webhoch.com', 'is_admin' => true],
-            ['name' => 'Michael Ruep', 'email' => 'michaelruep@webhoch.com', 'is_admin' => false],
-            ['name' => 'Michael Schmidt', 'email' => 'michaelschmidt@webhoch.com', 'is_admin' => false],
-            ['name' => 'Elias Reinhart', 'email' => 'eliasreinhart@webhoch.com', 'is_admin' => false],
-            ['name' => 'Amer Besic', 'email' => 'amerbesic@webhoch.com', 'is_admin' => false],
-            ['name' => 'Boffin Coders', 'email' => 'boffinconders@webhoch.com', 'is_admin' => false],
-            ['name' => 'Deborah Benza', 'email' => 'deborahbenza@webhoch.com', 'is_admin' => false],
+            ['name' => 'Manuel Puchner', 'email' => 'manuel@websters.at', 'is_admin' => true],
         ];
 
         foreach ($users as $userData) {
