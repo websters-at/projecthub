@@ -1,7 +1,3 @@
-Here’s a clean and professional **README.md** draft for your **Websters ProjectHub** project, formatted nicely for GitHub or GitLab:
-
----
-
 # Websters ProjectHub
 
 A modern **internal company project management tool** built with [Laravel](https://laravel.com/) and [Filament](https://filamentphp.com/).
